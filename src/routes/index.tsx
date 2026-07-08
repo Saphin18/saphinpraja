@@ -211,28 +211,30 @@ function Portfolio() {
             <p className="text-sm font-medium uppercase tracking-widest text-accent">Experience</p>
             <h2 className="mt-2 text-3xl font-bold md:text-4xl">Where I've worked</h2>
           </div>
-          <div className="reveal relative pl-8 md:pl-12">
+          <div className="reveal relative space-y-8 pl-8 md:pl-12">
             <div className="absolute left-2 top-2 h-full w-px bg-border md:left-4" />
-            <div className="absolute left-[3px] top-2 h-3 w-3 rounded-full bg-accent ring-4 ring-background md:left-[9px]" />
-            <div className="rounded-2xl border border-border bg-card p-8 shadow-card">
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 className="text-xl font-bold">Xuno · Data Analyst</h3>
-                <span className="text-sm text-muted-foreground">Fintech · 1 year</span>
+            {experience.map((job, idx) => (
+              <div key={job.title + job.duration} className="relative">
+                <div
+                  className="absolute top-2 h-3 w-3 rounded-full bg-accent ring-4 ring-background"
+                  style={{ left: idx === 0 ? "-29px" : "-29px" }}
+                />
+                <div className="rounded-2xl border border-border bg-card p-8 shadow-card md:-ml-0">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <h3 className="text-xl font-bold">{job.title}</h3>
+                    <span className="text-sm text-muted-foreground">{job.duration}</span>
+                  </div>
+                  <ul className="mt-6 space-y-3 text-muted-foreground">
+                    {job.bullets.map((b) => (
+                      <li key={b} className="flex gap-3">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-              <ul className="mt-6 space-y-3 text-muted-foreground">
-                {[
-                  "Ran customer profiling and segmentation analysis to support marketing decisions.",
-                  "Pulled and cross-checked data from several internal and external sources for research asks.",
-                  "Built interactive Power BI dashboards used by the business team for weekly reporting.",
-                  "Automated repeat analysis work in Python with Pandas and NumPy so it stopped being a manual job.",
-                ].map((b) => (
-                  <li key={b} className="flex gap-3">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            ))}
           </div>
         </div>
       </section>

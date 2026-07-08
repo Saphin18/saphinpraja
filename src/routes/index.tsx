@@ -267,13 +267,9 @@ function Portfolio() {
                   </span>
                 ))}
               </div>
-              <a
-                href="#"
-                className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors group-hover:text-accent"
-              >
-                View project
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </a>
+              <p className="mt-6 text-sm font-medium text-muted-foreground">
+                Built at Xuno — details on request
+              </p>
             </article>
           ))}
         </div>

@@ -14,6 +14,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useReveal } from "@/hooks/use-reveal";
+import resumeAsset from "@/assets/resume.pdf.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Portfolio,

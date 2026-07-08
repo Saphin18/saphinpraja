@@ -14,6 +14,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useReveal } from "@/hooks/use-reveal";
+import resumeAsset from "@/assets/resume.pdf.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Portfolio,
@@ -141,7 +142,10 @@ function Portfolio() {
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </a>
               <a
-                href="/resume.pdf"
+                href={resumeAsset.url}
+                download="Saphin_Praja_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-5 py-3 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
               >
                 <Download className="h-4 w-4" />

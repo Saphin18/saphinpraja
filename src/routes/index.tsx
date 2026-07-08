@@ -38,24 +38,37 @@ const skillIcons = [
 
 const projects = [
   {
-    title: "Customer Segmentation Analysis",
-    desc: "Grouped fintech users by transaction behavior using RFM scoring and K-means. The marketing team used the segments to target three campaigns.",
-    tags: ["Python", "SQL"],
+    title: "FX Insights Automation",
+    desc: "Python script that runs daily at 3 PM, pulling FX rates, commodity prices, and market index data. Saves structured JSON to Google Drive and posts a formatted summary to Slack automatically.",
+    tags: ["Python", "Google Drive API", "Slack API"],
   },
   {
-    title: "Fintech Sales Dashboard",
-    desc: "Power BI dashboard tracking daily sales, product mix, and channel performance. Refreshes from a SQL warehouse every morning.",
-    tags: ["Power BI"],
+    title: "Reddit Competitor & Remittance Monitor",
+    desc: "Monitoring script that scans Reddit every 15 minutes for remittance and competitor-related discussion using keyword and semantic matching, then auto-alerts a Slack channel.",
+    tags: ["Python", "Slack API"],
+  },
+];
+
+const experience = [
+  {
+    title: "Xuno · Data Analyst",
+    duration: "Feb 2026 – Present",
+    bullets: [
+      "Moved from a marketing-focused internship into a full data analyst role after picking up SQL and Python.",
+      "Built business analytics dashboards in Metabase, used by the team to track daily and weekly performance.",
+      "Write Python scripts and Jupyter notebooks to clean and analyze data, turning raw numbers into insights.",
+      "Query and report on data from Mixpanel, CleverTap, Meta Business Suite, and internal company sources.",
+      "Perform RFM segmentation and build customer profiles for each segment.",
+    ],
   },
   {
-    title: "Data Extraction & Cleaning Pipeline",
-    desc: "Python script that pulls data from three APIs, cleans it, and drops a tidy Excel report into a shared folder. Replaced a two-hour manual task.",
-    tags: ["Python", "Excel"],
-  },
-  {
-    title: "Customer Behavior Research Report",
-    desc: "SQL queries and Excel pivots explaining why a specific user cohort dropped off after week two. Shared with product and ops.",
-    tags: ["SQL", "Excel"],
+    title: "Xuno · Digital Marketing & Data Analysis Intern",
+    duration: "Oct 2025 – Jan 2026",
+    bullets: [
+      "Started out reporting on marketing performance — Mixpanel, CleverTap, Meta Business Suite.",
+      "Ran competitor and influencer research to track market activity and positioning.",
+      "Got curious about the data behind the marketing numbers, which led to learning SQL and Python and eventually moving into the data analyst role above.",
+    ],
   },
 ];
 

@@ -9,7 +9,6 @@ import {
   Github,
   Linkedin,
   Mail,
-  ArrowUpRight,
   Download,
   ArrowRight,
 } from "lucide-react";
@@ -38,24 +37,37 @@ const skillIcons = [
 
 const projects = [
   {
-    title: "Customer Segmentation Analysis",
-    desc: "Grouped fintech users by transaction behavior using RFM scoring and K-means. The marketing team used the segments to target three campaigns.",
-    tags: ["Python", "SQL"],
+    title: "FX Insights Automation",
+    desc: "Python script that runs daily at 3 PM, pulling FX rates, commodity prices, and market index data. Saves structured JSON to Google Drive and posts a formatted summary to Slack automatically.",
+    tags: ["Python", "Google Drive API", "Slack API"],
   },
   {
-    title: "Fintech Sales Dashboard",
-    desc: "Power BI dashboard tracking daily sales, product mix, and channel performance. Refreshes from a SQL warehouse every morning.",
-    tags: ["Power BI"],
+    title: "Reddit Competitor & Remittance Monitor",
+    desc: "Monitoring script that scans Reddit every 15 minutes for remittance and competitor-related discussion using keyword and semantic matching, then auto-alerts a Slack channel.",
+    tags: ["Python", "Slack API"],
+  },
+];
+
+const experience = [
+  {
+    title: "Xuno · Data Analyst",
+    duration: "Feb 2026 – Present",
+    bullets: [
+      "Moved from a marketing-focused internship into a full data analyst role after picking up SQL and Python.",
+      "Built business analytics dashboards in Metabase, used by the team to track daily and weekly performance.",
+      "Write Python scripts and Jupyter notebooks to clean and analyze data, turning raw numbers into insights.",
+      "Query and report on data from Mixpanel, CleverTap, Meta Business Suite, and internal company sources.",
+      "Perform RFM segmentation and build customer profiles for each segment.",
+    ],
   },
   {
-    title: "Data Extraction & Cleaning Pipeline",
-    desc: "Python script that pulls data from three APIs, cleans it, and drops a tidy Excel report into a shared folder. Replaced a two-hour manual task.",
-    tags: ["Python", "Excel"],
-  },
-  {
-    title: "Customer Behavior Research Report",
-    desc: "SQL queries and Excel pivots explaining why a specific user cohort dropped off after week two. Shared with product and ops.",
-    tags: ["SQL", "Excel"],
+    title: "Xuno · Digital Marketing & Data Analysis Intern",
+    duration: "Oct 2025 – Jan 2026",
+    bullets: [
+      "Started out reporting on marketing performance — Mixpanel, CleverTap, Meta Business Suite.",
+      "Ran competitor and influencer research to track market activity and positioning.",
+      "Got curious about the data behind the marketing numbers, which led to learning SQL and Python and eventually moving into the data analyst role above.",
+    ],
   },
 ];
 
@@ -198,28 +210,30 @@ function Portfolio() {
             <p className="text-sm font-medium uppercase tracking-widest text-accent">Experience</p>
             <h2 className="mt-2 text-3xl font-bold md:text-4xl">Where I've worked</h2>
           </div>
-          <div className="reveal relative pl-8 md:pl-12">
+          <div className="reveal relative space-y-8 pl-8 md:pl-12">
             <div className="absolute left-2 top-2 h-full w-px bg-border md:left-4" />
-            <div className="absolute left-[3px] top-2 h-3 w-3 rounded-full bg-accent ring-4 ring-background md:left-[9px]" />
-            <div className="rounded-2xl border border-border bg-card p-8 shadow-card">
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 className="text-xl font-bold">Xuno · Data Analyst</h3>
-                <span className="text-sm text-muted-foreground">Fintech · 1 year</span>
+            {experience.map((job, idx) => (
+              <div key={job.title + job.duration} className="relative">
+                <div
+                  className="absolute top-2 h-3 w-3 rounded-full bg-accent ring-4 ring-background"
+                  style={{ left: idx === 0 ? "-29px" : "-29px" }}
+                />
+                <div className="rounded-2xl border border-border bg-card p-8 shadow-card md:-ml-0">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <h3 className="text-xl font-bold">{job.title}</h3>
+                    <span className="text-sm text-muted-foreground">{job.duration}</span>
+                  </div>
+                  <ul className="mt-6 space-y-3 text-muted-foreground">
+                    {job.bullets.map((b) => (
+                      <li key={b} className="flex gap-3">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-              <ul className="mt-6 space-y-3 text-muted-foreground">
-                {[
-                  "Ran customer profiling and segmentation analysis to support marketing decisions.",
-                  "Pulled and cross-checked data from several internal and external sources for research asks.",
-                  "Built interactive Power BI dashboards used by the business team for weekly reporting.",
-                  "Automated repeat analysis work in Python with Pandas and NumPy so it stopped being a manual job.",
-                ].map((b) => (
-                  <li key={b} className="flex gap-3">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -252,13 +266,9 @@ function Portfolio() {
                   </span>
                 ))}
               </div>
-              <a
-                href="#"
-                className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors group-hover:text-accent"
-              >
-                View project
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </a>
+              <p className="mt-6 text-sm font-medium text-muted-foreground">
+                Built at Xuno — details on request
+              </p>
             </article>
           ))}
         </div>

@@ -377,28 +377,31 @@ function Portfolio() {
             className="reveal space-y-4 rounded-2xl border border-border bg-card p-8 shadow-card"
           >
             <div>
-              <label className="mb-1.5 block text-sm font-medium">Name</label>
+              <label htmlFor="contact-name" className="mb-1.5 block text-sm font-medium">Name</label>
               <input
                 required
+                id="contact-name"
                 name="name"
                 maxLength={100}
                 className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium">Email</label>
+              <label htmlFor="contact-email" className="mb-1.5 block text-sm font-medium">Email</label>
               <input
                 required
                 type="email"
+                id="contact-email"
                 name="email"
                 maxLength={255}
                 className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium">Message</label>
+              <label htmlFor="contact-message" className="mb-1.5 block text-sm font-medium">Message</label>
               <textarea
                 required
+                id="contact-message"
                 name="message"
                 rows={5}
                 maxLength={1000}

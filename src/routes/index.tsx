@@ -17,6 +17,37 @@ import resumeAsset from "@/assets/resume.pdf.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Portfolio,
+  head: () => ({
+    links: [{ rel: "canonical", href: "https://saphinpraja.lovable.app/" }],
+    meta: [{ property: "og:url", content: "https://saphinpraja.lovable.app/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Saphin Praja",
+          jobTitle: "Data Analyst",
+          url: "https://saphinpraja.lovable.app/",
+          sameAs: [
+            "https://www.linkedin.com/",
+            "https://github.com/",
+          ],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Saphin Praja Portfolio",
+          url: "https://saphinpraja.lovable.app/",
+          description:
+            "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI.",
+        }),
+      },
+    ],
+  }),
 });
 
 const nav = [
@@ -129,6 +160,7 @@ function Portfolio() {
         </div>
       </header>
 
+      <main>
       <section id="top" className="bg-hero">
         <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
           <div className="max-w-3xl">
@@ -136,7 +168,7 @@ function Portfolio() {
               <span className="h-1.5 w-1.5 rounded-full bg-accent" />
               Available for junior analyst roles
             </p>
-            <h1 className="text-5xl font-bold leading-[1.05] md:text-7xl">Saphin Praja</h1>
+            <h1 className="text-5xl font-bold leading-[1.05] md:text-7xl">Saphin Praja — Data Analyst</h1>
             <p className="mt-4 text-xl text-muted-foreground md:text-2xl">
               Data Analyst · <span className="text-foreground">SQL</span> ·{" "}
               <span className="text-foreground">Python</span> ·{" "}
@@ -346,28 +378,31 @@ function Portfolio() {
             className="reveal space-y-4 rounded-2xl border border-border bg-card p-8 shadow-card"
           >
             <div>
-              <label className="mb-1.5 block text-sm font-medium">Name</label>
+              <label htmlFor="contact-name" className="mb-1.5 block text-sm font-medium">Name</label>
               <input
                 required
+                id="contact-name"
                 name="name"
                 maxLength={100}
                 className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium">Email</label>
+              <label htmlFor="contact-email" className="mb-1.5 block text-sm font-medium">Email</label>
               <input
                 required
                 type="email"
+                id="contact-email"
                 name="email"
                 maxLength={255}
                 className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium">Message</label>
+              <label htmlFor="contact-message" className="mb-1.5 block text-sm font-medium">Message</label>
               <textarea
                 required
+                id="contact-message"
                 name="message"
                 rows={5}
                 maxLength={1000}
@@ -383,6 +418,7 @@ function Portfolio() {
           </form>
         </div>
       </section>
+      </main>
 
       <footer className="border-t border-border/60">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-6 py-8 text-sm text-muted-foreground">

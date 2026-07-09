@@ -1,0 +1,7 @@
+# Saphin Praja — Data Analyst
+
+> Portfolio of Saphin Praja, a junior data analyst with fintech experience working in SQL, Python, and Power BI.
+
+## Pages
+
+- [Home](/): About, experience at Xuno, projects (FX Insights Automation, Reddit Competitor & Remittance Monitor), skills, and contact.

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://saphinpraja.lovable.app/sitemap.xml

@@ -5,3 +5,7 @@
 ## Pages
 
 - [Home](/): About, experience at Xuno, projects (FX Insights Automation, Reddit Competitor & Remittance Monitor), skills, and contact.
+
+## Guides
+
+- [Building an AML Transaction Monitoring Script in Python & SQL](/guides/aml-transaction-monitoring): Practical walkthrough of a basic AML transaction monitoring script — rules, SQL window functions, Python loop, Slack alerts.

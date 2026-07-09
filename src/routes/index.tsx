@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import {
   Database,
@@ -303,6 +303,20 @@ function Portfolio() {
               </p>
             </article>
           ))}
+        </div>
+        <div className="reveal mt-10 rounded-2xl border border-border bg-card p-6 shadow-card sm:p-8">
+          <p className="text-sm font-medium uppercase tracking-widest text-accent">Guide</p>
+          <h3 className="mt-2 text-xl font-bold">Building an AML transaction monitoring script</h3>
+          <p className="mt-2 text-muted-foreground">
+            A technical walkthrough of the same monitoring shape as my Reddit project, applied to payments data — rules, SQL, and Slack alerts.
+          </p>
+          <Link
+            to="/guides/aml-transaction-monitoring"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-accent hover:underline"
+          >
+            Read the guide
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 

@@ -167,7 +167,7 @@ function Portfolio() {
               <span className="h-1.5 w-1.5 rounded-full bg-accent" />
               Available for junior analyst roles
             </p>
-            <h1 className="text-5xl font-bold leading-[1.05] md:text-7xl">Saphin Praja</h1>
+            <h1 className="text-5xl font-bold leading-[1.05] md:text-7xl">Saphin Praja — Data Analyst</h1>
             <p className="mt-4 text-xl text-muted-foreground md:text-2xl">
               Data Analyst · <span className="text-foreground">SQL</span> ·{" "}
               <span className="text-foreground">Python</span> ·{" "}

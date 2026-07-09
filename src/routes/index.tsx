@@ -160,6 +160,7 @@ function Portfolio() {
         </div>
       </header>
 
+      <main>
       <section id="top" className="bg-hero">
         <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
           <div className="max-w-3xl">

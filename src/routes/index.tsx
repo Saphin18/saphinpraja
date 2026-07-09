@@ -17,6 +17,37 @@ import resumeAsset from "@/assets/resume.pdf.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Portfolio,
+  head: () => ({
+    links: [{ rel: "canonical", href: "https://saphinpraja.lovable.app/" }],
+    meta: [{ property: "og:url", content: "https://saphinpraja.lovable.app/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Saphin Praja",
+          jobTitle: "Data Analyst",
+          url: "https://saphinpraja.lovable.app/",
+          sameAs: [
+            "https://www.linkedin.com/",
+            "https://github.com/",
+          ],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Saphin Praja Portfolio",
+          url: "https://saphinpraja.lovable.app/",
+          description:
+            "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI.",
+        }),
+      },
+    ],
+  }),
 });
 
 const nav = [

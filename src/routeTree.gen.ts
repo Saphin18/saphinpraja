@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GuidesAmlTransactionMonitoringRouteImport } from './routes/guides.aml-transaction-monitoring'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -22,31 +23,41 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuidesAmlTransactionMonitoringRoute =
+  GuidesAmlTransactionMonitoringRouteImport.update({
+    id: '/guides/aml-transaction-monitoring',
+    path: '/guides/aml-transaction-monitoring',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/guides/aml-transaction-monitoring': typeof GuidesAmlTransactionMonitoringRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/guides/aml-transaction-monitoring': typeof GuidesAmlTransactionMonitoringRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/guides/aml-transaction-monitoring': typeof GuidesAmlTransactionMonitoringRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sitemap.xml'
+  fullPaths: '/' | '/sitemap.xml' | '/guides/aml-transaction-monitoring'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sitemap.xml'
-  id: '__root__' | '/' | '/sitemap.xml'
+  to: '/' | '/sitemap.xml' | '/guides/aml-transaction-monitoring'
+  id: '__root__' | '/' | '/sitemap.xml' | '/guides/aml-transaction-monitoring'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  GuidesAmlTransactionMonitoringRoute: typeof GuidesAmlTransactionMonitoringRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +76,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guides/aml-transaction-monitoring': {
+      id: '/guides/aml-transaction-monitoring'
+      path: '/guides/aml-transaction-monitoring'
+      fullPath: '/guides/aml-transaction-monitoring'
+      preLoaderRoute: typeof GuidesAmlTransactionMonitoringRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  GuidesAmlTransactionMonitoringRoute: GuidesAmlTransactionMonitoringRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

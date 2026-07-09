@@ -79,22 +79,45 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Saphin Praja — Data Analyst" },
-      { name: "description", content: "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI." },
+      {
+        name: "description",
+        content:
+          "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI.",
+      },
       { name: "author", content: "Saphin Praja" },
       { property: "og:title", content: "Saphin Praja — Data Analyst" },
-      { property: "og:description", content: "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI." },
+      {
+        property: "og:description",
+        content:
+          "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Saphin Praja — Data Analyst" },
-      { name: "twitter:description", content: "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/1ba63e75-567a-4f3c-a5a0-b26e01a887e8" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/1ba63e75-567a-4f3c-a5a0-b26e01a887e8" },
+      {
+        name: "twitter:description",
+        content:
+          "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/1ba63e75-567a-4f3c-a5a0-b26e01a887e8",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/1ba63e75-567a-4f3c-a5a0-b26e01a887e8",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap",
+      },
       { rel: "icon", href: "/favicon-180.png", type: "image/x-icon" },
     ],
   }),

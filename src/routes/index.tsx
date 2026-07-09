@@ -16,7 +16,6 @@ import {
 import { useReveal } from "@/hooks/use-reveal";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-
 export const Route = createFileRoute("/")({
   component: Portfolio,
   head: () => ({
@@ -146,8 +145,9 @@ function Portfolio() {
               <a
                 key={n.id}
                 href={`#${n.id}`}
-                className={`rounded-md px-3 py-2 text-sm transition-colors hover:text-foreground ${active === n.id ? "text-foreground" : "text-muted-foreground"
-                  }`}
+                className={`rounded-md px-3 py-2 text-sm transition-colors hover:text-foreground ${
+                  active === n.id ? "text-foreground" : "text-muted-foreground"
+                }`}
               >
                 {n.label}
               </a>
@@ -173,7 +173,9 @@ function Portfolio() {
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" />
                 Available for junior analyst roles
               </p>
-              <h1 className="text-5xl font-bold leading-[1.05] md:text-7xl">Saphin Praja — Data Analyst</h1>
+              <h1 className="text-5xl font-bold leading-[1.05] md:text-7xl">
+                Saphin Praja — Data Analyst
+              </h1>
               <p className="mt-4 text-xl text-muted-foreground md:text-2xl">
                 Data Analyst · <span className="text-foreground">SQL</span> ·{" "}
                 <span className="text-foreground">Python</span> ·{" "}
@@ -221,10 +223,13 @@ function Portfolio() {
             </div>
             <div className="reveal space-y-6">
               <p className="text-lg leading-relaxed text-muted-foreground">
-                I'm a junior data analyst with a year of hands-on work in fintech. Day to day I pull data out of SQL, clean it in Python, and turn it into Power BI dashboards people actually open.
+                I'm a junior data analyst with a year of hands-on work in fintech. Day to day I pull
+                data out of SQL, clean it in Python, and turn it into Power BI dashboards people
+                actually open.
               </p>
               <p className="text-lg leading-relaxed text-muted-foreground">
-                Most of my work has been customer profiling, quick research questions from the business, and reporting that runs on a schedule so no one has to ask for it twice.
+                Most of my work has been customer profiling, quick research questions from the
+                business, and reporting that runs on a schedule so no one has to ask for it twice.
               </p>
               <div className="flex flex-wrap gap-3 pt-2">
                 {skillIcons.map(({ icon: Icon, label }) => (
@@ -244,7 +249,9 @@ function Portfolio() {
         <section id="experience" className="border-y border-border/60 bg-secondary/40">
           <div className="mx-auto max-w-6xl px-6 py-24">
             <div className="reveal mb-12">
-              <p className="text-sm font-medium uppercase tracking-widest text-accent">Experience</p>
+              <p className="text-sm font-medium uppercase tracking-widest text-accent">
+                Experience
+              </p>
               <h2 className="mt-2 text-3xl font-bold md:text-4xl">Where I've worked</h2>
             </div>
             <div className="reveal relative space-y-8 pl-8 md:pl-12">
@@ -311,9 +318,12 @@ function Portfolio() {
           </div>
           <div className="reveal mt-10 rounded-2xl border border-border bg-card p-6 shadow-card sm:p-8">
             <p className="text-sm font-medium uppercase tracking-widest text-accent">Guide</p>
-            <h3 className="mt-2 text-xl font-bold">Building an AML transaction monitoring script</h3>
+            <h3 className="mt-2 text-xl font-bold">
+              Building an AML transaction monitoring script
+            </h3>
             <p className="mt-2 text-muted-foreground">
-              A technical walkthrough of the same monitoring shape as my Reddit project, applied to payments data — rules, SQL, and Slack alerts.
+              A technical walkthrough of the same monitoring shape as my Reddit project, applied to
+              payments data — rules, SQL, and Slack alerts.
             </p>
             <Link
               to="/guides/aml-transaction-monitoring"
@@ -372,13 +382,22 @@ function Portfolio() {
               <p className="text-sm font-medium uppercase tracking-widest text-accent">Contact</p>
               <h2 className="mt-2 text-3xl font-bold md:text-4xl">Say hi.</h2>
               <p className="mt-4 text-lg text-muted-foreground">
-                Send a note about a role, a project, or a question. I read everything and reply within a day or two.
+                Send a note about a role, a project, or a question. I read everything and reply
+                within a day or two.
               </p>
               <div className="mt-8 flex gap-3">
                 {[
-                  { icon: Linkedin, href: "https://www.linkedin.com/in/saphinpraja/", label: "LinkedIn" },
+                  {
+                    icon: Linkedin,
+                    href: "https://www.linkedin.com/in/saphinpraja/",
+                    label: "LinkedIn",
+                  },
                   { icon: Github, href: "https://github.com/Saphin18", label: "GitHub" },
-                  { icon: Instagram, href: "https://www.instagram.com/saphin.twilight/", label: "Instagram" },
+                  {
+                    icon: Instagram,
+                    href: "https://www.instagram.com/saphin.twilight/",
+                    label: "Instagram",
+                  },
                   { icon: Mail, href: "mailto:hello@saphinpraja.com", label: "Email" },
                 ].map(({ icon: Icon, href, label }) => (
                   <a
@@ -400,7 +419,9 @@ function Portfolio() {
               className="reveal space-y-4 rounded-2xl border border-border bg-card p-8 shadow-card"
             >
               <div>
-                <label htmlFor="contact-name" className="mb-1.5 block text-sm font-medium">Name</label>
+                <label htmlFor="contact-name" className="mb-1.5 block text-sm font-medium">
+                  Name
+                </label>
                 <input
                   required
                   id="contact-name"
@@ -410,7 +431,9 @@ function Portfolio() {
                 />
               </div>
               <div>
-                <label htmlFor="contact-email" className="mb-1.5 block text-sm font-medium">Email</label>
+                <label htmlFor="contact-email" className="mb-1.5 block text-sm font-medium">
+                  Email
+                </label>
                 <input
                   required
                   type="email"
@@ -421,7 +444,9 @@ function Portfolio() {
                 />
               </div>
               <div>
-                <label htmlFor="contact-message" className="mb-1.5 block text-sm font-medium">Message</label>
+                <label htmlFor="contact-message" className="mb-1.5 block text-sm font-medium">
+                  Message
+                </label>
                 <textarea
                   required
                   id="contact-message"

@@ -85,6 +85,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI.",
       },
       { name: "author", content: "Saphin Praja" },
+      { name: "google-site-verification", content: "bkwo9RvJ1Lo8zOQVIyluumU1js64NszjKCJV6LUbncM" },
       { property: "og:title", content: "Saphin Praja — Data Analyst" },
       {
         property: "og:description",

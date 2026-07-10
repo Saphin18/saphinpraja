@@ -164,10 +164,14 @@ function Portfolio() {
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (typeof window !== "undefined" && typeof window.gtag === "function") {
+      window.gtag("event", "contact_form_submit", { event_category: "engagement" });
+    }
     setSent(true);
     (e.currentTarget as HTMLFormElement).reset();
     setTimeout(() => setSent(false), 4000);
   }
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -233,11 +237,17 @@ function Portfolio() {
                   download="Saphin_Praja_Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    if (typeof window !== "undefined" && typeof window.gtag === "function") {
+                      window.gtag("event", "download_resume", { event_category: "engagement" });
+                    }
+                  }}
                   className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-5 py-3 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
                 >
                   <Download className="h-4 w-4" />
                   Download resume
                 </a>
+
                 <a
                   href="#contact"
                   className="inline-flex items-center gap-2 rounded-md px-5 py-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"

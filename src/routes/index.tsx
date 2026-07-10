@@ -73,11 +73,13 @@ const projects = [
     title: "FX Insights Automation",
     desc: "Python script that runs daily at 3 PM, pulling FX rates, commodity prices, and market index data. Saves structured JSON to Google Drive and posts a formatted summary to Slack automatically.",
     tags: ["Python", "Google Drive API", "Slack API"],
+    url: "https://github.com/Saphin18/fx-market-insights",
   },
   {
     title: "Reddit Competitor & Remittance Monitor",
     desc: "Monitoring script that scans Reddit every 15 minutes for remittance and competitor-related discussion using keyword and semantic matching, then auto-alerts a Slack channel.",
     tags: ["Python", "Slack API"],
+    url: "https://github.com/Saphin18/reddit-brand-monitor",
   },
 ];
 
@@ -310,9 +312,16 @@ function Portfolio() {
                     </span>
                   ))}
                 </div>
-                <p className="mt-6 text-sm font-medium text-muted-foreground">
-                  Built at Xuno — details on request
-                </p>
+                <a
+                  href={p.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`View ${p.title} project on GitHub`}
+                  className="mt-6 inline-flex items-center gap-2 self-start text-sm font-medium text-accent transition-colors hover:text-foreground hover:underline"
+                >
+                  View project
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </a>
               </article>
             ))}
           </div>

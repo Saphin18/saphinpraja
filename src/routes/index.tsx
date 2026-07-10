@@ -164,10 +164,14 @@ function Portfolio() {
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (typeof window !== "undefined" && typeof window.gtag === "function") {
+      window.gtag("event", "contact_form_submit", { event_category: "engagement" });
+    }
     setSent(true);
     (e.currentTarget as HTMLFormElement).reset();
     setTimeout(() => setSent(false), 4000);
   }
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">

@@ -30,8 +30,13 @@ export const Route = createFileRoute("/")({
           name: "Saphin Praja",
           jobTitle: "Data Analyst",
           url: "https://saphinpraja.lovable.app/",
+          worksFor: {
+            "@type": "Organization",
+            name: "Xuno",
+          },
+          knowsAbout: ["SQL", "Python", "Power BI", "Excel", "Data Analysis", "Fintech"],
           sameAs: [
-            "https://www.linkedin.com/in/saphin-praja/",
+            "https://www.linkedin.com/in/saphinpraja/",
             "https://github.com/Saphin18",
             "https://www.instagram.com/saphin.twilight/",
           ],
@@ -48,9 +53,38 @@ export const Route = createFileRoute("/")({
             "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI.",
         }),
       },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          name: "FX Insights Automation",
+          creator: { "@type": "Person", name: "Saphin Praja" },
+          about: "Automated FX rate and market index reporting pipeline",
+          keywords: "Python, Google Drive API, Slack API, automation, fintech",
+          url: "https://github.com/Saphin18/fx-market-insights",
+          description:
+            "Python script that runs daily at 3 PM, pulling FX rates, commodity prices, and market index data. Saves structured JSON to Google Drive and posts a formatted summary to Slack automatically.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          name: "Reddit Competitor & Remittance Monitor",
+          creator: { "@type": "Person", name: "Saphin Praja" },
+          about: "Automated Reddit monitoring for competitor and remittance discussion",
+          keywords: "Python, Slack API, monitoring, NLP, fintech",
+          url: "https://github.com/Saphin18/reddit-brand-monitor",
+          description:
+            "Monitoring script that scans Reddit every 15 minutes for remittance and competitor-related discussion using keyword and semantic matching, then auto-alerts a Slack channel.",
+        }),
+      },
     ],
   }),
 });
+
 
 const nav = [
   { id: "about", label: "About" },

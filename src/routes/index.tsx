@@ -146,7 +146,7 @@ const domain = ["Fintech Analytics", "Customer Profiling", "Research", "Reportin
 function Portfolio() {
   useReveal();
   const [active, setActive] = useState("about");
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   useEffect(() => {
     const sections = nav.map((n) => document.getElementById(n.id)).filter(Boolean) as HTMLElement[];

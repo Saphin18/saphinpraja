@@ -484,7 +484,7 @@ function Portfolio() {
                     href: "https://www.instagram.com/saphin.twilight/",
                     label: "Instagram",
                   },
-                  { icon: Mail, href: "mailto:hello@saphinpraja.com", label: "Email" },
+                  { icon: Mail, href: "mailto:prajasaphin18@gmail.com", label: "Email" },
                 ].map(({ icon: Icon, href, label }) => (
                   <a
                     key={label}

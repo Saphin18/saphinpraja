@@ -22,7 +22,7 @@ const quickQuestions = [
   {
     question: "How can I contact you?",
     answer:
-      "You can use the contact form on this page, connect with Saphin on LinkedIn, or email hello@saphinpraja.com.",
+      "You can use the contact form on this page, connect with Saphin on LinkedIn, or email prajasaphin18@gmail.com.",
   },
 ];
 

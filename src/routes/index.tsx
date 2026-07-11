@@ -209,7 +209,7 @@ function Portfolio() {
         <section id="top" className="bg-hero">
           <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
             <div className="max-w-3xl">
-              <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
+              <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-200/60 bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800">
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" />
                 Available for junior analyst roles
               </p>
@@ -250,7 +250,7 @@ function Portfolio() {
 
                 <a
                   href="#contact"
-                  className="inline-flex items-center gap-2 rounded-md px-5 py-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-5 py-3 text-sm font-medium transition hover:border-accent hover:bg-accent/10 hover:text-accent active:scale-[0.98]"
                 >
                   Contact me
                 </a>

@@ -1,10 +1,7 @@
-import { MessageCircle, Send, X } from "lucide-react";
-import { useEffect, useState, type FormEvent } from "react";
+import { MessageCircle, X } from "lucide-react";
+import { useState } from "react";
 
 type ChatMessage = { role: "visitor" | "assistant"; text: string };
-
-const messageLimit = 10;
-const sessionKey = "portfolio-chat-message-count";
 
 const quickQuestions = [
   {
@@ -32,59 +29,9 @@ const quickQuestions = [
 export function PortfolioChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState("");
-  const [isSending, setIsSending] = useState(false);
-  const [messageCount, setMessageCount] = useState(0);
-
-  useEffect(() => {
-    const savedCount = Number(sessionStorage.getItem(sessionKey) ?? "0");
-    setMessageCount(Number.isFinite(savedCount) ? savedCount : 0);
-  }, []);
 
   function addQuickAnswer(answer: string) {
     setMessages((current) => [...current, { role: "assistant", text: answer }]);
-  }
-
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const question = input.trim();
-    if (!question || isSending) return;
-
-    if (messageCount >= messageLimit) {
-      setMessages((current) => [
-        ...current,
-        { role: "assistant", text: "You have reached this session's chat limit. Please contact Saphin directly for anything else." },
-      ]);
-      return;
-    }
-
-    const nextCount = messageCount + 1;
-    setMessageCount(nextCount);
-    sessionStorage.setItem(sessionKey, String(nextCount));
-    setMessages((current) => [...current, { role: "visitor", text: question }]);
-    setInput("");
-    setIsSending(true);
-
-    try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      if (!supabaseUrl) throw new Error("Chat is not configured yet.");
-
-      const response = await fetch(`${supabaseUrl}/functions/v1/portfolio-chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: question }),
-      });
-      const body = (await response.json().catch(() => null)) as { answer?: string; error?: string } | null;
-      if (!response.ok || !body?.answer) throw new Error(body?.error ?? "I couldn't answer that right now.");
-      setMessages((current) => [...current, { role: "assistant", text: body.answer }]);
-    } catch (error) {
-      setMessages((current) => [
-        ...current,
-        { role: "assistant", text: error instanceof Error ? error.message : "I couldn't answer that right now." },
-      ]);
-    } finally {
-      setIsSending(false);
-    }
   }
 
   return (
@@ -113,7 +60,7 @@ export function PortfolioChat() {
             {messages.length === 0 && (
               <>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  Hi! Ask a quick question, or type one below to learn about Saphin's background.
+                  Hi! Choose a question to learn about Saphin's background.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {quickQuestions.map(({ question, answer }) => (
@@ -142,33 +89,7 @@ export function PortfolioChat() {
                 {message.text}
               </p>
             ))}
-            {isSending && (
-              <p className="w-fit rounded-xl bg-secondary px-3 py-2 text-sm text-muted-foreground" aria-live="polite">
-                Typing<span className="animate-pulse">...</span>
-              </p>
-            )}
           </div>
-
-          <form onSubmit={onSubmit} className="flex gap-2 border-t border-border p-3">
-            <input
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              maxLength={500}
-              disabled={isSending}
-              placeholder="Ask about Saphin..."
-              className="min-w-0 flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"
-              aria-label="Ask a question"
-            />
-            <button
-              type="submit"
-              disabled={isSending || !input.trim()}
-              className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground transition-opacity disabled:opacity-50"
-              aria-label="Send question"
-            >
-              <Send className="h-4 w-4" />
-            </button>
-          </form>
-          <p className="px-3 pb-3 text-xs text-muted-foreground">{messageLimit - messageCount} AI messages left this session</p>
         </section>
       )}
 

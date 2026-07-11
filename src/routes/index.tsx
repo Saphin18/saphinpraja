@@ -162,15 +162,37 @@ function Portfolio() {
     return () => io.disconnect();
   }, []);
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (typeof window !== "undefined" && typeof window.gtag === "function") {
-      window.gtag("event", "contact_form_submit", { event_category: "engagement" });
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const payload = {
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      message: String(formData.get("message") ?? ""),
+      website: String(formData.get("website") ?? ""),
+    };
+
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("send failed");
+      if (typeof window !== "undefined" && typeof window.gtag === "function") {
+        window.gtag("event", "contact_form_submit", { event_category: "engagement" });
+      }
+      setStatus("sent");
+      form.reset();
+      setTimeout(() => setStatus("idle"), 4000);
+    } catch {
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 5000);
     }
-    setSent(true);
-    (e.currentTarget as HTMLFormElement).reset();
-    setTimeout(() => setSent(false), 4000);
   }
+
 
 
   return (

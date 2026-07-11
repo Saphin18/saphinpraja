@@ -147,6 +147,7 @@ function Portfolio() {
   useReveal();
   const [active, setActive] = useState("about");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const sections = nav.map((n) => document.getElementById(n.id)).filter(Boolean) as HTMLElement[];
@@ -174,21 +175,26 @@ function Portfolio() {
     };
 
     setStatus("sending");
+    setErrorMessage("");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("send failed");
+      if (!res.ok) {
+        const body = (await res.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(body?.error ?? "Unable to send your message.");
+      }
       if (typeof window !== "undefined" && typeof window.gtag === "function") {
         window.gtag("event", "contact_form_submit", { event_category: "engagement" });
       }
       setStatus("sent");
       form.reset();
       setTimeout(() => setStatus("idle"), 4000);
-    } catch {
+    } catch (error) {
       setStatus("error");
+      setErrorMessage(error instanceof Error ? error.message : "Unable to send your message.");
       setTimeout(() => setStatus("idle"), 5000);
     }
   }
@@ -544,7 +550,7 @@ function Portfolio() {
               </div>
               {status === "error" && (
                 <p className="text-sm text-destructive" role="alert">
-                  Something went wrong sending your message. Please try again or email me directly.
+                  {errorMessage} Please try again or email me directly.
                 </p>
               )}
               <button

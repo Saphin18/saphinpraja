@@ -30,9 +30,8 @@ export const Route = createFileRoute("/api/contact")({
           return Response.json({ ok: true });
         }
 
-        const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;
         const RESEND_API_KEY = process.env.RESEND_API_KEY;
-        if (!LOVABLE_API_KEY || !RESEND_API_KEY) {
+        if (!RESEND_API_KEY) {
           return Response.json({ error: "Email not configured" }, { status: 500 });
         }
 
@@ -46,15 +45,15 @@ export const Route = createFileRoute("/api/contact")({
           .replace(/\n/g, "<br/>");
 
         try {
-          const res = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
+          const res = await fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${LOVABLE_API_KEY}`,
-              "X-Connection-Api-Key": RESEND_API_KEY,
+              Authorization: `Bearer ${RESEND_API_KEY}`,
+              "User-Agent": "saphinpraja-contact-form/1.0",
             },
             body: JSON.stringify({
-              from: "Portfolio Contact <onboarding@resend.dev>",
+              from: process.env.CONTACT_FROM_EMAIL ?? "Portfolio Contact <onboarding@resend.dev>",
               to: ["prajasaphin18@gmail.com"],
               reply_to: email,
               subject: `New portfolio contact from ${safeName}`,
@@ -71,7 +70,11 @@ export const Route = createFileRoute("/api/contact")({
           if (!res.ok) {
             const errText = await res.text();
             console.error(`Resend send failed [${res.status}]: ${errText}`);
-            return Response.json({ error: "Failed to send" }, { status: 502 });
+            const error =
+              res.status === 401 || res.status === 403
+                ? "Resend rejected the email configuration. Check the API key and verified sender domain."
+                : "Email delivery failed. Please try again shortly.";
+            return Response.json({ error }, { status: 502 });
           }
 
           return Response.json({ ok: true });

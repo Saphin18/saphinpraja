@@ -531,12 +531,34 @@ function Portfolio() {
                   className="w-full resize-none rounded-lg border border-input bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"
                 />
               </div>
+              {/* Honeypot field — hidden from users, bots fill it in */}
+              <div aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
+                <label htmlFor="contact-website">Website</label>
+                <input
+                  id="contact-website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
+              {status === "error" && (
+                <p className="text-sm text-destructive" role="alert">
+                  Something went wrong sending your message. Please try again or email me directly.
+                </p>
+              )}
               <button
                 type="submit"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5"
+                disabled={status === "sending"}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5 disabled:opacity-70"
               >
-                {sent ? "Thanks — I'll be in touch" : "Send message"}
+                {status === "sending"
+                  ? "Sending…"
+                  : status === "sent"
+                    ? "Thanks — I'll be in touch"
+                    : "Send message"}
               </button>
+
             </form>
           </div>
         </section>

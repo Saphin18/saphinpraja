@@ -178,11 +178,7 @@ function Portfolio() {
     setStatus("sending");
     setErrorMessage("");
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      if (!supabaseUrl) {
-        throw new Error("Contact form is not configured yet.");
-      }
-      const res = await fetch(`${supabaseUrl}/functions/v1/contact`, {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

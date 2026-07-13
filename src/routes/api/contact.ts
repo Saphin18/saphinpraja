@@ -73,12 +73,47 @@ export const Route = createFileRoute("/api/contact")({
         if (!response.ok) {
           const errorBody = await response.text();
           console.error(`Resend send failed [${response.status}]: ${errorBody}`);
-          const error =
-            response.status === 401 || response.status === 403
-              ? "Resend rejected the API key or sender domain."
-              : "Email delivery failed. Please try again shortly.";
+
+          let resendName = "";
+          let resendMessage = "";
+          try {
+            const parsed = JSON.parse(errorBody);
+            resendName = typeof parsed?.name === "string" ? parsed.name : "";
+            resendMessage = typeof parsed?.message === "string" ? parsed.message : "";
+          } catch {
+            /* non-JSON error body */
+          }
+
+          // Map Resend error names → clear user-facing messages.
+          // https://resend.com/docs/api-reference/errors
+          let error: string;
+          if (
+            resendName === "missing_api_key" ||
+            resendName === "invalid_api_key" ||
+            resendName === "restricted_api_key" ||
+            resendName === "validation_error" && /api key/i.test(resendMessage) ||
+            response.status === 401
+          ) {
+            error = "Resend rejected the API key. It's missing, invalid, or lacks sending permission — please recreate it in Resend and update the RESEND_API_KEY secret.";
+          } else if (
+            resendName === "invalid_from_address" ||
+            resendName === "domain_not_verified" ||
+            resendName === "not_found" && /domain/i.test(resendMessage) ||
+            /domain is not verified|from address|sender/i.test(resendMessage)
+          ) {
+            error = "Resend rejected the sender domain. The 'From' address isn't a verified domain in your Resend account — verify saphinpraja.com in Resend, or send from onboarding@resend.dev to your Resend account owner's email only.";
+          } else if (resendName === "validation_error") {
+            error = `Resend rejected the request: ${resendMessage || "validation error"}.`;
+          } else if (response.status === 403) {
+            error = "Resend rejected the request (forbidden). Likely the API key isn't allowed to send from this domain.";
+          } else if (response.status === 429) {
+            error = "Resend rate limit reached. Please try again in a moment.";
+          } else {
+            error = "Email delivery failed. Please try again shortly.";
+          }
           return json({ error }, 502);
         }
+
 
         return json({ ok: true });
       },

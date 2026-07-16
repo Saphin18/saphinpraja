@@ -102,13 +102,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         property: "og:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/1ba63e75-567a-4f3c-a5a0-b26e01a887e8",
+        content: "https://saphinpraja.vercel.app/og-image.png",
       },
       {
         name: "twitter:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/1ba63e75-567a-4f3c-a5a0-b26e01a887e8",
+        content: "https://saphinpraja.vercel.app/og-image.png",
       },
     ],
     links: [

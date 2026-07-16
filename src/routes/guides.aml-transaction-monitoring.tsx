@@ -23,14 +23,14 @@ export const Route = createFileRoute("/guides/aml-transaction-monitoring")({
       { property: "og:type", content: "article" },
       {
         property: "og:url",
-        content: "https://saphinpraja.lovable.app/guides/aml-transaction-monitoring",
+        content: "https://saphinpraja.vercel.app/guides/aml-transaction-monitoring",
       },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       {
         rel: "canonical",
-        href: "https://saphinpraja.lovable.app/guides/aml-transaction-monitoring",
+        href: "https://saphinpraja.vercel.app/guides/aml-transaction-monitoring",
       },
     ],
     scripts: [
@@ -43,8 +43,8 @@ export const Route = createFileRoute("/guides/aml-transaction-monitoring")({
           author: { "@type": "Person", name: "Saphin Praja" },
           description:
             "A practical guide to building a basic AML transaction monitoring script with Python and SQL — rules, thresholds, and alerting.",
-          url: "https://saphinpraja.lovable.app/guides/aml-transaction-monitoring",
-          mainEntityOfPage: "https://saphinpraja.lovable.app/guides/aml-transaction-monitoring",
+          url: "https://saphinpraja.vercel.app/guides/aml-transaction-monitoring",
+          mainEntityOfPage: "https://saphinpraja.vercel.app/guides/aml-transaction-monitoring",
         }),
       },
     ],

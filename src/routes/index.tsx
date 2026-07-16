@@ -20,8 +20,8 @@ import { PortfolioChat } from "@/components/portfolio-chat";
 export const Route = createFileRoute("/")({
   component: Portfolio,
   head: () => ({
-    links: [{ rel: "canonical", href: "https://saphinpraja.lovable.app/" }],
-    meta: [{ property: "og:url", content: "https://saphinpraja.lovable.app/" }],
+    links: [{ rel: "canonical", href: "https://saphinpraja.vercel.app/" }],
+    meta: [{ property: "og:url", content: "https://saphinpraja.vercel.app/" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
           "@type": "Person",
           name: "Saphin Praja",
           jobTitle: "Data Analyst",
-          url: "https://saphinpraja.lovable.app/",
+          url: "https://saphinpraja.vercel.app/",
           worksFor: {
             "@type": "Organization",
             name: "Xuno",
@@ -49,7 +49,7 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "Saphin Praja Portfolio",
-          url: "https://saphinpraja.lovable.app/",
+          url: "https://saphinpraja.vercel.app/",
           description:
             "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI.",
         }),

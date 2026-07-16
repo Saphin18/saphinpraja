@@ -168,21 +168,26 @@ function Portfolio() {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
+
+    // Honeypot check: if website is filled, silently discard spam
+    const website = String(formData.get("website") ?? "");
+    if (website) {
+      setStatus("sent");
+      form.reset();
+      setTimeout(() => setStatus("idle"), 4000);
+      return;
+    }
+
     const payload = {
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
       message: String(formData.get("message") ?? ""),
-      website: String(formData.get("website") ?? ""),
     };
 
     setStatus("sending");
     setErrorMessage("");
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      if (!supabaseUrl) {
-        throw new Error("Contact form is not configured yet.");
-      }
-      const res = await fetch(`${supabaseUrl}/functions/v1/contact`, {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

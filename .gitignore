@@ -32,3 +32,8 @@ dist-ssr
 *.sw?
 
 src/routeTree.gen.ts
+
+# Environment variables
+.env
+.env.*
+!.env.example

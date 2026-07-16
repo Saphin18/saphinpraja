@@ -39,7 +39,7 @@ export const Route = createFileRoute("/")({
           sameAs: [
             "https://www.linkedin.com/in/saphinpraja/",
             "https://github.com/Saphin18",
-            "https://www.instagram.com/saphin.twilight/",
+            "https://www.instagram.com/twilightsaphin/",
           ],
         }),
       },
@@ -486,7 +486,7 @@ function Portfolio() {
                   { icon: Github, href: "https://github.com/Saphin18", label: "GitHub" },
                   {
                     icon: Instagram,
-                    href: "https://www.instagram.com/saphin.twilight/",
+                    href: "https://www.instagram.com/twilightsaphin/",
                     label: "Instagram",
                   },
                   { icon: Mail, href: "mailto:prajasaphin18@gmail.com", label: "Email" },

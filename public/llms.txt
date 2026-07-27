@@ -4,7 +4,7 @@
 
 ## Pages
 
-- [Home](/): About, experience at Xuno, projects (FX Insights Automation, Reddit Competitor & Remittance Monitor), skills, and contact.
+- [Home](/): About, experience at Xuno, projects (FX Insights Automation, Reddit Competitor & Remittance Monitor, Saphin AI), skills, and contact.
 
 ## Guides
 

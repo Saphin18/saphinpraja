@@ -82,6 +82,20 @@ export const Route = createFileRoute("/")({
             "Monitoring script that scans Reddit every 15 minutes for remittance and competitor-related discussion using keyword and semantic matching, then auto-alerts a Slack channel.",
         }),
       },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          name: "Saphin AI",
+          creator: { "@type": "Person", name: "Saphin Praja" },
+          about: "Privacy-first AI companion app for Android",
+          keywords: "Expo, React Native, TypeScript, FastAPI, Supabase, Groq",
+          url: "https://github.com/Saphin18/ai-companion",
+          description:
+            "A warm, privacy-first AI companion app for Android — voice, images, and documents, all in one chat. Built as a genuine, non-manipulative companion with no streaks, no guilt-tripping, and no \"you haven't opened me in 3 days\" notifications.",
+        }),
+      },
     ],
   }),
 });
@@ -115,6 +129,12 @@ const projects = [
     desc: "Monitoring script that scans Reddit every 15 minutes for remittance and competitor-related discussion using keyword and semantic matching, then auto-alerts a Slack channel.",
     tags: ["Python", "Slack API"],
     url: "https://github.com/Saphin18/reddit-brand-monitor",
+  },
+  {
+    title: "Saphin AI",
+    desc: "A warm, privacy-first AI companion app for Android — voice, images, and documents, all in one chat. Built as a genuine, non-manipulative companion with no streaks, no guilt-tripping, and no \"you haven't opened me in 3 days\" notifications.",
+    tags: ["Expo", "React Native", "TypeScript", "FastAPI", "Supabase", "Groq"],
+    url: "https://github.com/Saphin18/ai-companion",
   },
 ];
 
@@ -394,16 +414,18 @@ function Portfolio() {
                     </span>
                   ))}
                 </div>
-                <a
-                  href={p.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`View ${p.title} project on GitHub`}
-                  className="mt-6 inline-flex items-center gap-2 self-start text-sm font-medium text-accent transition-colors hover:text-foreground hover:underline"
-                >
-                  View project
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </a>
+                {p.url && (
+                  <a
+                    href={p.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`View ${p.title} project on GitHub`}
+                    className="mt-6 inline-flex items-center gap-2 self-start text-sm font-medium text-accent transition-colors hover:text-foreground hover:underline"
+                  >
+                    View project
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </a>
+                )}
               </article>
             ))}
           </div>

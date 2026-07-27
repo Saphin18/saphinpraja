@@ -17,7 +17,7 @@ const quickQuestions = [
   {
     question: "What have you built?",
     answer:
-      "He built an FX Insights Automation pipeline that gathers market data, saves structured results to Google Drive, and posts Slack summaries. He also built a Reddit competitor and remittance monitor that scans discussions and alerts Slack.",
+      "He built an FX Insights Automation pipeline that gathers market data, saves structured results to Google Drive, and posts Slack summaries. He also built a Reddit competitor and remittance monitor that scans discussions and alerts Slack, and Saphin AI, a privacy-first AI companion app for Android built with Expo, React Native, and FastAPI.",
   },
   {
     question: "How can I contact you?",

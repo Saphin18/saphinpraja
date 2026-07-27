@@ -96,6 +96,20 @@ export const Route = createFileRoute("/")({
             "A warm, privacy-first AI companion app for Android — voice, images, and documents, all in one chat. Built as a genuine, non-manipulative companion with no streaks, no guilt-tripping, and no \"you haven't opened me in 3 days\" notifications.",
         }),
       },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          name: "Daily Reporting Automation",
+          creator: { "@type": "Person", name: "Saphin Praja" },
+          about: "End-to-end BI pipeline for daily sales reporting",
+          keywords: "Python, Mixpanel API, Google Sheets API, Slack API, Matplotlib",
+          url: "https://github.com/Saphin18/daily-reporting-automation",
+          description:
+            "End-to-end BI pipeline that pulls Mixpanel analytics, generates 8 dark-themed dashboards from sales data, writes to Google Sheets via API, and posts a consolidated daily report with images to Slack — replacing 45 minutes of manual work.",
+        }),
+      },
     ],
   }),
 });
@@ -135,6 +149,12 @@ const projects = [
     desc: "A warm, privacy-first AI companion app for Android — voice, images, and documents, all in one chat. Built as a genuine, non-manipulative companion with no streaks, no guilt-tripping, and no \"you haven't opened me in 3 days\" notifications.",
     tags: ["Expo", "React Native", "TypeScript", "FastAPI", "Supabase", "Groq"],
     url: "https://github.com/Saphin18/ai-companion",
+  },
+  {
+    title: "Daily Reporting Automation",
+    desc: "End-to-end BI pipeline that pulls Mixpanel analytics, generates 8 dark-themed dashboards from sales data, writes to Google Sheets via API, and posts a consolidated daily report with images to Slack — replacing 45 minutes of manual work.",
+    tags: ["Python", "Mixpanel API", "Google Sheets API", "Slack API", "Matplotlib"],
+    url: "https://github.com/Saphin18/daily-reporting-automation",
   },
 ];
 

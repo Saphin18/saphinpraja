@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://saphinpraja.lovable.app/sitemap.xml
+Sitemap: https://saphinpraja.vercel.app/sitemap.xml

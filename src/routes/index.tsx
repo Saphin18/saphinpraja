@@ -51,7 +51,7 @@ export const Route = createFileRoute("/")({
           name: "Saphin Praja Portfolio",
           url: "https://saphinpraja.vercel.app/",
           description:
-            "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI.",
+            "Saphin Praja is a junior data analyst with fintech experience at Xuno, building automation, dashboards, and monitoring tools with SQL, Python, and Power BI.",
         }),
       },
       {

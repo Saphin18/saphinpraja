@@ -78,27 +78,29 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Saphin Praja — Data Analyst" },
+      { title: "Saphin Praja — Data Analyst | SQL, Python & Power BI Portfolio" },
       {
         name: "description",
         content:
-          "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI.",
+          "Saphin Praja is a junior data analyst with fintech experience at Xuno, building automation, dashboards, and monitoring tools with SQL, Python, and Power BI.",
       },
       { name: "author", content: "Saphin Praja" },
+      { name: "robots", content: "index, follow" },
       { name: "google-site-verification", content: "bkwo9RvJ1Lo8zOQVIyluumU1js64NszjKCJV6LUbncM" },
-      { property: "og:title", content: "Saphin Praja — Data Analyst" },
+      { property: "og:title", content: "Saphin Praja — Data Analyst | SQL, Python & Power BI Portfolio" },
       {
         property: "og:description",
         content:
-          "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI.",
+          "Saphin Praja is a junior data analyst with fintech experience at Xuno, building automation, dashboards, and monitoring tools with SQL, Python, and Power BI.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Saphin Praja Portfolio" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Saphin Praja — Data Analyst" },
+      { name: "twitter:title", content: "Saphin Praja — Data Analyst | SQL, Python & Power BI Portfolio" },
       {
         name: "twitter:description",
         content:
-          "Portfolio of Saphin Praja, a junior data analyst with fintech experience. SQL, Python, Power BI.",
+          "Saphin Praja is a junior data analyst with fintech experience at Xuno, building automation, dashboards, and monitoring tools with SQL, Python, and Power BI.",
       },
       {
         property: "og:image",

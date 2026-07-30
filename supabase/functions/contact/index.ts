@@ -1,5 +1,6 @@
+// @ts-nocheck — Deno runtime (Supabase Edge Function), not covered by tsconfig.json
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "https://saphinpraja.lovable.app",
+  "Access-Control-Allow-Origin": "https://saphinpraja.com.np",
   "Access-Control-Allow-Headers": "content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };

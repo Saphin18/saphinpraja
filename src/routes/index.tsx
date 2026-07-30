@@ -20,8 +20,8 @@ import { PortfolioChat } from "@/components/portfolio-chat";
 export const Route = createFileRoute("/")({
   component: Portfolio,
   head: () => ({
-    links: [{ rel: "canonical", href: "https://saphinpraja.vercel.app/" }],
-    meta: [{ property: "og:url", content: "https://saphinpraja.vercel.app/" }],
+    links: [{ rel: "canonical", href: "https://saphinpraja.com.np/" }],
+    meta: [{ property: "og:url", content: "https://saphinpraja.com.np/" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
           "@type": "Person",
           name: "Saphin Praja",
           jobTitle: "Data Analyst",
-          url: "https://saphinpraja.vercel.app/",
+          url: "https://saphinpraja.com.np/",
           worksFor: {
             "@type": "Organization",
             name: "Xuno",
@@ -49,7 +49,7 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "Saphin Praja Portfolio",
-          url: "https://saphinpraja.vercel.app/",
+          url: "https://saphinpraja.com.np/",
           description:
             "Saphin Praja is a junior data analyst with fintech experience at Xuno, building automation, dashboards, and monitoring tools with SQL, Python, and Power BI.",
         }),

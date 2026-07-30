@@ -104,11 +104,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         property: "og:image",
-        content: "https://saphinpraja.vercel.app/og-image.png",
+        content: "https://saphinpraja.com.np/og-image.png",
       },
       {
         name: "twitter:image",
-        content: "https://saphinpraja.vercel.app/og-image.png",
+        content: "https://saphinpraja.com.np/og-image.png",
       },
     ],
     links: [

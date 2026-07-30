@@ -31,6 +31,11 @@ export const Route = createFileRoute("/")({
           name: "Saphin Praja",
           jobTitle: "Data Analyst",
           url: "https://saphinpraja.com.np/",
+          image: "https://saphinpraja.com.np/og-image.png",
+          email: "mailto:prajasaphin18@gmail.com",
+          description:
+            "Junior data analyst with fintech experience at Xuno, building automation, dashboards, and monitoring tools with SQL, Python, and Power BI.",
+          mainEntityOfPage: "https://saphinpraja.com.np/",
           worksFor: {
             "@type": "Organization",
             name: "Xuno",

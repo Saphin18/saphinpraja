@@ -78,29 +78,34 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Saphin Praja — Data Analyst | SQL, Python & Power BI Portfolio" },
+      { title: "Saphin Praja — Data Analyst in Nepal | SQL, Python & Power BI Portfolio" },
       {
         name: "description",
         content:
-          "Saphin Praja is a junior data analyst with fintech experience at Xuno, building automation, dashboards, and monitoring tools with SQL, Python, and Power BI.",
+          "Saphin Praja is a data analyst in Nepal based in Kathmandu, working in fintech with SQL, Python, and Power BI to build dashboards and automation.",
+      },
+      {
+        name: "keywords",
+        content:
+          "data analyst Nepal, data analyst in Nepal, junior data analyst Nepal, SQL Python Power BI portfolio Nepal, data analyst Kathmandu, fintech data analyst Nepal, Saphin Praja data analyst",
       },
       { name: "author", content: "Saphin Praja" },
       { name: "robots", content: "index, follow" },
       { name: "google-site-verification", content: "bkwo9RvJ1Lo8zOQVIyluumU1js64NszjKCJV6LUbncM" },
-      { property: "og:title", content: "Saphin Praja — Data Analyst | SQL, Python & Power BI Portfolio" },
+      { property: "og:title", content: "Saphin Praja — Data Analyst in Nepal | SQL, Python & Power BI Portfolio" },
       {
         property: "og:description",
         content:
-          "Saphin Praja is a junior data analyst with fintech experience at Xuno, building automation, dashboards, and monitoring tools with SQL, Python, and Power BI.",
+          "Saphin Praja is a data analyst in Nepal based in Kathmandu, working in fintech with SQL, Python, and Power BI to build dashboards and automation.",
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Saphin Praja Portfolio" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Saphin Praja — Data Analyst | SQL, Python & Power BI Portfolio" },
+      { name: "twitter:title", content: "Saphin Praja — Data Analyst in Nepal | SQL, Python & Power BI Portfolio" },
       {
         name: "twitter:description",
         content:
-          "Saphin Praja is a junior data analyst with fintech experience at Xuno, building automation, dashboards, and monitoring tools with SQL, Python, and Power BI.",
+          "Saphin Praja is a data analyst in Nepal based in Kathmandu, working in fintech with SQL, Python, and Power BI to build dashboards and automation.",
       },
       {
         property: "og:image",
@@ -121,7 +126,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap",
       },
-      { rel: "icon", href: "/favicon-180.png", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "canonical", href: "https://saphinpraja.com.np/" },
     ],
   }),

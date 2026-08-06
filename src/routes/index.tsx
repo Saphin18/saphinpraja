@@ -34,7 +34,12 @@ export const Route = createFileRoute("/")({
           image: "https://saphinpraja.com.np/og-image.png",
           email: "mailto:prajasaphin18@gmail.com",
           description:
-            "Junior data analyst with fintech experience at Xuno, building automation, dashboards, and monitoring tools with SQL, Python, and Power BI.",
+            "Junior data analyst in Nepal with fintech experience at Xuno, building automation, dashboards, and monitoring tools with SQL, Python, and Power BI.",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Kathmandu",
+            addressCountry: "Nepal",
+          },
           mainEntityOfPage: "https://saphinpraja.com.np/",
           worksFor: {
             "@type": "Organization",
@@ -297,10 +302,10 @@ function Portfolio() {
                 Available for junior analyst roles
               </p>
               <h1 className="text-5xl font-bold leading-[1.05] md:text-7xl">
-                Saphin Praja — Data Analyst
+                Saphin Praja — Data Analyst in Nepal
               </h1>
               <p className="mt-4 text-xl text-muted-foreground md:text-2xl">
-                Data Analyst · <span className="text-foreground">SQL</span> ·{" "}
+                Data Analyst in Kathmandu, Nepal · <span className="text-foreground">SQL</span> ·{" "}
                 <span className="text-foreground">Python</span> ·{" "}
                 <span className="text-foreground">Power BI</span>
               </p>
@@ -352,9 +357,9 @@ function Portfolio() {
             </div>
             <div className="reveal space-y-6">
               <p className="text-lg leading-relaxed text-muted-foreground">
-                I'm a junior data analyst with a year of hands-on work in fintech. Day to day I pull
-                data out of SQL, clean it in Python, and turn it into Power BI dashboards people
-                actually open.
+                I'm a junior data analyst based in Kathmandu, Nepal, with a year of hands-on work in
+                fintech. Day to day I pull data out of SQL, clean it in Python, and turn it into
+                Power BI dashboards people actually open.
               </p>
               <p className="text-lg leading-relaxed text-muted-foreground">
                 Most of my work has been customer profiling, quick research questions from the

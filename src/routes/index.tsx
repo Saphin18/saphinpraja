@@ -459,22 +459,41 @@ function Portfolio() {
               </article>
             ))}
           </div>
-          <div className="reveal mt-10 rounded-2xl border border-border bg-card p-6 shadow-card sm:p-8">
-            <p className="text-sm font-medium uppercase tracking-widest text-accent">Guide</p>
-            <h3 className="mt-2 text-xl font-bold">
-              Building an AML transaction monitoring script
-            </h3>
-            <p className="mt-2 text-muted-foreground">
-              A technical walkthrough of the same monitoring shape as my Reddit project, applied to
-              payments data — rules, SQL, and Slack alerts.
-            </p>
-            <Link
-              to="/guides/aml-transaction-monitoring"
-              className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-accent hover:underline"
-            >
-              Read the guide
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+          <div className="reveal mt-10 grid gap-6 sm:grid-cols-2">
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-card sm:p-8">
+              <p className="text-sm font-medium uppercase tracking-widest text-accent">Guide</p>
+              <h3 className="mt-2 text-xl font-bold">
+                Building Saphin AI: an AI companion app
+              </h3>
+              <p className="mt-2 text-muted-foreground">
+                The architecture behind Saphin AI — a swappable AI provider layer, JWT/JWKS auth,
+                two-tier memory, and a hybrid approach to proactive notifications.
+              </p>
+              <Link
+                to="/guides/saphin-ai"
+                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-accent hover:underline"
+              >
+                Read the guide
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-card sm:p-8">
+              <p className="text-sm font-medium uppercase tracking-widest text-accent">Guide</p>
+              <h3 className="mt-2 text-xl font-bold">
+                Building FX-Insight: daily FX market data automation
+              </h3>
+              <p className="mt-2 text-muted-foreground">
+                A technical walkthrough of the script behind FX Insights Automation — TradingView
+                websockets, FII/DII scraping, and Excel, Slack, and Drive delivery.
+              </p>
+              <Link
+                to="/guides/fx-insight"
+                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-accent hover:underline"
+              >
+                Read the guide
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </section>
 

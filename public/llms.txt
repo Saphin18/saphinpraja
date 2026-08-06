@@ -8,4 +8,5 @@
 
 ## Guides
 
-- [Building an AML Transaction Monitoring Script in Python & SQL](/guides/aml-transaction-monitoring): Practical walkthrough of a basic AML transaction monitoring script — rules, SQL window functions, Python loop, Slack alerts.
+- [Building Saphin AI: An AI Companion App](/guides/saphin-ai): Technical walkthrough of Saphin AI's architecture — the AI provider abstraction layer, Supabase JWT/JWKS auth, two-tier memory, hybrid proactivity, attachment handling, and the shared Expo/Expo Web codebase.
+- [Building FX-Insight: Daily FX Market Data Automation](/guides/fx-insight): Technical walkthrough of the FX-Insight script — TradingView websocket candle fetching, session-close date handling, FII/DII scraping with fallbacks, openpyxl Excel writing, and Slack/Drive delivery.

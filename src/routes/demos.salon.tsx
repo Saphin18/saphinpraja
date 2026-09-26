@@ -12,14 +12,16 @@ import {
   Sparkles,
   Star,
 } from "lucide-react";
-import { DemoBanner, demoHead } from "@/components/demo-banner";
+import { DemoBanner, demoBusiness, demoHead, validateDemoSearch } from "@/components/demo-banner";
 
 export const Route = createFileRoute("/demos/salon")({
-  head: () => {
+  validateSearch: validateDemoSearch,
+  head: ({ match }) => {
     const base = demoHead(
       "/demos/salon",
       "Glow Studio — Salon Booking Website Demo",
       "Sample salon website by Saphin Praja: services with prices, stylist profiles, gallery, reviews, and online appointment booking.",
+      match.search.n,
     );
     return {
       ...base,
@@ -207,6 +209,12 @@ function nextDays(n: number): Day[] {
 const SLIDE_MS = 4500;
 
 function Salon() {
+  const biz = demoBusiness(
+    Route.useSearch(),
+    { name: "Glow Studio", area: "Manahari, Makwanpur", address: "Main Road, Manahari, Makwanpur" },
+    "#book",
+  );
+  const town = biz.area.split(",")[0];
   const [slide, setSlide] = useState(0);
   const [group, setGroup] = useState("All");
   const [serviceId, setServiceId] = useState("facial");
@@ -256,13 +264,13 @@ function Salon() {
         @media (prefers-reduced-motion: reduce) { .sln-rise, .sln-float { animation: none !important; } }
       `}</style>
 
-      <DemoBanner />
+      <DemoBanner forName={biz.personalised ? biz.name : undefined} />
 
       <header className="sticky top-0 z-40 border-b border-[#1f2a24]/10 bg-[#f7f4ef]/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <span className="sln-serif flex items-center gap-2 text-2xl font-semibold">
             <Sparkles className="h-5 w-5 text-[#b08d57]" />
-            Glow Studio
+            {biz.name}
           </span>
           <nav className="hidden gap-8 text-sm text-[#1f2a24]/70 md:flex">
             <a href="#services" className="hover:text-[#1f2a24]">
@@ -305,8 +313,8 @@ function Salon() {
               className="sln-rise mt-6 max-w-md text-lg text-[#1f2a24]/70"
               style={{ animationDelay: "200ms" }}
             >
-              A calm, beautiful salon in Manahari. Expert stylists, premium products, and the
-              easiest online booking in town.
+              A calm, beautiful salon in {town}. Expert stylists, premium products, and the easiest
+              online booking in town.
             </p>
             <div className="sln-rise mt-9 flex flex-wrap gap-3" style={{ animationDelay: "300ms" }}>
               <a
@@ -455,7 +463,7 @@ function Salon() {
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-24 md:grid-cols-2">
           <div className="order-2 md:order-1">
             <p className="text-sm font-medium uppercase tracking-[0.3em] text-[#d8bd8a]">
-              The Glow promise
+              {biz.personalised ? "Our promise" : "The Glow promise"}
             </p>
             <h2 className="mt-3 text-5xl font-semibold">Your hour of calm.</h2>
             <ul className="mt-8 space-y-4 text-white/80">
@@ -477,7 +485,7 @@ function Salon() {
           <div className="order-1 grid grid-cols-2 gap-4 md:order-2">
             <img
               src={`${IMG}/interior-sm.webp`}
-              alt="Inside Glow Studio"
+              alt={`Inside ${biz.name}`}
               loading="lazy"
               className="aspect-[3/4] w-full rounded-3xl object-cover"
             />
@@ -529,7 +537,8 @@ function Salon() {
               <h2 className="mt-3 text-5xl font-semibold">Recent looks</h2>
             </div>
             <span className="flex items-center gap-2 text-sm text-[#1f2a24]/60">
-              <Instagram className="h-4 w-4" /> @glowstudio.np
+              <Instagram className="h-4 w-4" /> @{biz.name.toLowerCase().replace(/[^a-z0-9]/g, "")}
+              .np
             </span>
           </div>
           <div className="mt-12 grid auto-rows-[200px] grid-cols-2 gap-4 md:grid-cols-3">
@@ -595,14 +604,13 @@ function Salon() {
             </p>
             <div className="mt-10 space-y-5 text-sm">
               <p className="flex gap-3">
-                <MapPin className="h-5 w-5 shrink-0 text-[#d8bd8a]" /> Main Road, Manahari,
-                Makwanpur
+                <MapPin className="h-5 w-5 shrink-0 text-[#d8bd8a]" /> {biz.address}
               </p>
               <p className="flex gap-3">
                 <Clock className="h-5 w-5 shrink-0 text-[#d8bd8a]" /> Sun – Fri, 10:00 AM – 7:00 PM
               </p>
               <p className="flex gap-3">
-                <Phone className="h-5 w-5 shrink-0 text-[#d8bd8a]" /> 98XX-XXXXXX
+                <Phone className="h-5 w-5 shrink-0 text-[#d8bd8a]" /> {biz.phone}
               </p>
             </div>
           </div>
@@ -757,8 +765,10 @@ function Salon() {
       </section>
 
       <footer className="bg-[#1f2a24] py-10 text-center text-sm text-white/50">
-        <p className="sln-serif text-2xl text-white">Glow Studio</p>
-        <p className="mt-2">Manahari, Makwanpur · © {new Date().getFullYear()} (demo)</p>
+        <p className="sln-serif text-2xl text-white">{biz.name}</p>
+        <p className="mt-2">
+          {biz.area} · © {new Date().getFullYear()} (demo)
+        </p>
       </footer>
     </div>
   );

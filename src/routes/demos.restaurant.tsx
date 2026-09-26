@@ -12,14 +12,16 @@ import {
   Truck,
   UtensilsCrossed,
 } from "lucide-react";
-import { DemoBanner, demoHead } from "@/components/demo-banner";
+import { DemoBanner, demoBusiness, demoHead, validateDemoSearch } from "@/components/demo-banner";
 
 export const Route = createFileRoute("/demos/restaurant")({
-  head: () => {
+  validateSearch: validateDemoSearch,
+  head: ({ match }) => {
     const base = demoHead(
       "/demos/restaurant",
       "Himalayan Thakali Kitchen — Restaurant Website Demo",
       "Sample restaurant website by Saphin Praja: dish slideshow, photo menu, gallery, reviews, and WhatsApp ordering.",
+      match.search.n,
     );
     return {
       ...base,
@@ -186,7 +188,7 @@ const reviews = [
 
 const SLIDE_MS = 5500;
 
-function HeroSlider() {
+function HeroSlider({ area, whatsapp }: { area: string; whatsapp: string }) {
   const [active, setActive] = useState(0);
   const [prev, setPrev] = useState(-1);
   const [paused, setPaused] = useState(false);
@@ -235,7 +237,7 @@ function HeroSlider() {
 
       <div className="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-6 pb-24 pt-16 sm:pb-16">
         <p className="rst-rise flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-amber-300">
-          <MapPin className="h-4 w-4" /> Manahari, Makwanpur
+          <MapPin className="h-4 w-4" /> {area}
         </p>
         <h1
           className="rst-rise mt-5 max-w-2xl text-5xl font-bold leading-[1.05] md:text-7xl"
@@ -258,7 +260,7 @@ function HeroSlider() {
             See the menu
           </a>
           <a
-            href="#visit"
+            href={whatsapp}
             className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/5 px-7 py-3.5 text-sm font-semibold backdrop-blur transition-colors hover:bg-white/15"
           >
             <MessageCircle className="h-4 w-4" />
@@ -331,6 +333,15 @@ function HeroSlider() {
 }
 
 function Restaurant() {
+  const biz = demoBusiness(
+    Route.useSearch(),
+    {
+      name: "Himalayan Thakali Kitchen",
+      area: "Manahari, Makwanpur",
+      address: "Main Road, Manahari, Makwanpur",
+    },
+    "#visit",
+  );
   const [tab, setTab] = useState("Thakali Sets");
 
   return (
@@ -348,14 +359,14 @@ function Restaurant() {
         }
       `}</style>
 
-      <DemoBanner />
+      <DemoBanner forName={biz.personalised ? biz.name : undefined} />
 
       <div className="relative">
         <header className="absolute inset-x-0 top-0 z-30">
           <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6 text-white">
             <span className="rst-serif flex items-center gap-2 text-xl font-bold">
               <UtensilsCrossed className="h-5 w-5 text-amber-300" />
-              Himalayan Thakali
+              {biz.personalised ? biz.name : "Himalayan Thakali"}
             </span>
             <nav className="hidden gap-8 text-sm text-stone-200 md:flex">
               <a href="#menu" className="hover:text-white">
@@ -379,7 +390,7 @@ function Restaurant() {
             </a>
           </div>
         </header>
-        <HeroSlider />
+        <HeroSlider area={biz.area} whatsapp={biz.whatsapp} />
       </div>
 
       {/* Highlights */}
@@ -596,12 +607,12 @@ function Restaurant() {
             <h2 className="mt-3 text-4xl font-bold md:text-5xl">Come hungry.</h2>
             <div className="mt-10 space-y-6">
               {[
-                { icon: MapPin, title: "Find us", lines: ["Main Road, Manahari, Makwanpur"] },
+                { icon: MapPin, title: "Find us", lines: [biz.address] },
                 { icon: Clock, title: "Opening hours", lines: ["Every day, 10:00 AM – 9:30 PM"] },
                 {
                   icon: Phone,
                   title: "Call or WhatsApp",
-                  lines: ["98XX-XXXXXX · Free delivery within 3 km"],
+                  lines: [`${biz.phone} · Free delivery within 3 km`],
                 },
               ].map(({ icon: Icon, title, lines }) => (
                 <div key={title} className="flex gap-4">
@@ -622,7 +633,7 @@ function Restaurant() {
               ))}
             </div>
             <a
-              href="#visit"
+              href={biz.whatsapp}
               className="mt-10 inline-flex items-center gap-2 rounded-full bg-[#25D366] px-7 py-3.5 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5"
             >
               <MessageCircle className="h-4 w-4" />
@@ -631,8 +642,8 @@ function Restaurant() {
           </div>
           <div className="min-h-[320px] overflow-hidden rounded-3xl border border-stone-200 shadow-sm">
             <iframe
-              title="Map to Himalayan Thakali Kitchen"
-              src="https://www.google.com/maps?q=Manahari,Makwanpur,Nepal&output=embed"
+              title={`Map to ${biz.name}`}
+              src={biz.mapSrc}
               loading="lazy"
               className="h-full min-h-[320px] w-full"
             />
@@ -641,8 +652,10 @@ function Restaurant() {
       </section>
 
       <footer className="bg-stone-950 py-10 text-center text-sm text-stone-400">
-        <p className="rst-serif text-lg text-white">Himalayan Thakali Kitchen</p>
-        <p className="mt-2">Manahari, Makwanpur · © {new Date().getFullYear()} (demo)</p>
+        <p className="rst-serif text-lg text-white">{biz.name}</p>
+        <p className="mt-2">
+          {biz.area} · © {new Date().getFullYear()} (demo)
+        </p>
       </footer>
     </div>
   );

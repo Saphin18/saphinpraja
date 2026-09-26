@@ -14,14 +14,16 @@ import {
   Wallet,
   X,
 } from "lucide-react";
-import { DemoBanner, demoHead } from "@/components/demo-banner";
+import { DemoBanner, demoBusiness, demoHead, validateDemoSearch } from "@/components/demo-banner";
 
 export const Route = createFileRoute("/demos/shop")({
-  head: () => {
+  validateSearch: validateDemoSearch,
+  head: ({ match }) => {
     const base = demoHead(
       "/demos/shop",
       "Dhaka & Co. — Online Store Demo",
       "Sample e-commerce website by Saphin Praja: featured products, category filters, cart, and checkout with eSewa, Khalti, or cash on delivery.",
+      match.search.n,
     );
     return {
       ...base,
@@ -173,6 +175,11 @@ const SLIDE_MS = 5000;
 const rs = (n: number) => `Rs ${n.toLocaleString("en-IN")}`;
 
 function Shop() {
+  const biz = demoBusiness(
+    Route.useSearch(),
+    { name: "Dhaka & Co.", area: "Manahari, Makwanpur", address: "Main Road, Manahari, Makwanpur" },
+    "#shop",
+  );
   const [category, setCategory] = useState("All");
   const [cart, setCart] = useState<Record<number, number>>({});
   const [open, setOpen] = useState(false);
@@ -238,7 +245,7 @@ function Shop() {
         @media (prefers-reduced-motion: reduce) { .shp-rise, .shp-drawer { animation: none !important; } }
       `}</style>
 
-      <DemoBanner />
+      <DemoBanner forName={biz.personalised ? biz.name : undefined} />
 
       <div className="bg-rose-900 py-2 text-center text-xs font-medium text-rose-50">
         Free delivery all over Nepal on orders above {rs(FREE_DELIVERY)} · Cash on delivery
@@ -248,7 +255,13 @@ function Shop() {
       <header className="sticky top-0 z-40 border-b border-neutral-200/70 bg-[#faf6f1]/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <span className="shp-serif text-2xl font-bold tracking-tight">
-            Dhaka<span className="text-rose-700">&</span>Co.
+            {biz.personalised ? (
+              biz.name
+            ) : (
+              <>
+                Dhaka<span className="text-rose-700">&</span>Co.
+              </>
+            )}
           </span>
           <nav className="hidden gap-8 text-sm text-neutral-600 md:flex">
             <a href="#categories" className="hover:text-neutral-900">
@@ -596,14 +609,20 @@ function Shop() {
         <div className="mx-auto grid max-w-6xl gap-8 px-6 py-14 md:grid-cols-3">
           <div>
             <p className="shp-serif text-2xl font-bold text-white">
-              Dhaka<span className="text-rose-500">&</span>Co.
+              {biz.personalised ? (
+                biz.name
+              ) : (
+                <>
+                  Dhaka<span className="text-rose-500">&</span>Co.
+                </>
+              )}
             </p>
             <p className="mt-3 text-sm">Handmade goods from artisan families across Nepal.</p>
           </div>
           <div className="text-sm">
             <p className="font-semibold text-white">Visit our store</p>
             <p className="mt-3 flex items-center gap-2">
-              <MapPin className="h-4 w-4" /> Main Road, Manahari, Makwanpur
+              <MapPin className="h-4 w-4" /> {biz.address}
             </p>
             <p className="mt-1">Sun – Fri, 10:00 AM – 7:00 PM</p>
           </div>
@@ -622,7 +641,7 @@ function Shop() {
           </div>
         </div>
         <p className="border-t border-white/10 py-6 text-center text-xs">
-          © {new Date().getFullYear()} Dhaka & Co. (demo)
+          © {new Date().getFullYear()} {biz.name} (demo)
         </p>
       </footer>
 

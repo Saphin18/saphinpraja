@@ -27,6 +27,7 @@ export type PortfolioContent = {
   headlineAfter: string;
   intro: string;
   currentRole: string;
+  photoUrl: string;
   aboutHeading: string;
   aboutParagraphs: string[];
   experience: Job[];
@@ -51,6 +52,7 @@ export const DEFAULT_CONTENT: PortfolioContent = {
   intro:
     "SQL, Python, and Power BI at Xuno — dashboards, visualisations, and automations that save hours. Plus beautiful websites and apps for Nepali businesses.",
   currentRole: "Data Analyst @ Xuno",
+  photoUrl: "/images/saphin-portrait.webp",
   aboutHeading: "A year in fintech, a lot of queries later.",
   aboutParagraphs: [
     "I'm a data analyst based in Kathmandu, Nepal, with a year of hands-on work in fintech. Day to day I pull data out of SQL, clean it in Python, and turn it into dashboards people actually open.",
@@ -172,6 +174,11 @@ export function normalizeContent(raw: unknown): PortfolioContent {
     headlineAfter: str(r.headlineAfter, d.headlineAfter),
     intro: str(r.intro, d.intro),
     currentRole: str(r.currentRole, d.currentRole),
+    // Only site-relative paths or https links, so a bad value can't break the <img>.
+    photoUrl:
+      typeof r.photoUrl === "string" && /^(\/|https:\/\/)/.test(r.photoUrl)
+        ? r.photoUrl
+        : d.photoUrl,
     aboutHeading: str(r.aboutHeading, d.aboutHeading),
     aboutParagraphs: strList(r.aboutParagraphs, d.aboutParagraphs),
     experience,

@@ -518,6 +518,8 @@ function IntroEditor({
         </Field>
       </section>
 
+      <PhotoEditor photoUrl={c.photoUrl} set={(photoUrl) => update({ photoUrl })} />
+
       <section className={`${card} grid gap-4`}>
         <h2 className="text-lg font-bold">About</h2>
         <Field label="Heading">
@@ -538,6 +540,105 @@ function IntroEditor({
         </Field>
       </section>
     </div>
+  );
+}
+
+// Shrinks a photo in the browser before upload (max 1000px, WebP) so the page stays fast.
+async function shrinkImage(file: File): Promise<Blob> {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, 1000 / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bitmap.width * scale);
+  canvas.height = Math.round(bitmap.height * scale);
+  canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+  const blob = await new Promise<Blob | null>((resolve) =>
+    canvas.toBlob(resolve, "image/webp", 0.85),
+  );
+  if (blob && blob.type === "image/webp") return blob;
+  // Browsers without WebP encoding fall back to JPEG.
+  return new Promise((resolve, reject) =>
+    canvas.toBlob(
+      (b) => (b ? resolve(b) : reject(new Error("Couldn't read that image."))),
+      "image/jpeg",
+      0.85,
+    ),
+  );
+}
+
+function PhotoEditor({ photoUrl, set }: { photoUrl: string; set: (url: string) => void }) {
+  const [status, setStatus] = useState<{ kind: "busy" | "error"; text: string } | null>(null);
+
+  async function onFile(file: File | undefined) {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setStatus({ kind: "error", text: "Pick a photo (JPG, PNG or WebP)." });
+      return;
+    }
+    setStatus({ kind: "busy", text: "Uploading…" });
+    try {
+      const blob = await shrinkImage(file);
+      const ext = blob.type === "image/webp" ? "webp" : "jpg";
+      const path = `portrait-${Date.now()}.${ext}`;
+      const supabase = getSupabase();
+      const { error } = await supabase.storage
+        .from("portfolio")
+        .upload(path, blob, { contentType: blob.type, cacheControl: "31536000" });
+      if (error) throw error;
+      set(supabase.storage.from("portfolio").getPublicUrl(path).data.publicUrl);
+      setStatus(null);
+    } catch (err) {
+      setStatus({
+        kind: "error",
+        text: `Upload failed: ${err instanceof Error ? err.message : "please try again."}`,
+      });
+    }
+  }
+
+  return (
+    <section className={`${card} grid gap-4`}>
+      <h2 className="text-lg font-bold">Your photo</h2>
+      <div className="flex flex-wrap items-start gap-5">
+        <img
+          src={photoUrl}
+          alt="Current portfolio photo"
+          className="aspect-[4/5] w-32 rounded-2xl border border-border object-cover"
+        />
+        <div className="grid max-w-sm gap-2 text-sm">
+          <p className="text-muted-foreground">
+            Shown in a tall frame (4:5), cropped from the middle. A portrait photo with your face
+            near the centre looks best.
+          </p>
+          <label className={`${btnGhost} cursor-pointer justify-self-start`}>
+            {status?.kind === "busy" ? status.text : "Upload new photo"}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="sr-only"
+              disabled={status?.kind === "busy"}
+              onChange={(e) => {
+                onFile(e.target.files?.[0]);
+                e.target.value = "";
+              }}
+            />
+          </label>
+          {photoUrl !== DEFAULT_CONTENT.photoUrl && (
+            <button
+              type="button"
+              className="justify-self-start text-xs text-muted-foreground underline"
+              onClick={() => set(DEFAULT_CONTENT.photoUrl)}
+            >
+              Use the original photo
+            </button>
+          )}
+          {status?.kind === "error" && (
+            <p role="alert" className="text-destructive">
+              {status.text}
+            </p>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
 

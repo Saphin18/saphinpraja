@@ -354,7 +354,7 @@ function Portfolio() {
             <div className="relative mx-auto w-full max-w-sm">
               <div className="absolute -inset-3 rotate-3 rounded-[2rem] bg-gradient-to-br from-teal-400 to-sky-500 opacity-80 dark:opacity-60 dark:shadow-[0_0_80px_-10px_rgba(94,234,212,0.6)]" />
               <img
-                src="/images/saphin-portrait.webp"
+                src={content.photoUrl}
                 alt="Saphin Praja, data analyst in Kathmandu"
                 width={553}
                 height={691}

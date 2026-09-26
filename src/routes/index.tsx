@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useReveal } from "@/hooks/use-reveal";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { MobileMenu } from "@/components/mobile-menu";
 import { PortfolioChat } from "@/components/portfolio-chat";
 import { ProjectVisual, type VisualKind } from "@/components/project-visual";
 
@@ -345,6 +346,13 @@ function Portfolio() {
           </nav>
           <div className="flex items-center gap-3">
             <ThemeToggle />
+            <MobileMenu
+              items={[
+                ...nav.map((n) => ({ label: n.label, href: `#${n.id}` })),
+                { label: "Services", to: "/services" as const },
+              ]}
+              cta={{ label: "Hire me", href: "#contact", onClick: () => setFormOpen(true) }}
+            />
             <a
               href="#contact"
               onClick={() => setFormOpen(true)}
@@ -435,7 +443,7 @@ function Portfolio() {
                 height={691}
                 className="relative aspect-[4/5] w-full rounded-[2rem] object-cover shadow-2xl"
               />
-              <div className="absolute -left-6 top-10 rounded-2xl border border-border bg-card p-4 shadow-xl sm:-left-10 dark:bg-[#0f1623]/95 dark:backdrop-blur">
+              <div className="absolute -left-2 top-6 rounded-2xl border border-border bg-card p-4 shadow-xl sm:-left-10 dark:bg-[#0f1623]/95 dark:backdrop-blur">
                 <p className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Briefcase className="h-3.5 w-3.5 text-teal-600 dark:text-teal-300" /> Currently
                 </p>

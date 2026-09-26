@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useReveal } from "@/hooks/use-reveal";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { MobileMenu } from "@/components/mobile-menu";
 import {
   Accordion,
   AccordionContent,
@@ -288,6 +289,17 @@ function Services() {
           </nav>
           <div className="flex items-center gap-3">
             <ThemeToggle />
+            <MobileMenu
+              items={[
+                { label: "Services", href: "#services" },
+                { label: "Work", href: "#work" },
+                { label: "Process", href: "#process" },
+                { label: "Pricing", href: "#pricing" },
+                { label: "FAQ", href: "#faq" },
+                { label: "Portfolio", to: "/" as const },
+              ]}
+              cta={{ label: "Get a quote", href: "#quote" }}
+            />
             <a
               href="#quote"
               className="hidden rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5 md:inline-flex"

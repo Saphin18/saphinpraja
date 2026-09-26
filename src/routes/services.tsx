@@ -238,6 +238,7 @@ function Services() {
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
       message: `[Website enquiry — ${business}]\nPhone: ${phone || "not given"}\n\n${String(formData.get("message") ?? "")}`,
+      source: "services",
     };
 
     setStatus("sending");

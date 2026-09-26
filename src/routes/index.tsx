@@ -19,9 +19,12 @@ import { useReveal } from "@/hooks/use-reveal";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MobileMenu } from "@/components/mobile-menu";
 import { PortfolioChat } from "@/components/portfolio-chat";
-import { ProjectVisual, type VisualKind } from "@/components/project-visual";
+import { ProjectVisual } from "@/components/project-visual";
+import { fetchPortfolioContent } from "@/lib/supabase";
 
 export const Route = createFileRoute("/")({
+  // Latest text saved from /admin; falls back to the built-in copy if the database is unavailable.
+  loader: () => fetchPortfolioContent(),
   component: Portfolio,
   head: () => ({
     links: [{ rel: "canonical", href: "https://saphinpraja.com.np/" }],
@@ -138,92 +141,6 @@ const nav = [
 
 const RESUME = "/Saphin_Praja_Resume.pdf";
 
-const projects: {
-  title: string;
-  desc: string;
-  impact: string;
-  tags: string[];
-  url: string;
-  visual: VisualKind;
-}[] = [
-  {
-    title: "Daily Reporting Automation",
-    desc: "End-to-end BI pipeline: pulls Mixpanel analytics, generates 8 dark-themed dashboards, writes to Google Sheets, and posts one consolidated daily report with images to Slack.",
-    impact: "Replaced 45 min of manual work daily",
-    tags: ["Python", "Mixpanel API", "Google Sheets API", "Slack API", "Matplotlib"],
-    url: "https://github.com/Saphin18/daily-reporting-automation",
-    visual: "bars",
-  },
-  {
-    title: "FX Insights Automation",
-    desc: "Runs every day at 3 PM, pulling FX rates, commodity prices, and market indices. Saves structured JSON to Google Drive and posts a formatted summary to Slack.",
-    impact: "Runs daily, zero manual steps",
-    tags: ["Python", "Google Drive API", "Slack API"],
-    url: "https://github.com/Saphin18/fx-market-insights",
-    visual: "line",
-  },
-  {
-    title: "Reddit Competitor & Remittance Monitor",
-    desc: "Scans Reddit every 15 minutes for remittance and competitor discussion using keyword and semantic matching, then alerts a Slack channel automatically.",
-    impact: "Alerts the team in Slack within minutes",
-    tags: ["Python", "NLP", "Slack API"],
-    url: "https://github.com/Saphin18/reddit-brand-monitor",
-    visual: "alerts",
-  },
-  {
-    title: "Saphin AI",
-    desc: 'A warm, privacy-first AI companion for Android you can talk to like a friend — it listens, supports, and motivates you. No streaks, no guilt-tripping, no "you haven\'t opened me in 3 days" notifications.',
-    impact: "A kind, supportive friend — always there to listen",
-    tags: ["Expo", "React Native", "TypeScript", "FastAPI", "Supabase", "Groq"],
-    url: "https://github.com/Saphin18/ai-companion",
-    visual: "chat",
-  },
-];
-
-const experience = [
-  {
-    title: "Xuno · Data Analyst",
-    duration: "Feb 2026 – Present",
-    bullets: [
-      "Moved from a marketing-focused internship into a full data analyst role after picking up SQL and Python.",
-      "Built business analytics dashboards in Metabase, used by the team to track daily and weekly performance.",
-      "Write Python scripts and Jupyter notebooks to clean and analyze data, turning raw numbers into insights.",
-      "Query and report on data from Mixpanel, CleverTap, Meta Business Suite, and internal company sources.",
-      "Perform RFM segmentation and build customer profiles for each segment.",
-    ],
-  },
-  {
-    title: "Xuno · Digital Marketing & Data Analysis Intern",
-    duration: "Oct 2025 – Jan 2026",
-    bullets: [
-      "Started out reporting on marketing performance — Mixpanel, CleverTap, Meta Business Suite.",
-      "Ran competitor and influencer research to track market activity and positioning.",
-      "Got curious about the data behind the marketing numbers, which led to learning SQL and Python and eventually moving into the data analyst role above.",
-    ],
-  },
-];
-
-const toolkit = [
-  "SQL",
-  "Python",
-  "Power BI",
-  "Excel",
-  "Jupyter",
-  "Metabase",
-  "Mixpanel",
-  "CleverTap",
-  "Slack API",
-  "Google Drive API",
-  "Google Sheets API",
-  "Matplotlib",
-];
-const domain = [
-  "Fintech analytics",
-  "RFM segmentation",
-  "Customer profiling",
-  "Automated reporting",
-];
-
 const demos = [
   { to: "/demos/restaurant" as const, name: "Restaurant", img: "/demos/previews/restaurant.webp" },
   { to: "/demos/shop" as const, name: "Online shop", img: "/demos/previews/shop.webp" },
@@ -246,6 +163,8 @@ function trackResume() {
 }
 
 function Portfolio() {
+  const content = Route.useLoaderData();
+  const { experience, projects, toolkit, domain } = content;
   useReveal();
   const [active, setActive] = useState("about");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -284,6 +203,7 @@ function Portfolio() {
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
       message: String(formData.get("message") ?? ""),
+      source: "portfolio",
     };
 
     setStatus("sending");
@@ -376,25 +296,22 @@ function Portfolio() {
               </p>
               <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 dark:mt-5 dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-300">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500 dark:bg-emerald-400" />
-                Open to freelance projects · Websites & apps
+                {content.badge}
               </span>
               <h1 className="mt-6">
                 {/* Name + role live inside the h1 so search engines still see them */}
                 <span className="block text-sm font-semibold uppercase tracking-[0.2em] text-teal-600 dark:text-teal-300">
-                  Saphin Praja · Data Analyst · Kathmandu
+                  {content.tagline}
                 </span>
                 <span className="mt-4 block text-5xl font-bold leading-[1.05] tracking-tight md:text-6xl">
-                  I find the{" "}
+                  {content.headlineBefore}{" "}
                   <em className="bg-gradient-to-r from-teal-600 to-teal-500 bg-clip-text text-transparent dark:from-teal-300 dark:via-cyan-300 dark:to-sky-400 pr-1">
-                    story
+                    {content.headlineHighlight}
                   </em>{" "}
-                  in your numbers.
+                  {content.headlineAfter}
                 </span>
               </h1>
-              <p className="mt-6 max-w-lg text-lg text-muted-foreground">
-                SQL, Python, and Power BI at Xuno — dashboards, visualisations, and automations that
-                save hours. Plus beautiful websites and apps for Nepali businesses.
-              </p>
+              <p className="mt-6 max-w-lg text-lg text-muted-foreground">{content.intro}</p>
               <div className="mt-9 flex flex-wrap gap-3">
                 <a href="#projects" className={btnPrimary}>
                   See my work
@@ -447,7 +364,7 @@ function Portfolio() {
                 <p className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Briefcase className="h-3.5 w-3.5 text-teal-600 dark:text-teal-300" /> Currently
                 </p>
-                <p className="mt-0.5 text-sm font-semibold">Data Analyst @ Xuno</p>
+                <p className="mt-0.5 text-sm font-semibold">{content.currentRole}</p>
               </div>
             </div>
           </div>
@@ -458,21 +375,12 @@ function Portfolio() {
           <div className="mx-auto grid max-w-6xl gap-12 px-6 py-24 md:grid-cols-[1fr_1.5fr]">
             <div className="reveal">
               <p className={eyebrow}>About</p>
-              <h2 className="mt-2 text-4xl font-bold tracking-tight">
-                A year in fintech, a lot of queries later.
-              </h2>
+              <h2 className="mt-2 text-4xl font-bold tracking-tight">{content.aboutHeading}</h2>
             </div>
             <div className="reveal space-y-6 text-lg leading-relaxed text-muted-foreground">
-              <p>
-                I'm a data analyst based in Kathmandu, Nepal, with a year of hands-on work in
-                fintech. Day to day I pull data out of SQL, clean it in Python, and turn it into
-                dashboards people actually open.
-              </p>
-              <p>
-                Most of my work is extracting and analysing data, building automations, and turning
-                the results into dashboards and visualisations — reporting that runs on a schedule
-                so no one has to ask for it twice.
-              </p>
+              {content.aboutParagraphs.map((para) => (
+                <p key={para}>{para}</p>
+              ))}
             </div>
           </div>
         </section>
@@ -485,8 +393,8 @@ function Portfolio() {
           </div>
           <div className="reveal relative space-y-8 pl-8 md:pl-12">
             <div className="absolute left-2 top-2 h-full w-px bg-border md:left-4" />
-            {experience.map((job) => (
-              <div key={job.title + job.duration} className="relative">
+            {experience.map((job, i) => (
+              <div key={`${i}-${job.title}`} className="relative">
                 <div className="absolute -left-[29px] top-9 h-3 w-3 rounded-full bg-teal-500 ring-4 ring-[#f8fafc] md:-left-[37px] dark:bg-teal-300 dark:ring-[#070b12]" />
                 <div className={`${card} p-8`}>
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -515,9 +423,9 @@ function Portfolio() {
               <h2 className="mt-2 text-4xl font-bold tracking-tight">Projects with real impact</h2>
             </div>
             <div className="grid gap-6 md:grid-cols-2">
-              {projects.map((p) => (
+              {projects.map((p, i) => (
                 <a
-                  key={p.title}
+                  key={`${i}-${p.title}`}
                   href={p.url}
                   target="_blank"
                   rel="noopener noreferrer"

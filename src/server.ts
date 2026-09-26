@@ -46,6 +46,11 @@ function isH3SwallowedErrorBody(body: string): boolean {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    // admin.saphinpraja.com.np opens the admin page directly.
+    const url = new URL(request.url);
+    if (url.hostname.startsWith("admin.") && url.pathname === "/") {
+      return Response.redirect(new URL("/admin", url).toString(), 302);
+    }
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

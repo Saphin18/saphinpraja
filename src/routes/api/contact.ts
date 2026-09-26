@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Resend } from "resend";
+import { saveContactMessage } from "@/lib/supabase";
 
 export const Route = createFileRoute("/api/contact")({
   server: {
@@ -15,21 +16,31 @@ export const Route = createFileRoute("/api/contact")({
               {
                 status: 400,
                 headers: { "Content-Type": "application/json" },
-              }
+              },
             );
           }
+
+          // Keep a copy for the /admin inbox before emailing, so nothing is lost if email fails.
+          const source = body.source === "services" ? "services" : "portfolio";
+          await saveContactMessage({
+            name: String(name).slice(0, 100),
+            email: String(email).slice(0, 255),
+            message: String(message).slice(0, 2000),
+            source,
+          });
 
           const apiKey = process.env.RESEND_API_KEY;
           if (!apiKey) {
             console.error("RESEND_API_KEY environment variable is not defined");
             return new Response(
               JSON.stringify({
-                error: "The email sending service is not properly configured. Please check backend environment variables.",
+                error:
+                  "The email sending service is not properly configured. Please check backend environment variables.",
               }),
               {
                 status: 500,
                 headers: { "Content-Type": "application/json" },
-              }
+              },
             );
           }
 
@@ -58,26 +69,20 @@ export const Route = createFileRoute("/api/contact")({
               {
                 status: 400,
                 headers: { "Content-Type": "application/json" },
-              }
+              },
             );
           }
 
-          return new Response(
-            JSON.stringify({ success: true, messageId: data?.id }),
-            {
-              status: 200,
-              headers: { "Content-Type": "application/json" },
-            }
-          );
+          return new Response(JSON.stringify({ success: true, messageId: data?.id }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
         } catch (err: any) {
           console.error("Error processing contact form:", err);
-          return new Response(
-            JSON.stringify({ error: err?.message || "Internal server error" }),
-            {
-              status: 500,
-              headers: { "Content-Type": "application/json" },
-            }
-          );
+          return new Response(JSON.stringify({ error: err?.message || "Internal server error" }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          });
         }
       },
     },

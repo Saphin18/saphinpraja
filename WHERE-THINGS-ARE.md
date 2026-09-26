@@ -1,7 +1,11 @@
 # Where Things Are
 
-A plain-English map of your website. Almost everything lives in one file:
-**src/routes/index.tsx**
+A plain-English map of your website. The page layout lives in **src/routes/index.tsx**.
+
+## Editing your text (intro, about, projects, experience, toolkit)
+Easiest: sign in at **saphinpraja.com.np/admin** and edit there. No code needed.
+The built-in backup copy of that text is in **src/lib/portfolio-content.ts** (the site shows it if the database can't be reached).
+Admin setup: **docs/admin-setup.sql** (database rules) and **src/lib/supabase.ts** (project URL and key).
 
 To open any of these files, just find it in your code editor's file list on the left and click it.
 
@@ -19,7 +23,7 @@ Look for the line that says `id="about"` (around line 320).
 
 ## Projects section ("Things I've built")
 File: **src/routes/index.tsx**
-Look for the line that says `id="projects"` (around line 389). Just above that section, there's a list called `projects` — that's where each project card's title, description, tags, and link live. To add/edit a project, edit that list.
+Look for the line that says `id="projects"` (around line 389). The project cards' text is edited from /admin (backup copy in src/lib/portfolio-content.ts).
 
 ## Skills section
 File: **src/routes/index.tsx**

@@ -1,11 +1,11 @@
 -- Portfolio admin: photo storage. Run once in Supabase: SQL Editor → New query → paste → Run.
 -- (Needs docs/admin-setup.sql to have been run first.) Safe to run again.
 --
--- A public "portfolio" bucket: anyone can view the photos (they're on your website),
+-- A public "portfolio" bucket for your photo and resume PDF: anyone can view them (they're on your website),
 -- only the admin account can upload, replace or delete them.
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('portfolio', 'portfolio', true, 5242880, array['image/webp', 'image/jpeg', 'image/png'])
+values ('portfolio', 'portfolio', true, 5242880, array['image/webp', 'image/jpeg', 'image/png', 'application/pdf'])
 on conflict (id) do update
   set public = excluded.public,
       file_size_limit = excluded.file_size_limit,

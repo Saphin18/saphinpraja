@@ -28,6 +28,7 @@ export type PortfolioContent = {
   intro: string;
   currentRole: string;
   photoUrl: string;
+  resumeUrl: string;
   aboutHeading: string;
   aboutParagraphs: string[];
   experience: Job[];
@@ -53,6 +54,7 @@ export const DEFAULT_CONTENT: PortfolioContent = {
     "SQL, Python, and Power BI at Xuno — dashboards, visualisations, and automations that save hours. Plus beautiful websites and apps for Nepali businesses.",
   currentRole: "Data Analyst @ Xuno",
   photoUrl: "/images/saphin-portrait.webp",
+  resumeUrl: "/Saphin_Praja_Resume.pdf",
   aboutHeading: "A year in fintech, a lot of queries later.",
   aboutParagraphs: [
     "I'm a data analyst based in Kathmandu, Nepal, with a year of hands-on work in fintech. Day to day I pull data out of SQL, clean it in Python, and turn it into dashboards people actually open.",
@@ -136,6 +138,9 @@ export const DEFAULT_CONTENT: PortfolioContent = {
 const str = (v: unknown, fallback: string) => (typeof v === "string" ? v : fallback);
 const strList = (v: unknown, fallback: string[]) =>
   Array.isArray(v) && v.every((x) => typeof x === "string") ? (v as string[]) : fallback;
+// Only site-relative paths or https links, so a bad value can't break an image or link.
+const safeUrl = (v: unknown, fallback: string) =>
+  typeof v === "string" && /^(\/|https:\/\/)/.test(v) ? v : fallback;
 const isVisual = (v: unknown): v is VisualKind => VISUALS.some((x) => x.id === v);
 
 export function normalizeContent(raw: unknown): PortfolioContent {
@@ -174,11 +179,8 @@ export function normalizeContent(raw: unknown): PortfolioContent {
     headlineAfter: str(r.headlineAfter, d.headlineAfter),
     intro: str(r.intro, d.intro),
     currentRole: str(r.currentRole, d.currentRole),
-    // Only site-relative paths or https links, so a bad value can't break the <img>.
-    photoUrl:
-      typeof r.photoUrl === "string" && /^(\/|https:\/\/)/.test(r.photoUrl)
-        ? r.photoUrl
-        : d.photoUrl,
+    photoUrl: safeUrl(r.photoUrl, d.photoUrl),
+    resumeUrl: safeUrl(r.resumeUrl, d.resumeUrl),
     aboutHeading: str(r.aboutHeading, d.aboutHeading),
     aboutParagraphs: strList(r.aboutParagraphs, d.aboutParagraphs),
     experience,

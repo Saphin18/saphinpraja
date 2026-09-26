@@ -13,7 +13,16 @@ import {
   RotateCcw,
   Trash2,
 } from "lucide-react";
-import { getSupabase, supabaseConfigured } from "@/lib/supabase";
+import { getSupabase, supabaseConfigured, type ContentId } from "@/lib/supabase";
+import {
+  DEFAULT_SERVICES,
+  formatWhatsapp,
+  normalizeServices,
+  normalizeWhatsapp,
+  type Faq,
+  type Package,
+  type ServicesContent,
+} from "@/lib/services-content";
 import {
   DEFAULT_CONTENT,
   normalizeContent,
@@ -48,7 +57,7 @@ const btnPrimary = `${btn} bg-slate-900 text-white hover:bg-teal-700 dark:bg-tea
 const btnGhost = `${btn} border border-border bg-card hover:border-foreground`;
 const card = "rounded-2xl border border-border bg-card p-5 shadow-sm";
 
-type Tab = "intro" | "projects" | "experience" | "messages" | "history";
+type Tab = "intro" | "projects" | "experience" | "services" | "messages" | "history";
 
 type Message = {
   id: string;
@@ -157,69 +166,130 @@ function Login() {
 
 // ---------------------------------------------------------------- dashboard
 
+const trim = (s: string) => s.trim();
+const trimList = (xs: string[]) => xs.map(trim).filter(Boolean);
+
 // Trim text and drop empty list items and untitled cards before saving.
-function clean(c: PortfolioContent): PortfolioContent {
-  const t = (s: string) => s.trim();
-  const list = (xs: string[]) => xs.map(t).filter(Boolean);
+function cleanPortfolio(c: PortfolioContent): PortfolioContent {
   return {
     ...c,
-    badge: t(c.badge),
-    tagline: t(c.tagline),
-    headlineBefore: t(c.headlineBefore),
-    headlineHighlight: t(c.headlineHighlight),
-    headlineAfter: t(c.headlineAfter),
-    intro: t(c.intro),
-    currentRole: t(c.currentRole),
-    aboutHeading: t(c.aboutHeading),
-    aboutParagraphs: list(c.aboutParagraphs),
-    toolkit: list(c.toolkit),
-    domain: list(c.domain),
+    badge: trim(c.badge),
+    tagline: trim(c.tagline),
+    headlineBefore: trim(c.headlineBefore),
+    headlineHighlight: trim(c.headlineHighlight),
+    headlineAfter: trim(c.headlineAfter),
+    intro: trim(c.intro),
+    currentRole: trim(c.currentRole),
+    aboutHeading: trim(c.aboutHeading),
+    aboutParagraphs: trimList(c.aboutParagraphs),
+    toolkit: trimList(c.toolkit),
+    domain: trimList(c.domain),
     experience: c.experience
-      .map((j) => ({ title: t(j.title), duration: t(j.duration), bullets: list(j.bullets) }))
+      .map((j) => ({
+        title: trim(j.title),
+        duration: trim(j.duration),
+        bullets: trimList(j.bullets),
+      }))
       .filter((j) => j.title),
     projects: c.projects
       .map((p) => ({
         ...p,
-        title: t(p.title),
-        desc: t(p.desc),
-        impact: t(p.impact),
-        url: t(p.url),
-        tags: list(p.tags),
+        title: trim(p.title),
+        desc: trim(p.desc),
+        impact: trim(p.impact),
+        url: trim(p.url),
+        tags: trimList(p.tags),
       }))
       .filter((p) => p.title),
   };
 }
 
-function Dashboard({ email }: { email: string }) {
+function cleanServices(s: ServicesContent): ServicesContent {
+  return {
+    whatsappNumber: normalizeWhatsapp(s.whatsappNumber),
+    packages: s.packages
+      .map((p) => ({
+        ...p,
+        name: trim(p.name),
+        price: trim(p.price),
+        blurb: trim(p.blurb),
+        features: trimList(p.features),
+      }))
+      .filter((p) => p.name),
+    faqs: s.faqs.map((f) => ({ q: trim(f.q), a: trim(f.a) })).filter((f) => f.q && f.a),
+  };
+}
+
+// One editable page's content: what's saved in the database and the unsaved draft.
+function useSiteDoc<T>(id: ContentId, normalize: (raw: unknown) => T, defaults: T) {
   const supabase = getSupabase();
-  const [tab, setTab] = useState<Tab>("intro");
-  const [saved, setSaved] = useState<PortfolioContent | null>(null);
-  const [draft, setDraft] = useState<PortfolioContent | null>(null);
+  const [saved, setSaved] = useState<T | null>(null);
+  const [draft, setDraft] = useState<T | null>(null);
   const [neverSaved, setNeverSaved] = useState(false);
   const [loadError, setLoadError] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [notice, setNotice] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
   // Bumped when the draft is replaced wholesale, so list inputs reset their text.
   const [version, setVersion] = useState(0);
-  const [unread, setUnread] = useState(0);
 
   const load = useCallback(async () => {
     setLoadError("");
     const { data, error } = await supabase
       .from("site_content")
       .select("data")
-      .eq("id", "portfolio")
+      .eq("id", id)
       .maybeSingle();
     if (error) {
       setLoadError(`Couldn't load your content: ${error.message}`);
       return;
     }
-    const content = data ? normalizeContent(data.data) : DEFAULT_CONTENT;
+    const content = data ? normalize(data.data) : defaults;
     setNeverSaved(!data);
     setSaved(content);
     setDraft(content);
     setVersion((v) => v + 1);
-  }, [supabase]);
+  }, [supabase, id, normalize, defaults]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const dirty = useMemo(
+    () => !!draft && !!saved && JSON.stringify(draft) !== JSON.stringify(saved),
+    [draft, saved],
+  );
+
+  // Resolves an error message, or null when saved.
+  async function save(clean: (c: T) => T): Promise<string | null> {
+    if (!draft) return null;
+    const content = clean(draft);
+    const { error } = await supabase
+      .from("site_content")
+      .upsert({ id, data: content, updated_at: new Date().toISOString() });
+    if (error) return error.message;
+    setSaved(content);
+    setDraft(content);
+    setVersion((v) => v + 1);
+    setNeverSaved(false);
+    return null;
+  }
+
+  function replace(content: T) {
+    setDraft(content);
+    setVersion((v) => v + 1);
+  }
+
+  const update = (patch: Partial<T>) => setDraft((d) => (d ? { ...d, ...patch } : d));
+
+  return { draft, saved, dirty, neverSaved, loadError, version, load, save, replace, update };
+}
+
+function Dashboard({ email }: { email: string }) {
+  const supabase = getSupabase();
+  const [tab, setTab] = useState<Tab>("intro");
+  const portfolio = useSiteDoc("portfolio", normalizeContent, DEFAULT_CONTENT);
+  const services = useSiteDoc("services", normalizeServices, DEFAULT_SERVICES);
+  const [saving, setSaving] = useState(false);
+  const [notice, setNotice] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
+  const [unread, setUnread] = useState(0);
 
   const loadUnread = useCallback(async () => {
     const { count } = await supabase
@@ -230,14 +300,10 @@ function Dashboard({ email }: { email: string }) {
   }, [supabase]);
 
   useEffect(() => {
-    load();
     loadUnread();
-  }, [load, loadUnread]);
+  }, [loadUnread]);
 
-  const dirty = useMemo(
-    () => !!draft && !!saved && JSON.stringify(draft) !== JSON.stringify(saved),
-    [draft, saved],
-  );
+  const dirty = portfolio.dirty || services.dirty;
 
   // Warn before leaving the page with unsaved edits.
   useEffect(() => {
@@ -254,46 +320,47 @@ function Dashboard({ email }: { email: string }) {
   }, [notice]);
 
   async function save() {
-    if (!draft) return;
-    const content = clean(draft);
     setSaving(true);
-    const { error } = await supabase
-      .from("site_content")
-      .upsert({ id: "portfolio", data: content, updated_at: new Date().toISOString() });
+    const errors = [
+      portfolio.dirty ? await portfolio.save(cleanPortfolio) : null,
+      services.dirty ? await services.save(cleanServices) : null,
+    ].filter(Boolean);
     setSaving(false);
-    if (error) {
-      setNotice({ kind: "error", text: `Not saved: ${error.message}` });
-      return;
-    }
-    setSaved(content);
-    setDraft(content);
-    setVersion((v) => v + 1);
-    setNeverSaved(false);
-    setNotice({ kind: "ok", text: "Saved. Your portfolio shows the changes now." });
+    setNotice(
+      errors.length
+        ? { kind: "error", text: `Not saved: ${errors.join("; ")}` }
+        : { kind: "ok", text: "Saved. Your site shows the changes now." },
+    );
   }
 
   function discard() {
-    setDraft(saved);
-    setVersion((v) => v + 1);
+    if (portfolio.dirty && portfolio.saved) portfolio.replace(portfolio.saved);
+    if (services.dirty && services.saved) services.replace(services.saved);
   }
 
-  function restore(content: PortfolioContent) {
-    setDraft(content);
-    setVersion((v) => v + 1);
-    setTab("intro");
+  function restore(id: ContentId, raw: unknown) {
+    if (id === "services") {
+      services.replace(normalizeServices(raw));
+      setTab("services");
+    } else {
+      portfolio.replace(normalizeContent(raw));
+      setTab("intro");
+    }
     setNotice({ kind: "ok", text: "Old version loaded. Check it, then click Save changes." });
   }
-
-  const update = (patch: Partial<PortfolioContent>) =>
-    setDraft((d) => (d ? { ...d, ...patch } : d));
 
   const tabs: { id: Tab; label: string; badge?: number }[] = [
     { id: "intro", label: "Intro & about" },
     { id: "projects", label: "Projects" },
     { id: "experience", label: "Experience & skills" },
+    { id: "services", label: "Services & prices" },
     { id: "messages", label: "Messages", badge: unread },
     { id: "history", label: "History" },
   ];
+
+  // Which page's content the current tab edits (none for Messages and History).
+  const doc =
+    tab === "services" ? services : tab === "messages" || tab === "history" ? null : portfolio;
 
   return (
     <Shell wide>
@@ -346,15 +413,15 @@ function Dashboard({ email }: { email: string }) {
           {notice.text}
         </p>
       )}
-      {loadError && (
+      {doc?.loadError && (
         <p role="alert" className="mt-4 text-sm text-destructive">
-          {loadError}{" "}
-          <button className="underline" onClick={load}>
+          {doc.loadError}{" "}
+          <button className="underline" onClick={doc.load}>
             Try again
           </button>
         </p>
       )}
-      {neverSaved && draft && tab !== "messages" && tab !== "history" && (
+      {doc?.neverSaved && doc.draft && (
         <p className="mt-4 rounded-lg border border-border bg-muted/40 px-4 py-2 text-sm text-muted-foreground">
           Showing the text that's built into your site. Your first save stores it in the database.
         </p>
@@ -365,25 +432,36 @@ function Dashboard({ email }: { email: string }) {
           <Messages onUnreadChange={loadUnread} />
         ) : tab === "history" ? (
           <HistoryList onRestore={restore} />
-        ) : !draft ? (
-          !loadError && <p className="text-muted-foreground">Loading your content…</p>
-        ) : tab === "intro" ? (
-          <IntroEditor key={version} c={draft} update={update} />
+        ) : !doc?.draft ? (
+          !doc?.loadError && <p className="text-muted-foreground">Loading your content…</p>
+        ) : tab === "services" ? (
+          services.draft && (
+            <ServicesEditor key={services.version} s={services.draft} update={services.update} />
+          )
+        ) : !portfolio.draft ? null : tab === "intro" ? (
+          <IntroEditor key={portfolio.version} c={portfolio.draft} update={portfolio.update} />
         ) : tab === "projects" ? (
           <ProjectsEditor
-            key={version}
-            projects={draft.projects}
-            set={(projects) => update({ projects })}
+            key={portfolio.version}
+            projects={portfolio.draft.projects}
+            set={(projects) => portfolio.update({ projects })}
           />
         ) : (
-          <ExperienceEditor key={version} c={draft} update={update} />
+          <ExperienceEditor key={portfolio.version} c={portfolio.draft} update={portfolio.update} />
         )}
       </div>
 
       {dirty && (
         <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur">
           <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-            <p className="text-sm font-medium">You have unsaved changes.</p>
+            <p className="text-sm font-medium">
+              You have unsaved changes
+              {portfolio.dirty && services.dirty
+                ? " to your portfolio and services."
+                : services.dirty
+                  ? " to your services page."
+                  : " to your portfolio."}
+            </p>
             <div className="flex gap-2">
               <button className={btnGhost} onClick={discard} disabled={saving}>
                 Discard
@@ -519,6 +597,7 @@ function IntroEditor({
       </section>
 
       <PhotoEditor photoUrl={c.photoUrl} set={(photoUrl) => update({ photoUrl })} />
+      <ResumeEditor resumeUrl={c.resumeUrl} set={(resumeUrl) => update({ resumeUrl })} />
 
       <section className={`${card} grid gap-4`}>
         <h2 className="text-lg font-bold">About</h2>
@@ -638,6 +717,91 @@ function PhotoEditor({ photoUrl, set }: { photoUrl: string; set: (url: string) =
           )}
         </div>
       </div>
+    </section>
+  );
+}
+
+function ResumeEditor({ resumeUrl, set }: { resumeUrl: string; set: (url: string) => void }) {
+  const [status, setStatus] = useState<{ kind: "busy" | "error"; text: string } | null>(null);
+
+  async function onFile(file: File | undefined) {
+    if (!file) return;
+    if (file.type !== "application/pdf") {
+      setStatus({ kind: "error", text: "Pick a PDF file." });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setStatus({
+        kind: "error",
+        text: "That PDF is over 5 MB. Export a smaller one and try again.",
+      });
+      return;
+    }
+    setStatus({ kind: "busy", text: "Uploading…" });
+    try {
+      const path = `resume-${Date.now()}.pdf`;
+      const supabase = getSupabase();
+      const { error } = await supabase.storage
+        .from("portfolio")
+        .upload(path, file, { contentType: "application/pdf", cacheControl: "31536000" });
+      if (error) throw error;
+      // download= makes the browser save it as Saphin_Praja_Resume.pdf.
+      set(
+        supabase.storage
+          .from("portfolio")
+          .getPublicUrl(path, { download: "Saphin_Praja_Resume.pdf" }).data.publicUrl,
+      );
+      setStatus(null);
+    } catch (err) {
+      setStatus({
+        kind: "error",
+        text: `Upload failed: ${err instanceof Error ? err.message : "please try again."}`,
+      });
+    }
+  }
+
+  const isOriginal = resumeUrl === DEFAULT_CONTENT.resumeUrl;
+  return (
+    <section className={`${card} grid gap-3`}>
+      <h2 className="text-lg font-bold">Resume</h2>
+      <p className="text-sm text-muted-foreground">
+        The file people get from the “Resume” button.{" "}
+        {isOriginal
+          ? "Currently the original resume built into the site."
+          : "Currently a resume you uploaded."}{" "}
+        <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="underline">
+          Open it
+        </a>
+      </p>
+      <div className="flex flex-wrap items-center gap-3">
+        <label className={`${btnGhost} cursor-pointer`}>
+          {status?.kind === "busy" ? status.text : "Upload new resume (PDF)"}
+          <input
+            type="file"
+            accept="application/pdf"
+            className="sr-only"
+            disabled={status?.kind === "busy"}
+            onChange={(e) => {
+              onFile(e.target.files?.[0]);
+              e.target.value = "";
+            }}
+          />
+        </label>
+        {!isOriginal && (
+          <button
+            type="button"
+            className="text-xs text-muted-foreground underline"
+            onClick={() => set(DEFAULT_CONTENT.resumeUrl)}
+          >
+            Use the original resume
+          </button>
+        )}
+      </div>
+      {status?.kind === "error" && (
+        <p role="alert" className="text-sm text-destructive">
+          {status.text}
+        </p>
+      )}
     </section>
   );
 }
@@ -908,6 +1072,201 @@ function ExperienceEditor({
   );
 }
 
+// ---------------------------------------------------------------- services
+
+// Stable React keys for a reorderable list, so moving cards doesn't mix up their typed text.
+function useListKeys(length: number) {
+  const [keys, setKeys] = useState(() => Array.from({ length }, (_, i) => i));
+  const [next, setNext] = useState(length);
+  return {
+    keys,
+    move: (from: number, to: number) => setKeys((k) => moveItem(k, from, to)),
+    remove: (i: number) => setKeys((k) => k.filter((_, j) => j !== i)),
+    add: () => {
+      setKeys((k) => [...k, next]);
+      setNext((n) => n + 1);
+    },
+  };
+}
+
+function ServicesEditor({
+  s,
+  update,
+}: {
+  s: ServicesContent;
+  update: (p: Partial<ServicesContent>) => void;
+}) {
+  const pkgKeys = useListKeys(s.packages.length);
+  const faqKeys = useListKeys(s.faqs.length);
+  const setPackages = (packages: Package[]) => update({ packages });
+  const setFaqs = (faqs: Faq[]) => update({ faqs });
+  const editPkg = (i: number, patch: Partial<Package>) =>
+    setPackages(s.packages.map((p, j) => (j === i ? { ...p, ...patch } : p)));
+  const editFaq = (i: number, patch: Partial<Faq>) =>
+    setFaqs(s.faqs.map((f, j) => (j === i ? { ...f, ...patch } : f)));
+  const whatsapp = normalizeWhatsapp(s.whatsappNumber);
+
+  return (
+    <div className="grid gap-6">
+      <section className={`${card} grid gap-4`}>
+        <h2 className="text-lg font-bold">WhatsApp</h2>
+        <Field
+          label="WhatsApp number"
+          hint={
+            whatsapp.length >= 12
+              ? `Every WhatsApp button on the services page opens a chat with ${formatWhatsapp(whatsapp)}.`
+              : "Type your 10-digit mobile number, e.g. 9821858674."
+          }
+        >
+          <input
+            className={`${inputCls} font-mono`}
+            inputMode="tel"
+            value={s.whatsappNumber}
+            onChange={(e) => update({ whatsappNumber: e.target.value })}
+          />
+        </Field>
+      </section>
+
+      <h2 className="text-lg font-bold">Packages</h2>
+      <p className="-mt-4 text-sm text-muted-foreground">
+        Shown side by side on the services page, in this order. The chat assistant quotes these
+        prices too.
+      </p>
+      {s.packages.map((p, i) => (
+        <section key={pkgKeys.keys[i]} className={`${card} grid gap-4`}>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h3 className="font-bold">
+              {p.name || "New package"}
+              {p.featured && (
+                <span className="ml-2 rounded-full bg-teal-600 px-2 py-0.5 text-xs text-white">
+                  Most popular
+                </span>
+              )}
+            </h3>
+            <CardControls
+              index={i}
+              count={s.packages.length}
+              move={(from, to) => {
+                setPackages(moveItem(s.packages, from, to));
+                pkgKeys.move(from, to);
+              }}
+              remove={() => {
+                setPackages(s.packages.filter((_, j) => j !== i));
+                pkgKeys.remove(i);
+              }}
+            />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Name">
+              <input
+                className={inputCls}
+                value={p.name}
+                onChange={(e) => editPkg(i, { name: e.target.value })}
+              />
+            </Field>
+            <Field label="Price" hint="Shown after “from”, e.g. Rs 12,000.">
+              <input
+                className={inputCls}
+                value={p.price}
+                onChange={(e) => editPkg(i, { price: e.target.value })}
+              />
+            </Field>
+          </div>
+          <Field label="Who it's for">
+            <input
+              className={inputCls}
+              value={p.blurb}
+              onChange={(e) => editPkg(i, { blurb: e.target.value })}
+            />
+          </Field>
+          <Field label="What's included" hint="One item per line.">
+            <ListInput
+              value={p.features}
+              onChange={(features) => editPkg(i, { features })}
+              split={/\n/}
+              join={"\n"}
+              rows={5}
+            />
+          </Field>
+          <label className="flex items-center gap-2 text-sm font-medium">
+            <input
+              type="checkbox"
+              checked={p.featured}
+              onChange={(e) =>
+                // Only one package carries the "Most popular" badge.
+                setPackages(
+                  s.packages.map((x, j) => ({
+                    ...x,
+                    featured: j === i ? e.target.checked : false,
+                  })),
+                )
+              }
+            />
+            Mark as “Most popular”
+          </label>
+        </section>
+      ))}
+      <button
+        className={`${btnGhost} justify-self-start`}
+        onClick={() => {
+          setPackages([
+            ...s.packages,
+            { name: "", price: "", blurb: "", features: [], featured: false },
+          ]);
+          pkgKeys.add();
+        }}
+      >
+        <Plus /> Add package
+      </button>
+
+      <h2 className="mt-4 text-lg font-bold">Common questions</h2>
+      {s.faqs.map((f, i) => (
+        <section key={faqKeys.keys[i]} className={`${card} grid gap-4`}>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h3 className="font-bold">{f.q || "New question"}</h3>
+            <CardControls
+              index={i}
+              count={s.faqs.length}
+              move={(from, to) => {
+                setFaqs(moveItem(s.faqs, from, to));
+                faqKeys.move(from, to);
+              }}
+              remove={() => {
+                setFaqs(s.faqs.filter((_, j) => j !== i));
+                faqKeys.remove(i);
+              }}
+            />
+          </div>
+          <Field label="Question">
+            <input
+              className={inputCls}
+              value={f.q}
+              onChange={(e) => editFaq(i, { q: e.target.value })}
+            />
+          </Field>
+          <Field label="Answer">
+            <textarea
+              className={`${inputCls} resize-y`}
+              rows={3}
+              value={f.a}
+              onChange={(e) => editFaq(i, { a: e.target.value })}
+            />
+          </Field>
+        </section>
+      ))}
+      <button
+        className={`${btnGhost} justify-self-start`}
+        onClick={() => {
+          setFaqs([...s.faqs, { q: "", a: "" }]);
+          faqKeys.add();
+        }}
+      >
+        <Plus /> Add question
+      </button>
+    </div>
+  );
+}
+
 // ---------------------------------------------------------------- messages
 
 function Messages({ onUnreadChange }: { onUnreadChange: () => void }) {
@@ -1023,29 +1382,61 @@ function Messages({ onUnreadChange }: { onUnreadChange: () => void }) {
 
 // ---------------------------------------------------------------- history
 
-function HistoryList({ onRestore }: { onRestore: (c: PortfolioContent) => void }) {
+function HistoryList({ onRestore }: { onRestore: (id: ContentId, data: unknown) => void }) {
   const supabase = getSupabase();
+  const [page, setPage] = useState<ContentId>("portfolio");
   const [rows, setRows] = useState<{ id: number; saved_at: string; data: unknown }[] | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    setRows(null);
+    setError("");
     supabase
       .from("site_content_history")
       .select("id, saved_at, data")
-      .eq("content_id", "portfolio")
+      .eq("content_id", page)
       .order("id", { ascending: false })
       .limit(30)
       .then(({ data, error }) => {
         if (error) setError(`Couldn't load history: ${error.message}`);
         else setRows(data);
       });
-  }, [supabase]);
+  }, [supabase, page]);
+
+  const picker = (
+    <div className="mb-4 flex gap-1.5" role="group" aria-label="Which page">
+      {(
+        [
+          ["portfolio", "Portfolio"],
+          ["services", "Services & prices"],
+        ] as const
+      ).map(([id, label]) => (
+        <button
+          key={id}
+          onClick={() => setPage(id)}
+          aria-pressed={page === id}
+          className={`rounded-lg px-3 py-1.5 text-sm font-semibold ${
+            page === id ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  );
 
   if (error) return <p className="text-sm text-destructive">{error}</p>;
-  if (!rows) return <p className="text-muted-foreground">Loading history…</p>;
+  if (!rows)
+    return (
+      <>
+        {picker}
+        <p className="text-muted-foreground">Loading history…</p>
+      </>
+    );
   if (!rows.length) {
     return (
       <div className={`${card} text-center text-muted-foreground`}>
+        {picker}
         <History className="mx-auto h-8 w-8" />
         <p className="mt-2">
           No earlier versions yet. Each time you save, the previous version is kept here.
@@ -1055,6 +1446,7 @@ function HistoryList({ onRestore }: { onRestore: (c: PortfolioContent) => void }
   }
   return (
     <div className="grid gap-2">
+      {picker}
       <p className="text-sm text-muted-foreground">
         Your last {rows.length} saved versions. Restoring loads one into the editor; nothing changes
         on your site until you click Save changes.
@@ -1074,7 +1466,7 @@ function HistoryList({ onRestore }: { onRestore: (c: PortfolioContent) => void }
               minute: "2-digit",
             })}
           </span>
-          <button className={btnGhost} onClick={() => onRestore(normalizeContent(r.data))}>
+          <button className={btnGhost} onClick={() => onRestore(page, r.data)}>
             <RotateCcw /> Restore
           </button>
         </div>

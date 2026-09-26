@@ -1,8 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { fetchPortfolioContent, fetchServicesContent } from "@/lib/supabase";
+import type { PortfolioContent } from "@/lib/portfolio-content";
+import { formatWhatsapp, type ServicesContent } from "@/lib/services-content";
 
 // Portfolio AI assistant, powered by Groq (same setup as the GymFreak project).
 // The browser only talks to this route; GROQ_API_KEY never leaves the server.
-// The model answers ONLY from the fact sheet below, so keep it up to date.
+// The model answers ONLY from the fact sheet built below.
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const DEFAULT_MODEL = "openai/gpt-oss-120b";
@@ -10,53 +13,65 @@ const MAX_QUESTION = 500; // characters a visitor may send in one message
 const HISTORY_TURNS = 3; // earlier question+answer pairs sent along for context
 const TIMEOUT_MS = 25_000;
 
-const FACTS = `
+// The facts come from the same content the pages show (edited in /admin), so the assistant
+// never quotes old prices or projects. Anything not editable there is written in below.
+function buildFacts(p: PortfolioContent, s: ServicesContent): string {
+  const lines = (xs: string[]) => xs.map((x) => `- ${x}`).join("\n");
+  return `
 ABOUT
-- Saphin Praja is a data analyst based in Kathmandu, Nepal.
-- Works at Xuno (a fintech / remittance company) as a Data Analyst since Feb 2026.
-- Before that: Digital Marketing & Data Analysis Intern at Xuno, Oct 2025 – Jan 2026. Got curious about the data behind marketing numbers, learned SQL and Python, and moved into the data analyst role.
-- Day to day: extracting and analysing data, building automations, and turning results into dashboards and visualisations; reporting that runs on a schedule.
-- At Xuno: built Metabase dashboards used to track daily and weekly performance; writes Python scripts and Jupyter notebooks to clean and analyse data; queries and reports on Mixpanel, CleverTap, Meta Business Suite, and internal data; has done RFM segmentation and customer profiles.
+- ${p.tagline}. Currently: ${p.currentRole}.
+${lines(p.aboutParagraphs)}
+
+EXPERIENCE
+${p.experience.map((j) => `${j.title} (${j.duration})\n${lines(j.bullets)}`).join("\n")}
 
 TOOLKIT
-SQL, Python, Power BI, Excel, Jupyter, Metabase, Mixpanel, CleverTap, Slack API, Google Drive API, Google Sheets API, Matplotlib. Also built apps with Expo, React Native, TypeScript, FastAPI, Supabase, Groq.
+${p.toolkit.join(", ")}. Domain: ${p.domain.join(", ")}.
 
 PROJECTS
-1. Daily Reporting Automation — pulls Mixpanel analytics, generates 8 dashboards, writes to Google Sheets, and posts one consolidated daily report with images to Slack. Replaced about 45 minutes of manual work every day. Tools: Python, Mixpanel API, Google Sheets API, Slack API, Matplotlib. GitHub: https://github.com/Saphin18/daily-reporting-automation
-2. FX Insights Automation — runs every day at 3 PM, pulls FX rates, commodity prices, and market indices, saves structured JSON to Google Drive, and posts a summary to Slack. Tools: Python, Google Drive API, Slack API. GitHub: https://github.com/Saphin18/fx-market-insights (guide on the site: /guides/fx-insight)
-3. Reddit Competitor & Remittance Monitor — scans Reddit every 15 minutes for remittance and competitor discussion using keyword and semantic matching, and alerts a Slack channel. Tools: Python, NLP, Slack API. GitHub: https://github.com/Saphin18/reddit-brand-monitor
-4. Saphin AI — a warm, privacy-first AI companion app for Android you can talk to like a friend; it listens, supports, and motivates you. No streaks, no guilt-tripping notifications. Tools: Expo, React Native, TypeScript, FastAPI, Supabase, Groq. GitHub: https://github.com/Saphin18/ai-companion (guide on the site: /guides/saphin-ai)
+${p.projects
+  .map(
+    (x, i) =>
+      `${i + 1}. ${x.title} — ${x.desc} Result: ${x.impact}. Tools: ${x.tags.join(", ")}.${x.url ? ` Link: ${x.url}` : ""}`,
+  )
+  .join("\n")}
+Guides on the site: /guides/saphin-ai (how Saphin AI was built), /guides/fx-insight (how FX Insights Automation works).
 
-WEBSITES & APPS FOR BUSINESSES (freelance, alongside the Xuno job)
+WEBSITES & APPS FOR BUSINESSES (freelance, alongside his day job)
 - Builds fast, mobile-friendly websites and apps for Nepali businesses: restaurants, shops, salons, clinics, and more. Can also add a simple sales dashboard, since he is a data analyst.
-- Starting prices: Starter Rs 12,000 (one-page site, mobile-friendly, WhatsApp & call buttons, Google Maps, delivered in about 5 days); Business Rs 25,000 (up to 5 pages, menu/services & price list, contact or booking form, Google Business Profile setup, basic SEO); Online Store Rs 45,000 (product catalogue, cart & order form, eSewa / Khalti or WhatsApp ordering, simple sales dashboard). Domain and hosting are billed at cost.
+- Starting prices:
+${s.packages.map((x) => `  - ${x.name}: from ${x.price}. ${x.blurb} Includes: ${x.features.join(", ")}.`).join("\n")}
+- Domain and hosting are billed at cost.
 - Process: free call → first design within a few days (changes included) → launch on your own domain → one month of free edits, then optional monthly support.
-- Payment: 50% to start, 50% when the site is ready; eSewa, Khalti, or bank transfer.
-- Works with businesses anywhere in Nepal.
 - Sample demo sites (fictional businesses): restaurant /demos/restaurant, online shop /demos/shop, salon booking /demos/salon. Full details and quote form: /services
+- Common questions:
+${s.faqs.map((f) => `  - Q: ${f.q} A: ${f.a}`).join("\n")}
 
 CONTACT
 - Email: prajasaphin18@gmail.com
-- WhatsApp: +977 9821858674
+- WhatsApp: ${formatWhatsapp(s.whatsappNumber)}
 - LinkedIn: https://www.linkedin.com/in/saphinpraja/
 - GitHub: https://github.com/Saphin18
 - Or use the contact form on the homepage, or the quote form on /services.
 `.trim();
+}
 
-const SYSTEM_PROMPT = `You are the friendly assistant on Saphin Praja's portfolio website (saphinpraja.com.np).
+function systemPrompt(p: PortfolioContent, s: ServicesContent): string {
+  return `You are the friendly assistant on Saphin Praja's portfolio website (saphinpraja.com.np).
 Visitors may be recruiters, people curious about his projects, or business owners who want a website or app.
 
 Rules:
 - Answer ONLY using the facts below. If something is not covered, say you don't know and suggest contacting Saphin directly (email or WhatsApp).
 - Never invent numbers, prices, employers, dates, or skills.
 - Keep answers short: 2–5 sentences, or a few short bullet lines. Plain text only, no markdown headings or bold.
-- When sharing a page, write the full plain URL, e.g. https://saphinpraja.com.np/services. Never use markdown links like [text](url). Write the WhatsApp number as +977 9821858674.
+- When sharing a page, write the full plain URL, e.g. https://saphinpraja.com.np/services. Never use markdown links like [text](url). Write the WhatsApp number as ${formatWhatsapp(s.whatsappNumber)}.
 - Be warm and professional. Refer to him as "Saphin".
 - For website or app enquiries, mention the starting price that fits and invite them to the quote form on /services or WhatsApp.
 - If asked about something unrelated to Saphin, his work, or his services, politely steer back.
 
 FACTS:
-${FACTS}`;
+${buildFacts(p, s)}`;
+}
 
 type Turn = { role: "user" | "assistant"; content: string };
 
@@ -113,6 +128,11 @@ export const Route = createFileRoute("/api/chat")({
           .slice(-HISTORY_TURNS * 2)
           .map((t) => ({ role: t.role, content: t.content.slice(0, 1500) }));
 
+        const [portfolio, services] = await Promise.all([
+          fetchPortfolioContent(),
+          fetchServicesContent(),
+        ]);
+
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
         let res: Response;
@@ -124,7 +144,7 @@ export const Route = createFileRoute("/api/chat")({
             body: JSON.stringify({
               model: process.env.GROQ_MODEL || DEFAULT_MODEL,
               messages: [
-                { role: "system", content: SYSTEM_PROMPT },
+                { role: "system", content: systemPrompt(portfolio, services) },
                 ...history,
                 { role: "user", content: question },
               ],

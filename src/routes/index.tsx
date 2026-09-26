@@ -139,8 +139,6 @@ const nav = [
   { id: "contact", label: "Contact" },
 ];
 
-const RESUME = "/Saphin_Praja_Resume.pdf";
-
 const demos = [
   { to: "/demos/restaurant" as const, name: "Restaurant", img: "/demos/previews/restaurant.webp" },
   { to: "/demos/shop" as const, name: "Online shop", img: "/demos/previews/shop.webp" },
@@ -318,7 +316,7 @@ function Portfolio() {
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </a>
                 <a
-                  href={RESUME}
+                  href={content.resumeUrl}
                   download="Saphin_Praja_Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"

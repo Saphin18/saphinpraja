@@ -108,7 +108,7 @@ create policy "Admin can delete messages" on public.contact_messages
 -- ---------- photo storage ----------
 -- Also in docs/admin-storage.sql for projects set up before photos were added.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('portfolio', 'portfolio', true, 5242880, array['image/webp', 'image/jpeg', 'image/png'])
+values ('portfolio', 'portfolio', true, 5242880, array['image/webp', 'image/jpeg', 'image/png', 'application/pdf'])
 on conflict (id) do update
   set public = excluded.public,
       file_size_limit = excluded.file_size_limit,

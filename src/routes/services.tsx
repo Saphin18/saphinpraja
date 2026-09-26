@@ -14,6 +14,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import { useReveal } from "@/hooks/use-reveal";
+import { fetchServicesContent } from "@/lib/supabase";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MobileMenu } from "@/components/mobile-menu";
 import {
@@ -23,11 +24,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-// Country code 977 + number, no + or spaces
-const WHATSAPP_NUMBER = "9779821858674";
-const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-  "Hi Saphin, I'd like a website for my business.",
-)}`;
+const WHATSAPP_GREETING = encodeURIComponent("Hi Saphin, I'd like a website for my business.");
 
 const PAGE_URL = "https://saphinpraja.com.np/services";
 const TITLE = "Website Design for Small Businesses in Nepal — Saphin Praja";
@@ -35,6 +32,8 @@ const DESCRIPTION =
   "Fast, mobile-friendly websites, online stores, and sales dashboards for restaurants, shops, and service businesses in Kathmandu and across Nepal.";
 
 export const Route = createFileRoute("/services")({
+  // Prices, FAQ and WhatsApp number saved from /admin; built-in copy if the database is unavailable.
+  loader: () => fetchServicesContent(),
   head: () => ({
     meta: [
       { title: TITLE },
@@ -148,74 +147,9 @@ const steps = [
   },
 ];
 
-const packages = [
-  {
-    name: "Starter",
-    price: "Rs 12,000",
-    blurb: "For a business that needs to be online, fast.",
-    features: [
-      "One-page website",
-      "Mobile-friendly",
-      "WhatsApp & call buttons",
-      "Google Maps location",
-      "Delivered in 5 days",
-    ],
-  },
-  {
-    name: "Business",
-    price: "Rs 25,000",
-    blurb: "For restaurants, clinics, salons, and service businesses.",
-    features: [
-      "Up to 5 pages",
-      "Menu / services & price list",
-      "Contact or booking form",
-      "Google Business Profile setup",
-      "Basic SEO",
-    ],
-    featured: true,
-  },
-  {
-    name: "Online Store",
-    price: "Rs 45,000",
-    blurb: "For shops ready to take orders online.",
-    features: [
-      "Product catalogue",
-      "Cart & order form",
-      "eSewa / Khalti or WhatsApp ordering",
-      "Simple sales dashboard",
-      "Everything in Business",
-    ],
-  },
-];
-
-const faqs = [
-  {
-    q: "Do I need to buy a domain and hosting?",
-    a: "I'll help you set it up. A .com.np domain is free for Nepali businesses, and hosting for a small site is often free or very cheap. You only pay what it actually costs.",
-  },
-  {
-    q: "How long does it take?",
-    a: "A Starter site is usually ready in 5 days. Business and Online Store sites take 1–3 weeks, depending on how quickly you can send photos and text.",
-  },
-  {
-    q: "Can I update the website myself?",
-    a: "You don't have to. Send me a message on WhatsApp with the new price, photo, or menu and I'll update it. If you'd rather do it yourself, I can set that up too.",
-  },
-  {
-    q: "How do I pay?",
-    a: "50% to start and 50% when the site is ready and you're happy with it. eSewa, Khalti, or bank transfer are all fine.",
-  },
-  {
-    q: "What if I don't like the design?",
-    a: "You see the first version before anything goes live, and changes are included. We keep adjusting until it feels right for your business.",
-  },
-  {
-    q: "Do you only work with businesses in Kathmandu?",
-    a: "No. Most of the work happens online, so I can build a site for a business anywhere in Nepal.",
-  },
-];
-
 function Services() {
+  const { packages, faqs, whatsappNumber } = Route.useLoaderData();
+  const WHATSAPP_URL = `https://wa.me/${whatsappNumber}?text=${WHATSAPP_GREETING}`;
   useReveal();
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -469,9 +403,9 @@ function Services() {
             </p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
-            {packages.map((p) => (
+            {packages.map((p, i) => (
               <div
-                key={p.name}
+                key={`${i}-${p.name}`}
                 className={`reveal flex flex-col rounded-2xl border bg-card p-8 shadow-card ${
                   p.featured ? "border-accent shadow-glow" : "border-border"
                 }`}
@@ -519,7 +453,7 @@ function Services() {
           </div>
           <Accordion type="single" collapsible className="reveal">
             {faqs.map((f, i) => (
-              <AccordionItem key={f.q} value={`faq-${i}`}>
+              <AccordionItem key={`${i}-${f.q}`} value={`faq-${i}`}>
                 <AccordionTrigger className="text-left text-base font-semibold">
                   {f.q}
                 </AccordionTrigger>

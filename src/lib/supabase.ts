@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { DEFAULT_CONTENT, normalizeContent, type PortfolioContent } from "@/lib/portfolio-content";
+import { DEFAULT_SERVICES, normalizeServices, type ServicesContent } from "@/lib/services-content";
 
 // The portfolio's own Supabase project (personal account), used by /admin.
 // Both values are public by design: the database's row-level security rules decide what
@@ -27,25 +28,38 @@ const restHeaders = (): Record<string, string> =>
     ? { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
     : { apikey: SUPABASE_ANON_KEY };
 
-// Reads the saved portfolio content. Never throws: if the database is slow, down, or
-// empty, the page gets the built-in content instead.
-export async function fetchPortfolioContent(timeoutMs = 2500): Promise<PortfolioContent> {
-  if (!supabaseConfigured) return DEFAULT_CONTENT;
+// Content saved from /admin lives in the site_content table, one row per page.
+export type ContentId = "portfolio" | "services";
+
+// Reads one page's saved content. Never throws: if the database is slow, down, or has
+// nothing saved yet, it resolves null and the page uses its built-in content instead.
+async function fetchSiteDoc(id: ContentId, timeoutMs = 2500): Promise<unknown> {
+  if (!supabaseConfigured) return null;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/site_content?id=eq.portfolio&select=data`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/site_content?id=eq.${id}&select=data`, {
       headers: restHeaders(),
       signal: ctrl.signal,
     });
-    if (!res.ok) return DEFAULT_CONTENT;
+    if (!res.ok) return null;
     const rows = (await res.json()) as { data: unknown }[];
-    return rows[0] ? normalizeContent(rows[0].data) : DEFAULT_CONTENT;
+    return rows[0]?.data ?? null;
   } catch {
-    return DEFAULT_CONTENT;
+    return null;
   } finally {
     clearTimeout(timer);
   }
+}
+
+export async function fetchPortfolioContent(): Promise<PortfolioContent> {
+  const data = await fetchSiteDoc("portfolio");
+  return data ? normalizeContent(data) : DEFAULT_CONTENT;
+}
+
+export async function fetchServicesContent(): Promise<ServicesContent> {
+  const data = await fetchSiteDoc("services");
+  return data ? normalizeServices(data) : DEFAULT_SERVICES;
 }
 
 // Keeps a copy of a contact/quote form message for the /admin inbox. Best effort: the

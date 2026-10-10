@@ -49,22 +49,22 @@ export function demoBusiness(
   };
 }
 
-// Thin bar on top of every demo site so visitors know it's a sample, not a real business.
+// Thin bar on top of a demo that was opened from a pitch link, naming the business it was
+// made for. Plain /demos/* links show nothing: the demo should look like a finished site.
 export function DemoBanner({ forName }: { forName?: string }) {
+  if (!forName) return null;
   return (
     <div className="bg-neutral-950 text-neutral-200">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-6 py-2 text-xs">
         <p>
-          {forName
-            ? `A free website preview for ${forName}, made by Saphin Praja. Photos and prices are placeholders.`
-            : "Sample website for a fictional business — designed & built by Saphin Praja."}
+          {`A free website preview for ${forName}, made by Saphin Praja. Photos and prices are placeholders.`}
         </p>
         <Link
           to="/services"
           className="inline-flex items-center gap-1.5 font-medium text-white hover:underline"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
-          {forName ? "Get this website" : "Want one like this?"}
+          Get this website
         </Link>
       </div>
     </div>

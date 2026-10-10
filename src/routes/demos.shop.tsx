@@ -170,7 +170,7 @@ const reviews = [
 
 const FREE_DELIVERY = 3000;
 const DELIVERY_FEE = 150;
-const SLIDE_MS = 5000;
+const SLIDE_MS = 3000;
 
 const rs = (n: number) => `Rs ${n.toLocaleString("en-IN")}`;
 

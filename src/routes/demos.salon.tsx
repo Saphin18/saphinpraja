@@ -206,7 +206,7 @@ function nextDays(n: number): Day[] {
   return out;
 }
 
-const SLIDE_MS = 4500;
+const SLIDE_MS = 3000;
 
 function Salon() {
   const biz = demoBusiness(

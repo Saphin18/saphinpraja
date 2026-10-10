@@ -186,7 +186,7 @@ const reviews = [
   },
 ];
 
-const SLIDE_MS = 5500;
+const SLIDE_MS = 3000;
 
 function HeroSlider({ area, whatsapp }: { area: string; whatsapp: string }) {
   const [active, setActive] = useState(0);

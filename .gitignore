@@ -37,3 +37,7 @@ src/routeTree.gen.ts
 .env
 .env.*
 !.env.example
+
+# Working notes for Claude Code sessions. Kept local: it tracks open security
+# items, and this repo is public.
+MEMORY.md

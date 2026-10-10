@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -35,7 +36,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -92,7 +93,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "Saphin Praja" },
       { name: "robots", content: "index, follow" },
       { name: "google-site-verification", content: "bkwo9RvJ1Lo8zOQVIyluumU1js64NszjKCJV6LUbncM" },
-      { property: "og:title", content: "Saphin Praja — Data Analyst in Nepal | SQL, Python & Power BI Portfolio" },
+      {
+        property: "og:title",
+        content: "Saphin Praja — Data Analyst in Nepal | SQL, Python & Power BI Portfolio",
+      },
       {
         property: "og:description",
         content:
@@ -101,7 +105,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Saphin Praja Portfolio" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Saphin Praja — Data Analyst in Nepal | SQL, Python & Power BI Portfolio" },
+      {
+        name: "twitter:title",
+        content: "Saphin Praja — Data Analyst in Nepal | SQL, Python & Power BI Portfolio",
+      },
       {
         name: "twitter:description",
         content:
@@ -160,10 +167,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         {children}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-4CPFDQVSMF"
-        />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-4CPFDQVSMF" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -180,7 +184,6 @@ function RootShell({ children }: { children: ReactNode }) {
     </html>
   );
 }
-
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();

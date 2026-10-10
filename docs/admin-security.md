@@ -35,7 +35,7 @@ One admin account is all this site ever needs.
 
 **Authentication → Policies** (or Sign In / Providers → Password settings)
 
-- **Minimum password length**: `12` — matches `MIN_PASSWORD` in `src/routes/admin.tsx`.
+- **Minimum password length**: `8` — matches `MIN_PASSWORD` in `src/routes/admin.tsx`.
 - **Password requirements**: letters, digits and symbols.
 - **Leaked password protection**: on, if your plan offers it. It checks new passwords
   against known breach lists.

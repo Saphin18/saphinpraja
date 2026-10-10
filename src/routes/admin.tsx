@@ -88,8 +88,10 @@ type AuthView = "login" | "forgot";
 // Authentication -> URL Configuration, so keep that list in sync with the sites you use.
 const resetRedirect = () => `${window.location.origin}${window.location.pathname}`;
 
-// Long enough that guessing is hopeless, short enough to still be typed by hand.
-const MIN_PASSWORD = 12;
+// Supabase rate-limits sign-in attempts, so the floor only has to stop the obviously
+// weak. Length beats cleverness: three unrelated words are easier to recall and harder
+// to guess than eight scrambled characters.
+const MIN_PASSWORD = 8;
 
 function passwordProblem(pw: string, confirm: string): string {
   if (pw.length < MIN_PASSWORD) return `Use at least ${MIN_PASSWORD} characters.`;

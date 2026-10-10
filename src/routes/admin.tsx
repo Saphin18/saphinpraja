@@ -7,10 +7,12 @@ import {
   ExternalLink,
   History,
   Inbox,
+  KeyRound,
   LogOut,
   Mail,
   Plus,
   RotateCcw,
+  ShieldCheck,
   Trash2,
 } from "lucide-react";
 import { getSupabase, supabaseConfigured, type ContentId } from "@/lib/supabase";
@@ -57,7 +59,9 @@ const btnPrimary = `${btn} bg-slate-900 text-white hover:bg-teal-700 dark:bg-tea
 const btnGhost = `${btn} border border-border bg-card hover:border-foreground`;
 const card = "rounded-2xl border border-border bg-card p-5 shadow-sm";
 
-type Tab = "intro" | "projects" | "experience" | "services" | "messages" | "history";
+type Tab = "intro" | "projects" | "experience" | "services" | "messages" | "history" | "security";
+
+type Notice = { kind: "ok" | "error"; text: string } | null;
 
 type Message = {
   id: string;
@@ -76,18 +80,58 @@ function Admin() {
 
 // ---------------------------------------------------------------- auth
 
+// Sign-in screens: normal login, "forgot password", and the "choose a new password"
+// screen the reset email links back to.
+type AuthView = "login" | "forgot";
+
+// Where the reset email should send you back to. Supabase only honours URLs listed under
+// Authentication -> URL Configuration, so keep that list in sync with the sites you use.
+const resetRedirect = () => `${window.location.origin}${window.location.pathname}`;
+
+// Long enough that guessing is hopeless, short enough to still be typed by hand.
+const MIN_PASSWORD = 12;
+
+function passwordProblem(pw: string, confirm: string): string {
+  if (pw.length < MIN_PASSWORD) return `Use at least ${MIN_PASSWORD} characters.`;
+  if (pw.toLowerCase().includes("saphin")) return "Don't use your name in the password.";
+  if (ADMIN_EMAIL.startsWith(pw.toLowerCase())) return "Don't use your email as the password.";
+  if (pw !== confirm) return "The two passwords don't match.";
+  return "";
+}
+
+// Supabase reports a bad or expired link in the URL fragment rather than as a failed call.
+function linkError(): string {
+  if (typeof window === "undefined") return "";
+  const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+  if (!hash.get("error")) return "";
+  return hash.get("error_code") === "otp_expired"
+    ? "That reset link has expired. Request a new one below."
+    : (hash.get("error_description") ?? "That reset link isn't valid any more.").replace(
+        /\+/g,
+        " ",
+      );
+}
+
 function AdminAuth() {
   const [session, setSession] = useState<Session | null | undefined>(undefined);
+  // True once the browser opens a link from a reset email. The visitor then holds a real
+  // session, but has to pick a new password before reaching the dashboard.
+  const [recovery, setRecovery] = useState(
+    () => typeof window !== "undefined" && window.location.hash.includes("type=recovery"),
+  );
 
   useEffect(() => {
     const supabase = getSupabase();
     supabase.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
+    const { data } = supabase.auth.onAuthStateChange((event, s) => {
+      if (event === "PASSWORD_RECOVERY") setRecovery(true);
+      setSession(s);
+    });
     return () => data.subscription.unsubscribe();
   }, []);
 
   if (session === undefined) return <Shell>Loading…</Shell>;
-  if (!session) return <Login />;
+  if (!session) return <SignedOut />;
   if (session.user.email?.toLowerCase() !== ADMIN_EMAIL) {
     return (
       <Shell>
@@ -104,10 +148,30 @@ function AdminAuth() {
       </Shell>
     );
   }
+  if (recovery) return <ChooseNewPassword onDone={() => setRecovery(false)} />;
   return <Dashboard email={session.user.email ?? ""} />;
 }
 
-function Login() {
+function SignedOut() {
+  const [view, setView] = useState<AuthView>("login");
+  // An expired or already-used reset link lands here, so say so instead of silently
+  // showing an empty sign-in form.
+  const [notice, setNotice] = useState(linkError);
+
+  return view === "login" ? (
+    <Login
+      notice={notice}
+      onForgot={() => {
+        setNotice("");
+        setView("forgot");
+      }}
+    />
+  ) : (
+    <ForgotPassword onBack={() => setView("login")} />
+  );
+}
+
+function Login({ notice, onForgot }: { notice: string; onForgot: () => void }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -137,6 +201,14 @@ function Login() {
           <h1 className="text-2xl font-bold">Portfolio admin</h1>
           <p className="mt-1 text-sm text-muted-foreground">Sign in to edit your portfolio.</p>
         </div>
+        {notice && (
+          <p
+            role="status"
+            className="rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm"
+          >
+            {notice}
+          </p>
+        )}
         <label className="block space-y-1.5 text-sm font-medium">
           <span>Email</span>
           <input name="email" type="email" required autoComplete="username" className={inputCls} />
@@ -158,6 +230,177 @@ function Login() {
         )}
         <button type="submit" disabled={busy} className={`${btnPrimary} w-full`}>
           {busy ? "Signing in…" : "Sign in"}
+        </button>
+        <button
+          type="button"
+          onClick={onForgot}
+          className="text-sm text-muted-foreground underline hover:text-foreground"
+        >
+          Forgot your password?
+        </button>
+      </form>
+    </Shell>
+  );
+}
+
+function ForgotPassword({ onBack }: { onBack: () => void }) {
+  const [state, setState] = useState<"ask" | "sent">("ask");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const email = String(new FormData(e.currentTarget).get("email") ?? "")
+      .trim()
+      .toLowerCase();
+    setBusy(true);
+    setError("");
+    // Only the owner's address ever gets an email. Any other address still sees the same
+    // confirmation below, so this form can't be used to probe for accounts or to send mail
+    // to strangers.
+    if (email === ADMIN_EMAIL) {
+      const { error } = await getSupabase().auth.resetPasswordForEmail(email, {
+        redirectTo: resetRedirect(),
+      });
+      if (error) {
+        setBusy(false);
+        setError(
+          error.status === 429
+            ? "Too many requests. Wait a minute, then try again."
+            : `Couldn't send the email: ${error.message}`,
+        );
+        return;
+      }
+    }
+    setBusy(false);
+    setState("sent");
+  }
+
+  if (state === "sent") {
+    return (
+      <Shell>
+        <div className={`${card} mx-auto mt-10 w-full max-w-sm`}>
+          <h1 className="text-xl font-bold">Check your email</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            If that address belongs to the site owner, a reset link is on its way. It works once and
+            expires in an hour — look in spam if it hasn't arrived in a few minutes.
+          </p>
+          <button className={`${btnGhost} mt-4`} onClick={onBack}>
+            Back to sign in
+          </button>
+        </div>
+      </Shell>
+    );
+  }
+
+  return (
+    <Shell>
+      <form onSubmit={onSubmit} className={`${card} mx-auto mt-10 w-full max-w-sm space-y-4`}>
+        <div>
+          <h1 className="text-2xl font-bold">Reset your password</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Enter your admin email and we'll send you a link to choose a new password.
+          </p>
+        </div>
+        <label className="block space-y-1.5 text-sm font-medium">
+          <span>Email</span>
+          <input
+            name="email"
+            type="email"
+            required
+            autoFocus
+            autoComplete="username"
+            className={inputCls}
+          />
+        </label>
+        {error && (
+          <p role="alert" className="text-sm text-destructive">
+            {error}
+          </p>
+        )}
+        <button type="submit" disabled={busy} className={`${btnPrimary} w-full`}>
+          <Mail /> {busy ? "Sending…" : "Send reset link"}
+        </button>
+        <button
+          type="button"
+          onClick={onBack}
+          className="text-sm text-muted-foreground underline hover:text-foreground"
+        >
+          Back to sign in
+        </button>
+      </form>
+    </Shell>
+  );
+}
+
+// Shown right after a reset link is opened. The session is already valid at this point, so
+// the only job left is to set a password and clear the token out of the URL.
+function ChooseNewPassword({ onDone }: { onDone: () => void }) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    const pw = String(form.get("password") ?? "");
+    const problem = passwordProblem(pw, String(form.get("confirm") ?? ""));
+    if (problem) {
+      setError(problem);
+      return;
+    }
+
+    setBusy(true);
+    setError("");
+    const { error } = await getSupabase().auth.updateUser({ password: pw });
+    setBusy(false);
+    if (error) {
+      setError(`Couldn't save the new password: ${error.message}`);
+      return;
+    }
+    // Drop the recovery token from the address bar so the link can't be reused or shared.
+    window.history.replaceState(null, "", window.location.pathname);
+    onDone();
+  }
+
+  return (
+    <Shell>
+      <form onSubmit={onSubmit} className={`${card} mx-auto mt-10 w-full max-w-sm space-y-4`}>
+        <div>
+          <h1 className="text-2xl font-bold">Choose a new password</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            At least {MIN_PASSWORD} characters. A password manager is the easiest way to keep it.
+          </p>
+        </div>
+        <label className="block space-y-1.5 text-sm font-medium">
+          <span>New password</span>
+          <input
+            name="password"
+            type="password"
+            required
+            autoFocus
+            minLength={MIN_PASSWORD}
+            autoComplete="new-password"
+            className={inputCls}
+          />
+        </label>
+        <label className="block space-y-1.5 text-sm font-medium">
+          <span>Repeat new password</span>
+          <input
+            name="confirm"
+            type="password"
+            required
+            minLength={MIN_PASSWORD}
+            autoComplete="new-password"
+            className={inputCls}
+          />
+        </label>
+        {error && (
+          <p role="alert" className="text-sm text-destructive">
+            {error}
+          </p>
+        )}
+        <button type="submit" disabled={busy} className={`${btnPrimary} w-full`}>
+          {busy ? "Saving…" : "Save password and continue"}
         </button>
       </form>
     </Shell>
@@ -288,7 +531,7 @@ function Dashboard({ email }: { email: string }) {
   const portfolio = useSiteDoc("portfolio", normalizeContent, DEFAULT_CONTENT);
   const services = useSiteDoc("services", normalizeServices, DEFAULT_SERVICES);
   const [saving, setSaving] = useState(false);
-  const [notice, setNotice] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
+  const [notice, setNotice] = useState<Notice>(null);
   const [unread, setUnread] = useState(0);
 
   const loadUnread = useCallback(async () => {
@@ -356,11 +599,16 @@ function Dashboard({ email }: { email: string }) {
     { id: "services", label: "Services & prices" },
     { id: "messages", label: "Messages", badge: unread },
     { id: "history", label: "History" },
+    { id: "security", label: "Security" },
   ];
 
   // Which page's content the current tab edits (none for Messages and History).
   const doc =
-    tab === "services" ? services : tab === "messages" || tab === "history" ? null : portfolio;
+    tab === "services"
+      ? services
+      : tab === "messages" || tab === "history" || tab === "security"
+        ? null
+        : portfolio;
 
   return (
     <Shell wide>
@@ -430,6 +678,8 @@ function Dashboard({ email }: { email: string }) {
       <div className="mt-6 pb-28">
         {tab === "messages" ? (
           <Messages onUnreadChange={loadUnread} />
+        ) : tab === "security" ? (
+          <SecurityTab email={email} />
         ) : tab === "history" ? (
           <HistoryList onRestore={restore} />
         ) : !doc?.draft ? (
@@ -1502,5 +1752,151 @@ function SetupNeeded() {
         </p>
       </div>
     </Shell>
+  );
+}
+
+// ---------------------------------------------------------------- security
+
+// Change the admin password, and drop every signed-in device. Useful after logging in on
+// a borrowed laptop, or any time the password might have been seen.
+function SecurityTab({ email }: { email: string }) {
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<Notice>(null);
+  const [signingOutAll, setSigningOutAll] = useState(false);
+
+  async function changePassword(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formEl = e.currentTarget;
+    const form = new FormData(formEl);
+    const current = String(form.get("current") ?? "");
+    const pw = String(form.get("password") ?? "");
+    const problem = passwordProblem(pw, String(form.get("confirm") ?? ""));
+    if (problem) {
+      setNotice({ kind: "error", text: problem });
+      return;
+    }
+    if (pw === current) {
+      setNotice({ kind: "error", text: "That's the password you already have." });
+      return;
+    }
+
+    setBusy(true);
+    setNotice(null);
+    const supabase = getSupabase();
+    // Prove the person at the keyboard knows the current password, so an unattended open
+    // tab can't be used to take the account over.
+    const { error: reauth } = await supabase.auth.signInWithPassword({
+      email,
+      password: current,
+    });
+    if (reauth) {
+      setBusy(false);
+      setNotice({ kind: "error", text: "Your current password isn't right." });
+      return;
+    }
+    const { error } = await supabase.auth.updateUser({ password: pw });
+    setBusy(false);
+    if (error) {
+      setNotice({ kind: "error", text: `Couldn't change it: ${error.message}` });
+      return;
+    }
+    formEl.reset();
+    setNotice({ kind: "ok", text: "Password changed. Save the new one in your password manager." });
+  }
+
+  async function signOutEverywhere() {
+    setSigningOutAll(true);
+    // Ends this session too, which is the point: every device starts again from the
+    // sign-in screen.
+    const { error } = await getSupabase().auth.signOut({ scope: "global" });
+    if (error) {
+      setSigningOutAll(false);
+      setNotice({ kind: "error", text: `Couldn't sign out everywhere: ${error.message}` });
+    }
+  }
+
+  return (
+    <div className="space-y-5">
+      {notice && (
+        <p
+          role="status"
+          className={`rounded-lg border px-4 py-2 text-sm ${
+            notice.kind === "ok"
+              ? "border-teal-500/40 bg-teal-500/10"
+              : "border-destructive/40 bg-destructive/10 text-destructive"
+          }`}
+        >
+          {notice.text}
+        </p>
+      )}
+
+      <form onSubmit={changePassword} className={`${card} max-w-md space-y-4`}>
+        <div>
+          <h2 className="flex items-center gap-2 text-lg font-bold">
+            <KeyRound className="h-4 w-4" /> Change your password
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            At least {MIN_PASSWORD} characters. You'll need your current one to confirm it's you.
+          </p>
+        </div>
+        <label className="block space-y-1.5 text-sm font-medium">
+          <span>Current password</span>
+          <input
+            name="current"
+            type="password"
+            required
+            autoComplete="current-password"
+            className={inputCls}
+          />
+        </label>
+        <label className="block space-y-1.5 text-sm font-medium">
+          <span>New password</span>
+          <input
+            name="password"
+            type="password"
+            required
+            minLength={MIN_PASSWORD}
+            autoComplete="new-password"
+            className={inputCls}
+          />
+        </label>
+        <label className="block space-y-1.5 text-sm font-medium">
+          <span>Repeat new password</span>
+          <input
+            name="confirm"
+            type="password"
+            required
+            minLength={MIN_PASSWORD}
+            autoComplete="new-password"
+            className={inputCls}
+          />
+        </label>
+        <button type="submit" disabled={busy} className={btnPrimary}>
+          {busy ? "Changing…" : "Change password"}
+        </button>
+      </form>
+
+      <div className={`${card} max-w-md`}>
+        <h2 className="flex items-center gap-2 text-lg font-bold">
+          <ShieldCheck className="h-4 w-4" /> Signed-in devices
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Signs you out of this admin page on every phone, laptop and browser. Do this if you signed
+          in somewhere you don't control.
+        </p>
+        <button className={`${btnGhost} mt-4`} disabled={signingOutAll} onClick={signOutEverywhere}>
+          <LogOut /> {signingOutAll ? "Signing out…" : "Sign out everywhere"}
+        </button>
+      </div>
+
+      <div className={`${card} max-w-md`}>
+        <h2 className="text-lg font-bold">Locked out?</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Only <strong>{ADMIN_EMAIL}</strong> can edit this site, and reset links go to that inbox
+          alone. If you ever lose the inbox too, set a new password straight from your Supabase
+          project under Authentication → Users.
+        </p>
+      </div>
+    </div>
   );
 }

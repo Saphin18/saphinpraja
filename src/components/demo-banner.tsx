@@ -18,6 +18,39 @@ export function validateDemoSearch(search: Record<string, unknown>): DemoSearch 
   return { n: pick(search.n), a: pick(search.a), p };
 }
 
+// Which country a demo is pitched into: decides the dial code on the chat link, the
+// country the map searches, and the shape of the placeholder phone number.
+export type DemoLocale = {
+  dialCode: string;
+  nationalDigits: number;
+  country: string;
+  placeholderPhone: string;
+};
+
+export const NEPAL: DemoLocale = {
+  dialCode: "977",
+  nationalDigits: 10,
+  country: "Nepal",
+  placeholderPhone: "98XX-XXXXXX",
+};
+
+export const KOREA: DemoLocale = {
+  dialCode: "82",
+  nationalDigits: 10,
+  country: "South Korea",
+  placeholderPhone: "010-XXXX-XXXX",
+};
+
+// Local number to international, without the leading trunk zero Korean numbers carry
+// (010-1234-5678 dials as +82 10 1234 5678). Anything we can't read confidently is
+// passed through untouched rather than guessed at.
+function toInternational(digits: string, locale: DemoLocale) {
+  if (!digits) return "";
+  if (digits.startsWith(locale.dialCode)) return digits;
+  const national = digits.replace(/^0+/, "");
+  return national.length === locale.nationalDigits ? `${locale.dialCode}${national}` : digits;
+}
+
 export type DemoBusiness = {
   personalised: boolean;
   name: string;
@@ -26,6 +59,7 @@ export type DemoBusiness = {
   phone: string;
   // WhatsApp chat link when a phone is given, otherwise the page's own contact section.
   whatsapp: string;
+  tel: string;
   mapSrc: string;
 };
 
@@ -33,19 +67,21 @@ export function demoBusiness(
   search: DemoSearch,
   defaults: { name: string; area: string; address: string },
   fallbackHref: string,
+  locale: DemoLocale = NEPAL,
 ): DemoBusiness {
   const area = search.a ?? defaults.area;
   const phone = search.p === undefined ? undefined : String(search.p);
   const digits = (phone ?? "").replace(/\D/g, "");
-  const intl = digits.length === 10 ? `977${digits}` : digits;
+  const intl = toInternational(digits, locale);
   return {
     personalised: Boolean(search.n),
     name: search.n ?? defaults.name,
     area,
     address: search.a ?? defaults.address,
-    phone: phone ?? "98XX-XXXXXX",
+    phone: phone ?? locale.placeholderPhone,
     whatsapp: intl ? `https://wa.me/${intl}` : fallbackHref,
-    mapSrc: `https://www.google.com/maps?q=${encodeURIComponent(`${area}, Nepal`)}&output=embed`,
+    tel: intl ? `tel:+${intl}` : fallbackHref,
+    mapSrc: `https://www.google.com/maps?q=${encodeURIComponent(`${area}, ${locale.country}`)}&output=embed`,
   };
 }
 

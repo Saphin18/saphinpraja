@@ -43,7 +43,7 @@ WEBSITES & APPS FOR BUSINESSES (freelance, alongside his day job)
 ${s.packages.map((x) => `  - ${x.name}: from ${x.price}. ${x.blurb} Includes: ${x.features.join(", ")}.`).join("\n")}
 - Domain and hosting are billed at cost.
 - Process: free call → first design within a few days (changes included) → launch on your own domain → one month of free edits, then optional monthly support.
-- Sample demo sites (fictional businesses): restaurant /demos/restaurant, online shop /demos/shop, salon booking /demos/salon. Full details and quote form: /services
+- Sample demo sites (fictional businesses): restaurant /demos/restaurant, online shop /demos/shop, salon booking /demos/salon, clothing store /demos/clothing (Korean market, KRW, KakaoPay/Naver Pay/Toss). Full details and quote form: /services
 - Common questions:
 ${s.faqs.map((f) => `  - Q: ${f.q} A: ${f.a}`).join("\n")}
 

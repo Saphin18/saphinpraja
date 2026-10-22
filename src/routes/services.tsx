@@ -126,6 +126,14 @@ const demos = [
     preview: "/demos/previews/salon.webp",
     url: "saphinpraja.com.np/demos/salon",
   },
+  {
+    to: "/demos/clothing" as const,
+    kind: "Clothing store",
+    name: "SEORI Studio",
+    desc: "Korean-market store: live ranking, timed deals, coupons, size and colour picker, and KakaoPay / Naver Pay / Toss checkout.",
+    preview: "/demos/previews/clothing.webp",
+    url: "saphinpraja.com.np/demos/clothing",
+  },
 ];
 
 const steps = [

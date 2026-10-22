@@ -143,6 +143,11 @@ const demos = [
   { to: "/demos/restaurant" as const, name: "Restaurant", img: "/demos/previews/restaurant.webp" },
   { to: "/demos/shop" as const, name: "Online shop", img: "/demos/previews/shop.webp" },
   { to: "/demos/salon" as const, name: "Salon booking", img: "/demos/previews/salon.webp" },
+  {
+    to: "/demos/clothing" as const,
+    name: "Clothing store",
+    img: "/demos/previews/clothing.webp",
+  },
 ];
 
 // Shared class strings so light (clean) and dark (data) themes stay in sync.

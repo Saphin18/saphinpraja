@@ -182,6 +182,24 @@ const T: Record<Lang, Record<string, string>> = {
     seasonAll: "전체 시즌",
     seasonSs: "봄 · 여름",
     seasonFw: "가을 · 겨울",
+    accountTitle: "마이페이지",
+    accountGreeting: "지은님, 안녕하세요",
+    accountTier: "SILVER 회원",
+    accountOrders: "주문",
+    accountCoupons: "쿠폰",
+    accountPoints: "적립금",
+    orderHistory: "최근 주문 내역",
+    orderDelivered: "배송완료",
+    orderShipping: "배송중",
+    orderPreparing: "상품준비중",
+    orderNo: "주문번호",
+    menuOrders: "주문 내역 전체보기",
+    menuAddress: "배송지 관리",
+    menuCoupons: "쿠폰함",
+    menuWishlist: "위시리스트",
+    menuInquiry: "1:1 문의",
+    menuLogout: "로그아웃",
+    accountDemo: "데모 사이트입니다. 실제 계정이 아니며 주문 내역은 예시입니다.",
   },
   en: {
     promo: "Free shipping over ₩50,000 · Free returns within 14 days",
@@ -289,6 +307,24 @@ const T: Record<Lang, Record<string, string>> = {
     seasonAll: "All seasons",
     seasonSs: "Spring / Summer",
     seasonFw: "Autumn / Winter",
+    accountTitle: "Account",
+    accountGreeting: "Hello, Ji-eun",
+    accountTier: "SILVER member",
+    accountOrders: "Orders",
+    accountCoupons: "Coupons",
+    accountPoints: "Points",
+    orderHistory: "Recent orders",
+    orderDelivered: "Delivered",
+    orderShipping: "In transit",
+    orderPreparing: "Preparing",
+    orderNo: "Order no.",
+    menuOrders: "View all orders",
+    menuAddress: "Delivery addresses",
+    menuCoupons: "My coupons",
+    menuWishlist: "Wishlist",
+    menuInquiry: "Contact us",
+    menuLogout: "Sign out",
+    accountDemo: "Demo site — this is not a real account and the orders shown are examples.",
   },
 };
 
@@ -765,6 +801,34 @@ const categories: { key: string; ko: string; en: string }[] = [
   { key: "Acc", ko: "액세서리", en: "Accessories" },
 ];
 
+// Example order history for the account panel.
+const orders = [
+  {
+    no: "20261021-0117",
+    date: "2026.10.21",
+    productId: 21,
+    size: "S",
+    colour: "Ivory",
+    status: "orderPreparing" as const,
+  },
+  {
+    no: "20261020-0094",
+    date: "2026.10.20",
+    productId: 3,
+    size: "M",
+    colour: "Camel",
+    status: "orderShipping" as const,
+  },
+  {
+    no: "20261018-0042",
+    date: "2026.10.18",
+    productId: 13,
+    size: "M",
+    colour: "Camel",
+    status: "orderDelivered" as const,
+  },
+];
+
 const bestIds = [13, 3, 7, 10];
 const newIds = [15, 21, 23, 17];
 
@@ -975,6 +1039,7 @@ function Clothing() {
   const [step, setStep] = useState<"cart" | "checkout" | "done">("cart");
   const [slide, setSlide] = useState(0);
   const [guide, setGuide] = useState(false);
+  const [account, setAccount] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
 
   // The header floats over the hero image until the page scrolls past it.
@@ -1983,6 +2048,140 @@ function Clothing() {
         </div>
       )}
 
+      {/* Account */}
+      {account && (
+        <div
+          className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm"
+          onClick={() => setAccount(false)}
+        >
+          <aside
+            className="seo-drawer flex h-full w-full max-w-md flex-col bg-white shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+            aria-label={t.accountTitle}
+          >
+            <div className="flex items-center justify-between border-b border-neutral-100 p-6">
+              <h2 className="text-[15px] font-medium tracking-tight">{t.accountTitle}</h2>
+              <button
+                type="button"
+                onClick={() => setAccount(false)}
+                aria-label={t.close}
+                className="p-1 text-neutral-400 transition-colors hover:text-neutral-900"
+              >
+                <X className="h-5 w-5" strokeWidth={1.5} />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto">
+              {/* Who is signed in */}
+              <div className="flex items-center gap-4 px-6 py-6">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-neutral-100 text-neutral-500">
+                  <User className="h-5 w-5" strokeWidth={1.5} />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[15px] font-medium">{t.accountGreeting}</p>
+                  <p className="mt-0.5 text-[11px] font-light tracking-[0.12em] text-neutral-500">
+                    {t.accountTier}
+                  </p>
+                </div>
+              </div>
+
+              {/* Orders / coupons / points */}
+              <div className="mx-6 grid grid-cols-3 border-y border-neutral-100">
+                {[
+                  [t.accountOrders, String(orders.length)],
+                  [t.accountCoupons, "2"],
+                  [t.accountPoints, "3,200"],
+                ].map(([label, value], i) => (
+                  <div
+                    key={label}
+                    className={`py-4 text-center ${i < 2 ? "border-r border-neutral-100" : ""}`}
+                  >
+                    <p className="seo-tab text-lg font-medium">{value}</p>
+                    <p className="mt-0.5 text-[11px] font-light text-neutral-500">{label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Order history */}
+              <div className="px-6 pt-7">
+                <p className="text-[11px] font-medium">{t.orderHistory}</p>
+                <ul className="mt-4 space-y-4">
+                  {orders.map((o) => {
+                    const prod = byId.get(o.productId)!;
+                    return (
+                      <li key={o.no} className="flex gap-4">
+                        <img
+                          src={`${IMG}/${prod.img}-sm.webp`}
+                          alt=""
+                          loading="lazy"
+                          className="h-24 w-18 shrink-0 object-cover"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`px-1.5 py-0.5 text-[10px] font-medium ${
+                                o.status === "orderDelivered"
+                                  ? "bg-neutral-100 text-neutral-600"
+                                  : "bg-neutral-900 text-white"
+                              }`}
+                            >
+                              {t[o.status]}
+                            </span>
+                            <span className="seo-tab text-[11px] font-light text-neutral-400">
+                              {o.date}
+                            </span>
+                          </div>
+                          <p className="mt-1.5 truncate text-[13px] font-medium">
+                            {lead(prod, lang)}
+                          </p>
+                          <p className="mt-0.5 text-[11px] font-light text-neutral-500">
+                            {o.size} · {o.colour}
+                          </p>
+                          <p className="seo-tab mt-1 text-[11px] font-light text-neutral-400">
+                            {t.orderNo} {o.no}
+                          </p>
+                        </div>
+                        <p className="seo-tab shrink-0 text-[13px]">{won(prod.price)}</p>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {/* Menu */}
+              <ul className="mt-8 border-t border-neutral-100">
+                {[t.menuOrders, t.menuAddress, t.menuCoupons, t.menuWishlist, t.menuInquiry].map(
+                  (label) => (
+                    <li key={label}>
+                      <button
+                        type="button"
+                        className="flex w-full items-center justify-between border-b border-neutral-100 px-6 py-4 text-left text-[13px] font-light transition-colors hover:bg-neutral-50"
+                      >
+                        {label}
+                        <ChevronRight className="h-4 w-4 text-neutral-300" />
+                      </button>
+                    </li>
+                  ),
+                )}
+              </ul>
+
+              <div className="px-6 py-6">
+                <button
+                  type="button"
+                  onClick={() => setAccount(false)}
+                  className="w-full border border-neutral-200 py-3.5 text-[12px] font-light tracking-[0.08em] text-neutral-600 transition-colors hover:border-neutral-900 hover:text-neutral-900"
+                >
+                  {t.menuLogout}
+                </button>
+                <p className="mt-4 text-[11px] font-light leading-relaxed text-neutral-400">
+                  {t.accountDemo}
+                </p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      )}
+
       {/* Toast */}
       {toast && !open && (
         <div className="seo-pop fixed bottom-20 left-1/2 z-40 -translate-x-1/2 bg-neutral-900 px-5 py-3 text-[11px] font-light text-white shadow-lg md:bottom-6">
@@ -2006,7 +2205,7 @@ function Clothing() {
               action: () => document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" }),
             },
             { icon: ShoppingBag, label: t.tabCart, action: () => setOpen(true), badge: count },
-            { icon: User, label: t.tabMy, action: () => setGuide(true) },
+            { icon: User, label: t.tabMy, action: () => setAccount(true) },
           ].map((tab) => {
             const I = tab.icon;
             return (

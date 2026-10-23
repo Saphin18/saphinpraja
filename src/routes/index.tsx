@@ -164,6 +164,11 @@ const demos = [
     name: "Nepali boutique",
     img: "/demos/previews/naya.webp",
   },
+  {
+    href: "/demos/komal/index.html",
+    name: "Nepali fashion app",
+    img: "/demos/previews/komal.webp",
+  },
 ];
 
 // Shared class strings so light (clean) and dark (data) themes stay in sync.

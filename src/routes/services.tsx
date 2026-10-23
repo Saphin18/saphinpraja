@@ -159,6 +159,14 @@ const demos = [
     preview: "/demos/previews/naya.webp",
     url: "saphinpraja.com.np/demos/naya",
   },
+  {
+    href: "/demos/komal/index.html",
+    kind: "Fashion app store",
+    name: "KOMAL",
+    desc: "Korean shopping-app style for Nepali clothing: auto-sliding banners, ranked best sellers, filters and sort, bottom-sheet product view, Korean/English, and KakaoPay / Naver Pay / Toss checkout.",
+    preview: "/demos/previews/komal.webp",
+    url: "saphinpraja.com.np/demos/komal",
+  },
 ];
 
 const steps = [

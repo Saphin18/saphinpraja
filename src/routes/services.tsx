@@ -150,6 +150,15 @@ const demos = [
     preview: "/demos/previews/nepali-craft.webp",
     url: "saphinpraja.com.np/demos/nepali-craft",
   },
+  // Plain HTML/CSS/JS demo served from public/, so it takes an href, not a route
+  {
+    href: "/demos/naya/index.html",
+    kind: "Nepali boutique",
+    name: "NAYA",
+    desc: "Luxury Nepali clothing for Korea, built in plain HTML, CSS and JS: kurtha, sari, gunyu cholo and pashmina, English/Korean, wishlist, search, and KakaoPay / Naver Pay / Toss checkout.",
+    preview: "/demos/previews/naya.webp",
+    url: "saphinpraja.com.np/demos/naya",
+  },
 ];
 
 const steps = [
@@ -356,43 +365,52 @@ function Services() {
             </p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
-            {demos.map((d) => (
-              <Link
-                key={d.to}
-                to={d.to}
-                className="reveal group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-all hover:-translate-y-1 hover:border-accent/60 hover:shadow-glow"
-              >
-                <div className="border-b border-border bg-secondary/60 p-3 pb-0">
-                  <div className="flex items-center gap-1.5 px-1 pb-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
-                    <span className="ml-2 truncate rounded-md bg-background/80 px-2 py-0.5 text-[10px] text-muted-foreground">
-                      {d.url}
+            {demos.map((d) => {
+              const cls =
+                "reveal group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-all hover:-translate-y-1 hover:border-accent/60 hover:shadow-glow";
+              const body = (
+                <>
+                  <div className="border-b border-border bg-secondary/60 p-3 pb-0">
+                    <div className="flex items-center gap-1.5 px-1 pb-2">
+                      <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
+                      <span className="ml-2 truncate rounded-md bg-background/80 px-2 py-0.5 text-[10px] text-muted-foreground">
+                        {d.url}
+                      </span>
+                    </div>
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-t-lg">
+                      <img
+                        src={d.preview}
+                        alt={`Preview of the ${d.name} demo website`}
+                        loading="lazy"
+                        className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-neutral-900 shadow">
+                        {d.kind}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    <h3 className="text-lg font-bold">{d.name}</h3>
+                    <p className="mt-2 flex-1 text-muted-foreground">{d.desc}</p>
+                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-accent">
+                      Open demo
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                     </span>
                   </div>
-                  <div className="relative aspect-[16/10] overflow-hidden rounded-t-lg">
-                    <img
-                      src={d.preview}
-                      alt={`Preview of the ${d.name} demo website`}
-                      loading="lazy"
-                      className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-neutral-900 shadow">
-                      {d.kind}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex flex-1 flex-col p-6">
-                  <h3 className="text-lg font-bold">{d.name}</h3>
-                  <p className="mt-2 flex-1 text-muted-foreground">{d.desc}</p>
-                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-accent">
-                    Open demo
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                </div>
-              </Link>
-            ))}
+                </>
+              );
+              return "href" in d ? (
+                <a key={d.href} href={d.href} className={cls}>
+                  {body}
+                </a>
+              ) : (
+                <Link key={d.to} to={d.to} className={cls}>
+                  {body}
+                </Link>
+              );
+            })}
           </div>
         </section>
 

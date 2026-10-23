@@ -158,6 +158,12 @@ const demos = [
     name: "Handwoven Nepal",
     img: "/demos/previews/nepali-craft.webp",
   },
+  // Plain HTML/CSS/JS demo served from public/, so it takes an href, not a route
+  {
+    href: "/demos/naya/index.html",
+    name: "Nepali boutique",
+    img: "/demos/previews/naya.webp",
+  },
 ];
 
 // Shared class strings so light (clean) and dark (data) themes stay in sync.
@@ -528,21 +534,31 @@ function Portfolio() {
               and more. Fast, mobile-friendly, and easy to manage. Try a demo:
             </p>
             <div className="mt-6 grid grid-cols-3 gap-3">
-              {demos.map((d) => (
-                <Link
-                  key={d.to}
-                  to={d.to}
-                  aria-label={`${d.name} demo website`}
-                  className="group overflow-hidden rounded-xl border border-border"
-                >
+              {demos.map((d) => {
+                const thumb = (
                   <img
                     src={d.img}
                     alt={`${d.name} demo`}
                     loading="lazy"
                     className="aspect-[4/3] w-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
                   />
-                </Link>
-              ))}
+                );
+                const cls = "group overflow-hidden rounded-xl border border-border";
+                return "href" in d ? (
+                  <a
+                    key={d.href}
+                    href={d.href}
+                    aria-label={`${d.name} demo website`}
+                    className={cls}
+                  >
+                    {thumb}
+                  </a>
+                ) : (
+                  <Link key={d.to} to={d.to} aria-label={`${d.name} demo website`} className={cls}>
+                    {thumb}
+                  </Link>
+                );
+              })}
             </div>
             <Link
               to="/services"

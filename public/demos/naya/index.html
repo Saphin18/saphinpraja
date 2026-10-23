@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NAYA — Nepal, Reimagined.</title>
+  <meta name="description" content="NAYA brings authentic Nepali clothing — kurtha, sari, gunyu cholo, dhaka and pashmina — to customers across Korea." />
+  <meta name="theme-color" content="#F8F4EE" />
+
+  <!-- Fonts: Cormorant Garamond (display), Jost (UI/body), Noto Sans KR (Korean) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============ ICON SPRITE (referenced with <use href="#i-name">) ============ -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M4.5 20.5c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></symbol>
+      <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></symbol>
+      <symbol id="i-heart-fill" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z" fill="currentColor" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></symbol>
+      <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5.5 8.5h13l-1 12h-11z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" fill="none" stroke="currentColor" stroke-width="1.3"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M14 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="M20 12H5M10 7l-5 5 5 5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5L12 4l8 6.5V20h-5.5v-5.5h-5V20H4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" fill="none" stroke="currentColor" stroke-width="1.3"/><rect x="13.5" y="4" width="6.5" height="6.5" fill="none" stroke="currentColor" stroke-width="1.3"/><rect x="4" y="13.5" width="6.5" height="6.5" fill="none" stroke="currentColor" stroke-width="1.3"/><rect x="13.5" y="13.5" width="6.5" height="6.5" fill="none" stroke="currentColor" stroke-width="1.3"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M3.5 12h17M12 3.5c2.4 2.4 3.5 5.2 3.5 8.5s-1.1 6.1-3.5 8.5c-2.4-2.4-3.5-5.2-3.5-8.5s1.1-6.1 3.5-8.5z" fill="none" stroke="currentColor" stroke-width="1.3"/></symbol>
+      <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="16.6" cy="7.4" r=".9" fill="currentColor"/></symbol>
+      <!-- Trust / feature line icons -->
+      <symbol id="i-thread" viewBox="0 0 40 40"><path d="M8 32L32 8" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><circle cx="30" cy="10" r="2.2" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M10 14c6 0 6 6 12 6s6 6 12 6" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M6 22c6 0 6 6 12 6" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 40 40"><rect x="10" y="17" width="20" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M14 17v-4a6 6 0 0 1 12 0v4" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="20" cy="24" r="1.6" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M20 25.6V28" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></symbol>
+      <symbol id="i-truck" viewBox="0 0 40 40"><path d="M5 12h18v15H5zM23 17h7l5 5v5H23z" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/><circle cx="11" cy="29" r="2.6" fill="var(--icon-bg, #F8F4EE)" stroke="currentColor" stroke-width="1.1"/><circle cx="29" cy="29" r="2.6" fill="var(--icon-bg, #F8F4EE)" stroke="currentColor" stroke-width="1.1"/></symbol>
+      <symbol id="i-return" viewBox="0 0 40 40"><path d="M10 16h15a7 7 0 0 1 0 14H14" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M15 11l-5 5 5 5" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-mountain" viewBox="0 0 40 40"><path d="M4 32l11-17 6 9 4-5 11 13z" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/><path d="M12.4 19l2.6 2 2.2-2.4" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 40 40"><path d="M20 35s-10-9.5-10-17a10 10 0 0 1 20 0c0 7.5-10 17-10 17z" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="20" cy="18" r="3.5" fill="none" stroke="currentColor" stroke-width="1.1"/></symbol>
+      <symbol id="i-cross" viewBox="0 0 40 40"><circle cx="15" cy="20" r="9" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="25" cy="20" r="9" fill="none" stroke="currentColor" stroke-width="1.1"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header" id="siteHeader">
+    <div class="topbar">
+      <p>
+        <span data-i18n="topbar.ship">Free shipping on orders over ₩100,000</span>
+        <span class="topbar-dot" aria-hidden="true">·</span>
+        <span class="topbar-second" data-i18n="topbar.days">Delivered from Nepal in 7–12 days</span>
+      </p>
+    </div>
+
+    <div class="nav-wrap">
+      <button class="icon-btn nav-burger" id="menuOpen" aria-label="Open menu" data-i18n-aria="aria.menu">
+        <svg><use href="#i-menu"/></svg>
+      </button>
+
+      <!-- Brand name lives in one place per spot; search "NAYA" to rename -->
+      <a href="#top" class="logo" aria-label="NAYA home">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/><path d="M7 21.5l6-8.5 3.5 5 2.5-3 6 6.5" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>
+        <span class="logo-word">NAYA</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Primary">
+        <a href="#shop" data-filter="all" data-i18n="nav.new">New Arrivals</a>
+        <a href="#shop" data-filter="kurtha" data-i18n="nav.kurtha">Kurthas</a>
+        <a href="#shop" data-filter="saree" data-i18n="nav.saree">Sarees</a>
+        <a href="#shop" data-filter="gunyu" data-i18n="nav.gunyu">Gunyu Cholo</a>
+        <a href="#shop" data-filter="pashmina" data-i18n="nav.pashmina">Pashmina &amp; Dhaka</a>
+        <a href="#shop" data-filter="lehenga" data-i18n="nav.lehenga">Lehengas</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="icon-btn" data-open="search" aria-label="Search" data-i18n-aria="aria.search"><svg><use href="#i-search"/></svg></button>
+
+        <div class="lang" id="langSwitch">
+          <button class="lang-toggle" id="langToggle" aria-haspopup="true" aria-expanded="false">
+            <span id="langCurrent">EN</span>
+            <svg class="lang-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+          </button>
+          <ul class="lang-menu" role="menu">
+            <li><button role="menuitem" data-lang="ko"><b>KR</b> 한국어</button></li>
+            <li><button role="menuitem" data-lang="en"><b>EN</b> English</button></li>
+          </ul>
+        </div>
+
+        <button class="icon-btn hide-sm" data-open="account" aria-label="Account" data-i18n-aria="aria.account"><svg><use href="#i-user"/></svg></button>
+        <button class="icon-btn hide-sm" data-open="wishlist" aria-label="Wishlist" data-i18n-aria="aria.wishlist">
+          <svg><use href="#i-heart"/></svg><span class="badge" data-count="wish">0</span>
+        </button>
+        <button class="icon-btn" data-open="cart" aria-label="Shopping bag" data-i18n-aria="aria.bag">
+          <svg><use href="#i-bag"/></svg><span class="badge" data-count="cart">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" aria-label="NAYA campaign">
+      <div class="media hero-media" data-img="hero" data-label="NAYA — Nepal, Reimagined" data-eager></div>
+      <div class="hero-shade" aria-hidden="true"></div>
+
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow hero-eyebrow reveal-hero" data-i18n="hero.eyebrow">Authentic pieces from Nepal · Curated for Korea</p>
+          <h1 class="hero-title reveal-hero" style="--d:.1s">
+            <span data-i18n="hero.title1">Nepal,</span>
+            <em data-i18n="hero.title2">Reimagined.</em>
+          </h1>
+          <p class="hero-lead reveal-hero" style="--d:.2s" data-i18n-html="hero.lead">Timeless Nepali craftsmanship,<br />made for the modern world.</p>
+          <div class="hero-ctas reveal-hero" style="--d:.3s">
+            <a href="#shop" class="btn btn-light" data-filter="all" data-i18n="hero.cta1">Shop Collection</a>
+            <a href="#story" class="btn btn-ghost-light" data-i18n="hero.cta2">Explore Nepali Heritage</a>
+          </div>
+        </div>
+
+        <!-- "Shop the look" tag: opens the product worn in the hero image -->
+        <button class="hero-look reveal-hero" style="--d:.45s" data-product="gunyu-rani">
+          <span class="hero-look-dot" aria-hidden="true"></span>
+          <span class="hero-look-text">
+            <small data-i18n="hero.shown">Shown</small>
+            <b data-pname="gunyu-rani">Rani Gunyu Cholo Set</b>
+            <span data-pprice="gunyu-rani">₩179,000</span>
+          </span>
+          <svg aria-hidden="true"><use href="#i-arrow"/></svg>
+        </button>
+      </div>
+
+      <a href="#collection" class="hero-scroll" aria-label="Scroll down"><span></span></a>
+    </section>
+
+    <!-- ============ PROMISE STRIP (instant understanding) ============ -->
+    <section class="promise" aria-label="Why NAYA">
+      <ul class="container promise-list">
+        <li><svg aria-hidden="true"><use href="#i-mountain"/></svg><span data-i18n="promise.1">Handmade in Nepal</span></li>
+        <li><svg aria-hidden="true"><use href="#i-truck"/></svg><span data-i18n="promise.2">Free shipping over ₩100,000</span></li>
+        <li><svg aria-hidden="true"><use href="#i-pin"/></svg><span data-i18n="promise.3">Delivered across Korea in 7–12 days</span></li>
+        <li><svg aria-hidden="true"><use href="#i-lock"/></svg><span data-i18n="promise.4">KakaoPay · Naver Pay · Toss</span></li>
+      </ul>
+    </section>
+
+    <!-- ============ CATEGORIES ============ -->
+    <section class="section collection" id="collection">
+      <div class="container">
+        <header class="section-head center reveal">
+          <p class="eyebrow" data-i18n="cat.eyebrow">새로운 컬렉션 · The Collection</p>
+          <h2 class="section-title" data-i18n="cat.title">Discover the Collection</h2>
+          <p class="section-sub" data-i18n="cat.sub">Traditional silhouettes, thoughtfully reimagined.</p>
+        </header>
+
+        <div class="cat-grid">
+          <a href="#shop" class="cat-card reveal" data-filter="kurtha">
+            <div class="media" data-img="catKurtha" data-label="Kurthas"></div>
+            <div class="cat-info">
+              <h3 data-i18n="cat.kurtha">Kurthas</h3>
+              <p data-i18n="cat.kurthaSub">Everyday heritage</p>
+              <span class="link-arrow"><span data-i18n="common.shop">Shop</span> <svg><use href="#i-arrow"/></svg></span>
+            </div>
+          </a>
+          <a href="#shop" class="cat-card reveal" style="--d:.08s" data-filter="saree">
+            <div class="media" data-img="catSaree" data-label="Sarees"></div>
+            <div class="cat-info">
+              <h3 data-i18n="cat.saree">Sarees</h3>
+              <p data-i18n="cat.sareeSub">Timeless elegance</p>
+              <span class="link-arrow"><span data-i18n="common.shop">Shop</span> <svg><use href="#i-arrow"/></svg></span>
+            </div>
+          </a>
+          <a href="#shop" class="cat-card reveal" style="--d:.16s" data-filter="gunyu">
+            <div class="media" data-img="catCultural" data-label="Cultural Edits"></div>
+            <div class="cat-info">
+              <h3 data-i18n="cat.cultural">Cultural Edits</h3>
+              <p data-i18n="cat.culturalSub">Pieces with a story</p>
+              <span class="link-arrow"><span data-i18n="common.shop">Shop</span> <svg><use href="#i-arrow"/></svg></span>
+            </div>
+          </a>
+          <a href="#shop" class="cat-card reveal" style="--d:.24s" data-filter="lehenga">
+            <div class="media" data-img="catLehenga" data-label="Lehengas"></div>
+            <div class="cat-info">
+              <h3 data-i18n="cat.lehenga">Lehengas</h3>
+              <p data-i18n="cat.lehengaSub">Made for celebrations</p>
+              <span class="link-arrow"><span data-i18n="common.shop">Shop</span> <svg><use href="#i-arrow"/></svg></span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PRODUCTS ============ -->
+    <section class="section shop" id="shop">
+      <div class="container">
+        <header class="shop-head reveal">
+          <div>
+            <p class="eyebrow" data-i18n="shop.eyebrow">신상품 · New Arrivals</p>
+            <h2 class="section-title" data-i18n="shop.title">Curated for You</h2>
+          </div>
+          <div class="filters" role="tablist" aria-label="Filter products">
+            <button class="filter is-active" data-filter-btn="all" role="tab" data-i18n="filter.all">All</button>
+            <button class="filter" data-filter-btn="kurtha" role="tab" data-i18n="filter.kurtha">Kurthas</button>
+            <button class="filter" data-filter-btn="saree" role="tab" data-i18n="filter.saree">Sarees</button>
+            <button class="filter" data-filter-btn="gunyu" role="tab" data-i18n="filter.gunyu">Gunyu Cholo</button>
+            <button class="filter" data-filter-btn="pashmina" role="tab" data-i18n="filter.pashmina">Pashmina &amp; Dhaka</button>
+            <button class="filter" data-filter-btn="lehenga" role="tab" data-i18n="filter.lehenga">Lehengas</button>
+          </div>
+        </header>
+
+        <!-- Product cards are rendered by script.js from the PRODUCTS list -->
+        <div class="product-grid" id="productGrid" aria-live="polite"></div>
+
+        <div class="shop-more">
+          <button class="btn btn-outline" id="showAll" data-i18n="shop.viewAll">View all pieces</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STORY ============ -->
+    <section class="section story" id="story">
+      <div class="container story-grid">
+        <div class="story-visual reveal">
+          <div class="media story-main" data-img="storyMain" data-label="Hand-loomed in Nepal"></div>
+          <div class="media story-inset" data-img="storyInset" data-label="Hand embroidery"></div>
+          <p class="story-caption" data-i18n="story.caption">On the loom — every metre woven by hand.</p>
+        </div>
+
+        <div class="story-copy reveal" style="--d:.1s">
+          <p class="eyebrow" data-i18n="story.eyebrow">Our Story · 우리의 이야기</p>
+          <h2 class="story-title" data-i18n="story.title">More Than Clothing.</h2>
+          <p class="story-quote" data-i18n="story.quote">“Every piece carries a story — from the hands that create it to the culture that inspires it.”</p>
+          <p class="story-text" data-i18n="story.text">NAYA works directly with weavers and tailors across Nepal — from the dhaka looms of Palpa to the pashmina workshops of Kathmandu. We choose each piece for its craft, then bring it to Korea with the care, sizing and service you expect from a modern boutique.</p>
+
+          <ol class="journey">
+            <li><span class="journey-n">01</span><span data-i18n="story.step1">Woven in Palpa</span></li>
+            <li><span class="journey-n">02</span><span data-i18n="story.step2">Finished in Kathmandu</span></li>
+            <li><span class="journey-n">03</span><span data-i18n="story.step3">Delivered in Seoul</span></li>
+          </ol>
+
+          <a href="#korea" class="btn btn-dark" data-i18n="story.cta">Our Story</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ NEPAL × KOREA ============ -->
+    <section class="section korea" id="korea">
+      <div class="container">
+        <header class="section-head center reveal">
+          <p class="eyebrow eyebrow-gold" data-i18n="korea.eyebrow">Nepal × Korea · 네팔 × 한국</p>
+          <h2 class="section-title" data-i18n="korea.title">From Nepal, With Love.</h2>
+          <p class="section-sub" data-i18n="korea.sub">Traditional craftsmanship, thoughtfully brought to Korea.</p>
+        </header>
+
+        <!-- Kathmandu → Seoul route line -->
+        <div class="route reveal" aria-hidden="true">
+          <div class="route-city"><b>Kathmandu</b><small>काठमाडौं</small></div>
+          <div class="route-line"><span class="route-plane">✈</span></div>
+          <div class="route-city"><b>Seoul</b><small>서울</small></div>
+        </div>
+
+        <div class="korea-grid">
+          <article class="korea-card reveal">
+            <svg aria-hidden="true"><use href="#i-mountain"/></svg>
+            <h3 data-i18n="korea.c1">Authentic Nepali Craft</h3>
+            <p data-i18n="korea.c1t">Curated directly from Nepal</p>
+          </article>
+          <article class="korea-card reveal" style="--d:.08s">
+            <svg aria-hidden="true"><use href="#i-pin"/></svg>
+            <h3 data-i18n="korea.c2">Delivered Across Korea</h3>
+            <p data-i18n="korea.c2t">Made for modern Korean shoppers</p>
+          </article>
+          <article class="korea-card reveal" style="--d:.16s">
+            <svg aria-hidden="true"><use href="#i-cross"/></svg>
+            <h3 data-i18n="korea.c3">Culture × Contemporary</h3>
+            <p data-i18n="korea.c3t">Heritage with a modern perspective</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WARDROBE GLOSSARY ============ -->
+    <section class="section glossary" id="glossary">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow" data-i18n="gloss.eyebrow">A Guide · 네팔 의상 가이드</p>
+          <h2 class="section-title" data-i18n="gloss.title">The Nepali Wardrobe</h2>
+          <p class="section-sub" data-i18n="gloss.sub">Five pieces worth knowing — and how to wear them in Seoul.</p>
+        </header>
+
+        <dl class="gloss-list">
+          <div class="gloss-item reveal">
+            <dt><span class="gloss-native">कुर्था</span><span data-i18n="gloss.k">Kurtha</span></dt>
+            <dd data-i18n="gloss.kt">A long, easy tunic worn with suruwal trousers and a shawl. Nepal’s everyday staple — lovely with denim, too.</dd>
+          </div>
+          <div class="gloss-item reveal" style="--d:.06s">
+            <dt><span class="gloss-native">सारी</span><span data-i18n="gloss.s">Sari</span></dt>
+            <dd data-i18n="gloss.st">Five to six metres of unstitched cloth, draped. For weddings, festivals and evenings out.</dd>
+          </div>
+          <div class="gloss-item reveal" style="--d:.12s">
+            <dt><span class="gloss-native">गुन्यू चोलो</span><span data-i18n="gloss.g">Gunyu Cholo</span></dt>
+            <dd data-i18n="gloss.gt">A wrapped blouse (cholo) and skirt (gunyu) — the traditional dress of Nepal’s hill communities.</dd>
+          </div>
+          <div class="gloss-item reveal" style="--d:.18s">
+            <dt><span class="gloss-native">ढाका</span><span data-i18n="gloss.d">Dhaka</span></dt>
+            <dd data-i18n="gloss.dt">A geometric handwoven cloth from Palpa, made thread by thread on wooden looms.</dd>
+          </div>
+          <div class="gloss-item reveal" style="--d:.24s">
+            <dt><span class="gloss-native">पश्मिना</span><span data-i18n="gloss.p">Pashmina</span></dt>
+            <dd data-i18n="gloss.pt">Fine Himalayan goat wool, feather-light and warm — made for Korean winters.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ============ OCCASIONS ============ -->
+    <section class="section occasions" id="occasions">
+      <div class="container">
+        <header class="occ-head reveal">
+          <div>
+            <p class="eyebrow" data-i18n="occ.eyebrow">Occasionwear · 특별한 날</p>
+            <h2 class="section-title" data-i18n="occ.title">Made for Your Moments</h2>
+          </div>
+          <a href="#shop" class="btn btn-dark" data-filter="all" data-i18n="occ.cta">Shop Occasionwear</a>
+        </header>
+
+        <div class="occ-grid">
+          <a href="#shop" class="occ-tile reveal" data-filter="lehenga">
+            <div class="media" data-img="occWedding" data-label="Wedding"></div>
+            <span class="occ-label"><b data-i18n="occ.wedding">Wedding</b><small data-i18n="occ.weddingSub">결혼식</small></span>
+          </a>
+          <a href="#shop" class="occ-tile reveal" style="--d:.08s" data-filter="saree">
+            <div class="media" data-img="occFestival" data-label="Festival"></div>
+            <span class="occ-label"><b data-i18n="occ.festival">Festival</b><small data-i18n="occ.festivalSub">축제</small></span>
+          </a>
+          <a href="#shop" class="occ-tile reveal" style="--d:.16s" data-filter="gunyu">
+            <div class="media" data-img="occCelebration" data-label="Celebration"></div>
+            <span class="occ-label"><b data-i18n="occ.celebration">Celebration</b><small data-i18n="occ.celebrationSub">기념일</small></span>
+          </a>
+          <a href="#shop" class="occ-tile reveal" style="--d:.24s" data-filter="kurtha">
+            <div class="media" data-img="occEveryday" data-label="Everyday"></div>
+            <span class="occ-label"><b data-i18n="occ.everyday">Everyday</b><small data-i18n="occ.everydaySub">데일리</small></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ INSTAGRAM ============ -->
+    <section class="section social" id="social">
+      <div class="container">
+        <header class="section-head center reveal">
+          <p class="eyebrow" data-i18n="social.eyebrow">Instagram</p>
+          <h2 class="section-title" data-i18n="social.title">Follow the Journey</h2>
+          <a class="social-handle" href="#social" data-demo-link>@nayakorea</a>
+        </header>
+        <div class="insta-grid">
+          <a href="#social" class="insta-tile reveal" data-demo-link><div class="media" data-img="insta1" data-label="@nayakorea"></div><span class="insta-over"><svg><use href="#i-instagram"/></svg></span></a>
+          <a href="#social" class="insta-tile reveal" style="--d:.05s" data-demo-link><div class="media" data-img="insta2" data-label="@nayakorea"></div><span class="insta-over"><svg><use href="#i-instagram"/></svg></span></a>
+          <a href="#social" class="insta-tile reveal" style="--d:.1s" data-demo-link><div class="media" data-img="insta3" data-label="@nayakorea"></div><span class="insta-over"><svg><use href="#i-instagram"/></svg></span></a>
+          <a href="#social" class="insta-tile reveal" style="--d:.15s" data-demo-link><div class="media" data-img="insta4" data-label="@nayakorea"></div><span class="insta-over"><svg><use href="#i-instagram"/></svg></span></a>
+          <a href="#social" class="insta-tile reveal" style="--d:.2s" data-demo-link><div class="media" data-img="insta5" data-label="@nayakorea"></div><span class="insta-over"><svg><use href="#i-instagram"/></svg></span></a>
+          <a href="#social" class="insta-tile reveal" style="--d:.25s" data-demo-link><div class="media" data-img="insta6" data-label="@nayakorea"></div><span class="insta-over"><svg><use href="#i-instagram"/></svg></span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TRUST ============ -->
+    <section class="trust" aria-label="Customer promise">
+      <div class="container trust-grid">
+        <div class="trust-item reveal">
+          <svg aria-hidden="true"><use href="#i-thread"/></svg>
+          <h3 data-i18n="trust.1">Authentic Nepali Fashion</h3>
+          <p data-i18n="trust.1t">Curated pieces inspired by Nepal.</p>
+        </div>
+        <div class="trust-item reveal" style="--d:.06s">
+          <svg aria-hidden="true"><use href="#i-lock"/></svg>
+          <h3 data-i18n="trust.2">Secure Payments</h3>
+          <p data-i18n="trust.2t">Safe and simple checkout.</p>
+        </div>
+        <div class="trust-item reveal" style="--d:.12s">
+          <svg aria-hidden="true"><use href="#i-truck"/></svg>
+          <h3 data-i18n="trust.3">Korea-Wide Delivery</h3>
+          <p data-i18n="trust.3t">Convenient delivery across Korea.</p>
+        </div>
+        <div class="trust-item reveal" style="--d:.18s">
+          <svg aria-hidden="true"><use href="#i-return"/></svg>
+          <h3 data-i18n="trust.4">Easy Returns</h3>
+          <p data-i18n="trust.4t">Simple customer-friendly return experience.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ NEWSLETTER ============ -->
+    <section class="newsletter" id="newsletter">
+      <div class="container newsletter-inner reveal">
+        <p class="eyebrow" data-i18n="news.eyebrow">Newsletter · 뉴스레터</p>
+        <h2 class="section-title" data-i18n="news.title">Stay in the Story.</h2>
+        <p class="section-sub" data-i18n="news.sub">New collections, cultural stories and exclusive launches — delivered to your inbox.</p>
+        <form class="news-form" id="newsForm" novalidate>
+          <label class="sr-only" for="newsEmail" data-i18n="news.ph">Your email address</label>
+          <input type="email" id="newsEmail" placeholder="Your email address" data-i18n-ph="news.ph" autocomplete="email" />
+          <button type="submit" class="btn btn-dark" data-i18n="news.cta">Join NAYA</button>
+        </form>
+        <p class="news-msg" id="newsMsg" role="status"></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#top" class="logo logo-light">
+            <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/><path d="M7 21.5l6-8.5 3.5 5 2.5-3 6 6.5" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>
+            <span class="logo-word">NAYA</span>
+          </a>
+          <p class="footer-tag">NEPAL, REIMAGINED.</p>
+          <p class="footer-about" data-i18n="footer.about">Authentic Nepali clothing, curated in Kathmandu and delivered across Korea.</p>
+          <div class="pay-badges" aria-label="Payment methods">
+            <span>KakaoPay</span><span>Naver Pay</span><span>Toss</span><span>VISA</span><span>Mastercard</span>
+          </div>
+        </div>
+
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4 data-i18n="footer.shop">Shop</h4>
+            <a href="#shop" data-filter="all" data-i18n="nav.new">New Arrivals</a>
+            <a href="#shop" data-filter="kurtha" data-i18n="nav.kurtha">Kurthas</a>
+            <a href="#shop" data-filter="saree" data-i18n="nav.saree">Sarees</a>
+            <a href="#shop" data-filter="gunyu" data-i18n="nav.gunyu">Gunyu Cholo</a>
+            <a href="#shop" data-filter="pashmina" data-i18n="nav.pashmina">Pashmina &amp; Dhaka</a>
+            <a href="#shop" data-filter="lehenga" data-i18n="nav.lehenga">Lehengas</a>
+          </div>
+          <div class="footer-col">
+            <h4 data-i18n="footer.aboutH">About</h4>
+            <a href="#story" data-i18n="footer.story">Our Story</a>
+            <a href="#glossary" data-i18n="footer.heritage">Nepali Heritage</a>
+            <a href="#korea" data-i18n="footer.craft">Craftsmanship</a>
+            <a href="#social" data-demo-link data-i18n="footer.journal">Journal</a>
+          </div>
+          <div class="footer-col">
+            <h4 data-i18n="footer.care">Customer Care</h4>
+            <a href="#top" data-demo-link data-i18n="footer.contact">Contact</a>
+            <a href="#top" data-demo-link data-i18n="footer.shipping">Shipping</a>
+            <a href="#top" data-demo-link data-i18n="footer.returns">Returns</a>
+            <a href="#top" data-demo-link data-i18n="footer.faq">FAQ</a>
+          </div>
+          <div class="footer-col">
+            <h4 data-i18n="footer.follow">Follow</h4>
+            <a href="#social" data-demo-link>Instagram</a>
+            <a href="#social" data-demo-link>TikTok</a>
+            <a href="#social" data-demo-link>Facebook</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placeholder company details — replace with the client's real registration before launch -->
+      <p class="footer-legal" data-i18n="footer.legal">NAYA Korea (demo) · Representative: —— · Business Reg. No. 000-00-00000 · Mail-order Reg. No. 0000-서울-0000 · Customer care 10:00–18:00 KST, Mon–Fri. All company details on this page are placeholders for a design demo.</p>
+
+      <div class="footer-bottom">
+        <p>© 2026 NAYA. <span data-i18n="footer.rights">All rights reserved.</span></p>
+        <p class="footer-lang">
+          <button data-lang="ko">한국어</button>
+          <span aria-hidden="true">|</span>
+          <button data-lang="en">English</button>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ MOBILE BOTTOM TAB BAR ============ -->
+  <nav class="tabbar" aria-label="Quick actions">
+    <a href="#top"><svg><use href="#i-home"/></svg><span data-i18n="tab.home">Home</span></a>
+    <a href="#shop" data-filter="all"><svg><use href="#i-grid"/></svg><span data-i18n="tab.shop">Shop</span></a>
+    <button data-open="search"><svg><use href="#i-search"/></svg><span data-i18n="tab.search">Search</span></button>
+    <button data-open="wishlist"><svg><use href="#i-heart"/></svg><span data-i18n="tab.wish">Wishlist</span><span class="badge" data-count="wish">0</span></button>
+    <button data-open="cart"><svg><use href="#i-bag"/></svg><span data-i18n="tab.bag">Bag</span><span class="badge" data-count="cart">0</span></button>
+  </nav>
+
+  <!-- ============ OVERLAYS ============ -->
+  <div class="scrim" id="scrim" hidden></div>
+
+  <!-- Mobile menu -->
+  <aside class="mobile-menu" id="mobileMenu" aria-label="Menu" aria-hidden="true">
+    <div class="mm-head">
+      <span class="logo-word">NAYA</span>
+      <button class="icon-btn" data-close aria-label="Close" data-i18n-aria="aria.close"><svg><use href="#i-close"/></svg></button>
+    </div>
+    <nav class="mm-nav">
+      <a href="#shop" data-filter="all" data-i18n="nav.new">New Arrivals</a>
+      <a href="#shop" data-filter="kurtha" data-i18n="nav.kurtha">Kurthas</a>
+      <a href="#shop" data-filter="saree" data-i18n="nav.saree">Sarees</a>
+      <a href="#shop" data-filter="gunyu" data-i18n="nav.gunyu">Gunyu Cholo</a>
+      <a href="#shop" data-filter="pashmina" data-i18n="nav.pashmina">Pashmina &amp; Dhaka</a>
+      <a href="#shop" data-filter="lehenga" data-i18n="nav.lehenga">Lehengas</a>
+    </nav>
+    <div class="mm-sub">
+      <a href="#story" data-i18n="footer.story">Our Story</a>
+      <a href="#glossary" data-i18n="footer.heritage">Nepali Heritage</a>
+      <button data-open="account" data-i18n="aria.account">Account</button>
+    </div>
+    <div class="mm-lang">
+      <svg aria-hidden="true"><use href="#i-globe"/></svg>
+      <button data-lang="ko">한국어</button><span aria-hidden="true">/</span><button data-lang="en">English</button>
+    </div>
+    <p class="mm-note" data-i18n="topbar.days">Delivered from Nepal in 7–12 days</p>
+  </aside>
+
+  <!-- Search -->
+  <div class="search" id="searchPanel" role="dialog" aria-modal="true" aria-label="Search" aria-hidden="true">
+    <div class="container">
+      <div class="search-bar">
+        <svg aria-hidden="true"><use href="#i-search"/></svg>
+        <input type="search" id="searchInput" placeholder="Search kurtha, sari, pashmina…" data-i18n-ph="search.ph" autocomplete="off" />
+        <button class="icon-btn" data-close aria-label="Close" data-i18n-aria="aria.close"><svg><use href="#i-close"/></svg></button>
+      </div>
+      <div class="search-tags">
+        <span data-i18n="search.popular">Popular</span>
+        <button data-term="kurtha">Kurtha</button>
+        <button data-term="pashmina">Pashmina</button>
+        <button data-term="gunyu">Gunyu Cholo</button>
+        <button data-term="silk">Silk</button>
+        <button data-term="dhaka">Dhaka</button>
+      </div>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
+
+  <!-- Side drawer: cart / wishlist / account (content rendered by script.js) -->
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="drawerTitle">
+    <div class="drawer-head">
+      <button class="icon-btn drawer-back" id="drawerBack" aria-label="Back" hidden><svg><use href="#i-back"/></svg></button>
+      <h2 id="drawerTitle">Bag</h2>
+      <button class="icon-btn" data-close aria-label="Close" data-i18n-aria="aria.close"><svg><use href="#i-close"/></svg></button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-foot" id="drawerFoot"></div>
+  </aside>
+
+  <!-- Product detail modal -->
+  <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Product details">
+    <div class="modal-card">
+      <button class="icon-btn modal-close" data-close aria-label="Close" data-i18n-aria="aria.close"><svg><use href="#i-close"/></svg></button>
+      <div class="modal-media media" id="modalMedia"></div>
+      <div class="modal-info" id="modalInfo"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

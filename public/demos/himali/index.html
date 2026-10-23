@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>HIMALI — Woven in the Himalayas</title>
+  <meta name="description" content="HIMALI: handcrafted Nepali sari, kurtha, gunyu cholo, dhaka and pashmina, delivered to Korea." />
+  <meta name="theme-color" content="#111111" />
+
+  <!-- Playfair Display (display serif), Noto Sans KR (body), Noto Serif KR (Korean headings) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Sans+KR:wght@300;400;500&family=Noto+Serif+KR:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============ LINE ICONS (thin gold strokes) ============ -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1"/></symbol>
+      <symbol id="ic-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></symbol>
+      <symbol id="ic-heart-on" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></symbol>
+      <symbol id="ic-close" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1"/></symbol>
+      <symbol id="ic-arrow" viewBox="0 0 40 12"><path d="M0 6h38M33 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+      <symbol id="ic-arrow-l" viewBox="0 0 40 12"><path d="M40 6H2M7 1L2 6l5 5" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+      <symbol id="ic-peak" viewBox="0 0 40 16"><path d="M1 15L12 3l6 7 5-5 16 10" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+      <symbol id="ic-kakao" viewBox="0 0 24 24"><path d="M12 4C7 4 3 7.1 3 11c0 2.5 1.7 4.7 4.2 6l-.9 3.3 3.8-2.4c.6.1 1.3.1 1.9.1 5 0 9-3.1 9-7s-4-7-9-7z" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></symbol>
+      <symbol id="ic-insta" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="16.8" cy="7.2" r=".8" fill="currentColor"/></symbol>
+      <!-- Benefit icons -->
+      <symbol id="ic-hand" viewBox="0 0 48 48"><path d="M10 30c4-3 8-3 12 0l4 3c2 1.5 5 1 6-1M6 34l8 8h14l14-12c1.5-1.3.4-4-1.6-3.6L30 30" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/><path d="M24 6v14M18 10l6-4 6 4M20 16h8" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+      <symbol id="ic-lock" viewBox="0 0 48 48"><rect x="12" y="21" width="24" height="19" fill="none" stroke="currentColor" stroke-width="1"/><path d="M17 21v-5a7 7 0 0 1 14 0v5M24 28v5" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+      <symbol id="ic-route" viewBox="0 0 48 48"><circle cx="10" cy="36" r="3" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="38" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1"/><path d="M13 35c10-2 4-14 14-16s8-4 8-4" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3"/></symbol>
+      <symbol id="ic-gift" viewBox="0 0 48 48"><rect x="9" y="19" width="30" height="21" fill="none" stroke="currentColor" stroke-width="1"/><path d="M7 14h34v5H7zM24 14v26M24 14c-3-6-11-7-11-3s8 3 11 3zm0 0c3-6 11-7 11-3s-8 3-11 3z" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- ============ HEADER ============ -->
+  <header class="hd" id="header">
+    <div class="hd-left">
+      <button class="hd-menu" id="menuOpen" aria-label="Open menu">
+        <span class="hd-burger" aria-hidden="true"><i></i><i></i></span>
+        <span class="hd-label" data-i18n="hd.menu">Menu</span>
+      </button>
+    </div>
+
+    <!-- Brand: change "HIMALI" here, in the menu and in the footer wordmark -->
+    <a href="#top" class="logo" aria-label="HIMALI home">
+      <svg class="logo-peak" aria-hidden="true"><use href="#ic-peak"/></svg>
+      <span class="logo-word">HIMALI</span>
+    </a>
+
+    <div class="hd-right">
+      <div class="lang hide-mobile" role="group" aria-label="Language">
+        <button data-lang="en">EN</button><span aria-hidden="true">/</span><button data-lang="ko">KR</button>
+      </div>
+      <button class="hd-icon hide-mobile" data-open-search aria-label="Search"><svg><use href="#ic-search"/></svg></button>
+      <button class="hd-icon hide-mobile" data-open-drawer="saved" aria-label="Saved pieces"><svg><use href="#ic-heart"/></svg><sup class="hd-count" data-count="saved"></sup></button>
+      <button class="hd-bag" data-open-drawer="bag"><span data-i18n="hd.bag">Bag</span> (<span data-count="bag">0</span>)</button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ 1. HERO — slow cross-fade, text bottom-left ============ -->
+    <section class="hero" aria-label="HIMALI">
+      <div class="hero-stage" id="heroStage"><!-- slides from HERO_SLIDES in script.js --></div>
+      <div class="hero-veil" aria-hidden="true"></div>
+
+      <div class="hero-copy">
+        <h1 class="hero-title reveal-load" style="--d:.1s">
+          <span data-i18n="hero.t1">Woven in the</span>
+          <em data-i18n="hero.t2">Himalayas</em>
+        </h1>
+        <p class="hero-sub reveal-load" style="--d:.45s" data-i18n="hero.sub">Saris, kurthas and pashmina made slowly, by hand, in the valleys of Nepal — and brought to Korea one piece at a time.</p>
+        <a href="#collections" class="btn-gold reveal-load" style="--d:.65s">
+          <span data-i18n="hero.cta">Discover the Collection</span>
+          <svg aria-hidden="true"><use href="#ic-arrow"/></svg>
+        </a>
+      </div>
+
+      <div class="hero-index reveal-load" style="--d:.9s" aria-hidden="true">
+        <span class="hero-num"><b id="heroNum">01</b> / 03</span>
+        <span class="hero-caption" id="heroCaption"></span>
+        <span class="hero-bars" id="heroBars"></span>
+      </div>
+
+      <span class="hero-scroll" aria-hidden="true" data-i18n="hero.scroll">Scroll</span>
+    </section>
+
+    <!-- ============ 2. THE COLLECTIONS — alternating split blocks ============ -->
+    <section class="collections" id="collections">
+      <header class="sec-intro reveal">
+        <p class="sec-label"><span>I</span><span data-i18n="col.label">The Collections</span></p>
+        <h2 class="sec-title" data-i18n-html="col.title">Four crafts,<br><em>one mountain.</em></h2>
+      </header>
+
+      <article class="split reveal" data-cat="sari">
+        <figure class="split-img"><div class="frame" data-img="col-sari" data-label="Sari"></div></figure>
+        <div class="split-text">
+          <span class="split-num">01</span>
+          <p class="split-alt">사리 · सारी</p>
+          <h3 data-i18n="col.sari">Sari</h3>
+          <p data-i18n="col.sariT">Six yards of silk that remember every hand that held them. Draped for weddings, for temples, for the nights that matter.</p>
+          <button class="link-gold" data-filter-jump="sari"><span data-i18n="col.cta">View the pieces</span><svg><use href="#ic-arrow"/></svg></button>
+        </div>
+      </article>
+
+      <article class="split split--rev reveal" data-cat="kurtha">
+        <figure class="split-img"><div class="frame" data-img="col-kurtha" data-label="Kurtha"></div></figure>
+        <div class="split-text">
+          <span class="split-num">02</span>
+          <p class="split-alt">쿠르타 · कुर्था</p>
+          <h3 data-i18n="col.kurtha">Kurtha</h3>
+          <p data-i18n="col.kurthaT">The quiet elegance of everyday Nepal — long lines, soft silk, embroidery stitched slowly by lamplight.</p>
+          <button class="link-gold" data-filter-jump="kurtha"><span data-i18n="col.cta">View the pieces</span><svg><use href="#ic-arrow"/></svg></button>
+        </div>
+      </article>
+
+      <article class="split reveal" data-cat="pashmina">
+        <figure class="split-img"><div class="frame" data-img="col-pashmina" data-label="Pashmina"></div></figure>
+        <div class="split-text">
+          <span class="split-num">03</span>
+          <p class="split-alt">파시미나 · पश्मिना</p>
+          <h3 data-i18n="col.pashmina">Pashmina</h3>
+          <p data-i18n="col.pashminaT">Combed from mountain goats at four thousand metres. Lighter than breath, warmer than a Seoul winter asks for.</p>
+          <button class="link-gold" data-filter-jump="pashmina"><span data-i18n="col.cta">View the pieces</span><svg><use href="#ic-arrow"/></svg></button>
+        </div>
+      </article>
+
+      <article class="split split--rev reveal" data-cat="dhaka">
+        <figure class="split-img"><div class="frame" data-img="col-dhaka" data-label="Dhaka"></div></figure>
+        <div class="split-text">
+          <span class="split-num">04</span>
+          <p class="split-alt">다카 · ढाका</p>
+          <h3 data-i18n="col.dhaka">Dhaka</h3>
+          <p data-i18n="col.dhakaT">Geometry from Palpa's wooden looms — every diamond counted by eye, every thread placed by hand.</p>
+          <button class="link-gold" data-filter-jump="dhaka"><span data-i18n="col.cta">View the pieces</span><svg><use href="#ic-arrow"/></svg></button>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============ 3. THE ARTISAN'S HAND — horizontal timeline ============ -->
+    <section class="artisan" id="artisan">
+      <div class="artisan-head reveal">
+        <p class="sec-label"><span>II</span><span data-i18n="art.label">The Artisan's Hand</span></p>
+        <h2 class="sec-title" data-i18n-html="art.title">From the loom<br>to your door.</h2>
+        <p class="artisan-lede" data-i18n="art.lede">Each HIMALI piece passes through three pairs of hands before it reaches yours. We pay every artisan fairly, and we name them.</p>
+      </div>
+
+      <ol class="timeline">
+        <li class="step reveal">
+          <div class="step-img"><div class="frame" data-img="step-1" data-label="Handwoven in Nepal"></div></div>
+          <span class="step-dot" aria-hidden="true"></span>
+          <span class="step-num">I</span>
+          <h3 data-i18n="art.s1">Handwoven in Nepal</h3>
+          <p data-i18n="art.s1t">Cloth is woven on wooden looms in Palpa, Bhaktapur and the high valleys — a sari can take three weeks.</p>
+        </li>
+        <li class="step step--tall reveal" style="--d:.2s">
+          <div class="step-img"><div class="frame" data-img="step-2" data-label="Finished by Artisans"></div></div>
+          <span class="step-dot" aria-hidden="true"></span>
+          <span class="step-num">II</span>
+          <h3 data-i18n="art.s2">Finished by Artisans</h3>
+          <p data-i18n="art.s2t">Master tailors in Kathmandu cut, embroider and hand-finish every hem, then sign the label inside.</p>
+        </li>
+        <li class="step reveal" style="--d:.4s">
+          <div class="step-img"><div class="frame" data-img="step-3" data-label="Delivered to Korea"></div></div>
+          <span class="step-dot" aria-hidden="true"></span>
+          <span class="step-num">III</span>
+          <h3 data-i18n="art.s3">Delivered to Korea</h3>
+          <p data-i18n="art.s3t">Wrapped in hand-made lokta paper and flown to Seoul — at your door in 7 to 12 days, duties included.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ 4. SIGNATURE PIECES — asymmetric masonry ============ -->
+    <section class="pieces" id="pieces">
+      <header class="pieces-head reveal">
+        <div>
+          <p class="sec-label"><span>III</span><span data-i18n="pc.label">Signature Pieces</span></p>
+          <h2 class="sec-title" data-i18n-html="pc.title">Made in small<br><em>numbers.</em></h2>
+        </div>
+        <nav class="filters" id="filters" aria-label="Filter pieces"></nav>
+      </header>
+      <div class="masonry" id="masonry" aria-live="polite"></div>
+    </section>
+
+    <!-- ============ 5. QUOTE BANNER ============ -->
+    <section class="quote" aria-label="Quote">
+      <div class="quote-bg"><div class="frame" data-img="quote" data-label="Every thread carries a story."></div></div>
+      <div class="quote-veil" aria-hidden="true"></div>
+      <blockquote class="quote-body reveal">
+        <span class="quote-mark" aria-hidden="true">“</span>
+        <p class="quote-text" data-i18n="q.text">Every thread carries a story.</p>
+        <p class="quote-note" data-i18n="q.note">In Nepal, cloth is still made the slow way — spun, dyed and woven by families who have kept the same patterns for generations. When you wear HIMALI, you carry a little of their story with you.</p>
+        <cite data-i18n="q.cite">— The weavers of Palpa</cite>
+      </blockquote>
+    </section>
+
+    <!-- ============ 6. PRIVATE STYLING ============ -->
+    <section class="styling" id="styling">
+      <div class="styling-text reveal">
+        <p class="sec-label"><span>IV</span><span data-i18n="st.label">Private Styling</span></p>
+        <h2 class="sec-title" data-i18n-html="st.title">Dressed for<br><em>the day itself.</em></h2>
+        <p class="styling-lede" data-i18n="st.lede">For weddings, Dashain, Tihar and every occasion that deserves more than a click, our stylists will help you choose — and teach you how to wear it. A free 30-minute consultation over KakaoTalk, in Korean or English.</p>
+        <ul class="occasions">
+          <li data-i18n="st.o1">Weddings & engagements</li>
+          <li data-i18n="st.o2">Dashain & Tihar</li>
+          <li data-i18n="st.o3">Teej & family celebrations</li>
+          <li data-i18n="st.o4">Sari draping lessons</li>
+        </ul>
+        <button class="btn-gold" id="bookOpen"><svg class="btn-kakao" aria-hidden="true"><use href="#ic-kakao"/></svg><span data-i18n="st.cta">Book via KakaoTalk</span></button>
+      </div>
+      <div class="styling-imgs">
+        <div class="styling-main reveal"><div class="frame" data-img="styling-main" data-label="Private Styling"></div></div>
+        <div class="styling-inset reveal" style="--d:.3s"><div class="frame" data-img="styling-inset" data-label="Bridal"></div></div>
+      </div>
+    </section>
+
+    <!-- ============ 7. BENEFITS ============ -->
+    <section class="benefits" aria-label="Our promise">
+      <div class="benefit reveal"><svg><use href="#ic-hand"/></svg><h3 data-i18n="b.1">Authentic Handmade</h3><p data-i18n="b.1t">Every piece signed by its maker</p></div>
+      <div class="benefit reveal" style="--d:.1s"><svg><use href="#ic-lock"/></svg><h3 data-i18n="b.2">Secure Payment</h3><p data-i18n="b.2t">KakaoPay, Naver Pay, Toss & cards</p></div>
+      <div class="benefit reveal" style="--d:.2s"><svg><use href="#ic-route"/></svg><h3 data-i18n="b.3">Korea-Wide Delivery</h3><p data-i18n="b.3t">7–12 days, duties included</p></div>
+      <div class="benefit reveal" style="--d:.3s"><svg><use href="#ic-gift"/></svg><h3 data-i18n="b.4">Gift Packaging</h3><p data-i18n="b.4t">Wrapped in hand-made lokta paper</p></div>
+    </section>
+
+    <!-- ============ 8. NEWSLETTER ============ -->
+    <section class="circle" id="circle">
+      <h2 class="circle-title reveal" data-i18n-html="nl.title">Join the<br><em>Inner Circle.</em></h2>
+      <div class="circle-form reveal" style="--d:.2s">
+        <p data-i18n="nl.text">First access to limited runs, private trunk shows in Seoul, and letters from our weavers — four times a year, never more.</p>
+        <form id="nlForm" novalidate>
+          <label class="sr-only" for="nlEmail" data-i18n="nl.ph">Your email address</label>
+          <input type="email" id="nlEmail" placeholder="Your email address" data-i18n-ph="nl.ph" autocomplete="email" />
+          <button type="submit" aria-label="Subscribe"><span data-i18n="nl.cta">Subscribe</span><svg><use href="#ic-arrow"/></svg></button>
+        </form>
+        <p class="nl-msg" id="nlMsg" role="status"></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="ft">
+    <div class="ft-grid">
+      <div class="ft-col">
+        <h4 data-i18n="ft.atelier">Atelier</h4>
+        <p data-i18n="ft.addr1">Thamel, Kathmandu, Nepal</p>
+        <p data-i18n="ft.addr2">Showroom by appointment · Hannam-dong, Seoul</p>
+      </div>
+      <div class="ft-col">
+        <h4 data-i18n="ft.contact">Client Services</h4>
+        <a href="#top" data-demo><svg><use href="#ic-kakao"/></svg><span data-i18n="ft.kakao">KakaoTalk @himali</span></a>
+        <a href="#top" data-demo>concierge@himali.kr</a>
+        <p data-i18n="ft.hours">Mon–Sat, 11:00–19:00 KST</p>
+      </div>
+      <div class="ft-col">
+        <h4 data-i18n="ft.follow">Follow</h4>
+        <a href="#top" data-demo><svg><use href="#ic-insta"/></svg>Instagram</a>
+        <a href="#top" data-demo><svg><use href="#ic-kakao"/></svg>KakaoTalk Channel</a>
+      </div>
+      <div class="ft-col">
+        <h4 data-i18n="ft.policies">Policies</h4>
+        <a href="#top" data-demo data-i18n="ft.ship">Shipping & Duties</a>
+        <a href="#top" data-demo data-i18n="ft.returns">Returns</a>
+        <a href="#top" data-demo data-i18n="ft.privacy">Privacy</a>
+        <a href="#top" data-demo data-i18n="ft.terms">Terms</a>
+      </div>
+    </div>
+
+    <p class="ft-wordmark" aria-hidden="true">HIMALI</p>
+
+    <div class="ft-bottom">
+      <p>© 2026 HIMALI. <span data-i18n="ft.rights">All rights reserved.</span></p>
+      <!-- Placeholder company details — replace before launch -->
+      <p class="ft-legal" data-i18n="ft.legal">HIMALI Korea (demo) · Business Reg. No. 000-00-00000 · Mail-order Reg. 0000-서울-0000 · Placeholder details for a design demo · Photos: Unsplash</p>
+      <div class="lang" role="group" aria-label="Language">
+        <button data-lang="en">English</button><span aria-hidden="true">/</span><button data-lang="ko">한국어</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ FULL-SCREEN MENU ============ -->
+  <nav class="menu" id="menu" aria-label="Menu" aria-hidden="true">
+    <div class="menu-top">
+      <span class="logo-word">HIMALI</span>
+      <button class="close-x" data-close aria-label="Close"><span data-i18n="ui.close">Close</span><svg><use href="#ic-close"/></svg></button>
+    </div>
+    <div class="menu-body">
+      <ol class="menu-links">
+        <li><a href="#collections" data-menu-link><span>I</span><b data-i18n="col.label">The Collections</b></a></li>
+        <li><a href="#artisan" data-menu-link><span>II</span><b data-i18n="art.label">The Artisan's Hand</b></a></li>
+        <li><a href="#pieces" data-menu-link><span>III</span><b data-i18n="pc.label">Signature Pieces</b></a></li>
+        <li><a href="#styling" data-menu-link><span>IV</span><b data-i18n="st.label">Private Styling</b></a></li>
+        <li><a href="#circle" data-menu-link><span>V</span><b data-i18n="nl.short">Inner Circle</b></a></li>
+      </ol>
+      <div class="menu-side">
+        <div class="menu-img"><div class="frame" data-img="menu" data-label="HIMALI"></div></div>
+        <div class="menu-tools">
+          <button data-open-search><svg><use href="#ic-search"/></svg><span data-i18n="ui.search">Search</span></button>
+          <button data-open-drawer="saved"><svg><use href="#ic-heart"/></svg><span data-i18n="ui.saved">Saved</span> (<span data-count="saved">0</span>)</button>
+          <div class="lang"><button data-lang="en">English</button><span aria-hidden="true">/</span><button data-lang="ko">한국어</button></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ SEARCH OVERLAY ============ -->
+  <div class="search" id="search" role="dialog" aria-modal="true" aria-label="Search" aria-hidden="true">
+    <button class="close-x" data-close aria-label="Close"><span data-i18n="ui.close">Close</span><svg><use href="#ic-close"/></svg></button>
+    <div class="search-inner">
+      <label class="sec-label" for="searchInput"><span>—</span><span data-i18n="ui.searchLabel">Search the collection</span></label>
+      <input id="searchInput" type="search" autocomplete="off" placeholder="Sari, pashmina, Palpa…" data-i18n-ph="ui.searchPh" />
+      <ul class="search-results" id="searchResults"></ul>
+    </div>
+  </div>
+
+  <!-- ============ FULL-SCREEN PRODUCT VIEW ============ -->
+  <div class="pv" id="pv" role="dialog" aria-modal="true" aria-label="Product" aria-hidden="true">
+    <button class="close-x pv-close" data-close aria-label="Close"><span data-i18n="ui.close">Close</span><svg><use href="#ic-close"/></svg></button>
+    <div class="pv-gallery">
+      <div class="pv-thumbs" id="pvThumbs"></div>
+      <div class="pv-stage" id="pvStage"></div>
+      <div class="pv-nav">
+        <button id="pvPrev" aria-label="Previous image"><svg><use href="#ic-arrow-l"/></svg></button>
+        <span id="pvCount">1 / 3</span>
+        <button id="pvNext" aria-label="Next image"><svg><use href="#ic-arrow"/></svg></button>
+      </div>
+    </div>
+    <div class="pv-info" id="pvInfo"></div>
+  </div>
+
+  <!-- ============ BAG / SAVED DRAWER ============ -->
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Bag">
+    <div class="drawer-head">
+      <div class="drawer-tabs" id="drawerTabs">
+        <button data-tab="bag"><span data-i18n="hd.bag">Bag</span> (<span data-count="bag">0</span>)</button>
+        <button data-tab="saved"><span data-i18n="ui.saved">Saved</span> (<span data-count="saved">0</span>)</button>
+      </div>
+      <button class="close-x" data-close aria-label="Close"><svg><use href="#ic-close"/></svg></button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-foot" id="drawerFoot"></div>
+  </aside>
+
+  <!-- ============ STYLING BOOKING MODAL ============ -->
+  <div class="book" id="book" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="bookTitle">
+    <div class="book-card">
+      <button class="close-x" data-close aria-label="Close"><svg><use href="#ic-close"/></svg></button>
+      <div id="bookBody"></div>
+    </div>
+  </div>
+
+  <div class="shade" id="shade" hidden></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -167,6 +167,14 @@ const demos = [
     preview: "/demos/previews/komal.webp",
     url: "saphinpraja.com.np/demos/komal",
   },
+  {
+    href: "/demos/himali/index.html",
+    kind: "Luxury storytelling",
+    name: "HIMALI",
+    desc: "Dark Himalayan luxury boutique: full-screen fading hero, editorial collection stories, artisan timeline, masonry gallery, full-screen product view, KakaoTalk styling booking, and Korean/English.",
+    preview: "/demos/previews/himali.webp",
+    url: "saphinpraja.com.np/demos/himali",
+  },
 ];
 
 const steps = [

@@ -1029,7 +1029,9 @@ function Clothing() {
     KOREA,
   );
 
-  const [lang, setLang] = useState<Lang>("ko");
+  // English by default, like the other two clothing demos, so the page can be reviewed
+  // without reading Korean. The KO toggle still flips every string on the page.
+  const [lang, setLang] = useState<Lang>("en");
   const t = T[lang];
 
   const [category, setCategory] = useState("All");
@@ -1230,7 +1232,7 @@ function Clothing() {
               role="group"
               aria-label="Language"
             >
-              {(["ko", "en"] as Lang[]).map((l, i) => (
+              {(["en", "ko"] as Lang[]).map((l, i) => (
                 <span key={l} className="flex items-center">
                   {i === 1 && (
                     <span className={scrolled ? "px-1.5 text-neutral-300" : "px-1.5 text-white/40"}>

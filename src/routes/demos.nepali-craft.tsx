@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
   ArrowRight,
   Check,
@@ -41,7 +41,7 @@ export const Route = createFileRoute("/demos/nepali-craft")({
         ...base.links,
         {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@200;300;400;500&display=swap",
+          href: "https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=Noto+Sans+KR:wght@200;300;400;500&display=swap",
         },
         { rel: "preload", as: "image", href: "/demos/nepali-craft/banner-loom.webp" },
       ],
@@ -85,6 +85,16 @@ type Product = {
 const T: Record<Lang, Record<string, string>> = {
   en: {
     promo: "Handwoven in Nepal · Air freight to Korea in 5–8 days · Free over ₩150,000",
+    heroEyebrow: "Handwoven in Nepal",
+    heroT1: "Cloth that takes",
+    heroEm: "four metres a day",
+    heroT2: "to make.",
+    heroSub:
+      "A power loom manages four hundred. That difference is the price of everything here, and the reason the cloth softens into your shape instead of away from it.",
+    heroShop: "See the cloth",
+    heroStory: "How it is made",
+    heroProof: "Every piece names the person who wove it",
+    heroFeatured: "On the loom now",
     searchPlaceholder: "Search dhaka, pashmina, allo…",
     cart: "Cart",
     account: "Account",
@@ -247,6 +257,16 @@ const T: Record<Lang, Record<string, string>> = {
   },
   ko: {
     promo: "네팔 수직 제작 · 한국까지 항공 5~8일 · 15만원 이상 무료배송",
+    heroEyebrow: "네팔 수직",
+    heroT1: "하루에 4미터씩",
+    heroEm: "손으로 짜는",
+    heroT2: "원단.",
+    heroSub:
+      "기계 직기는 400미터를 짃습니다. 그 차이가 이곧 모든 가격의 이유이며, 몸에서 멀어지는 대신 입는 사람의 모양으로 부드러워지는 이유입니다.",
+    heroShop: "원단 보기",
+    heroStory: "만드는 방법",
+    heroProof: "모든 제품에 직조한 사람의 이름이 있습니다",
+    heroFeatured: "지금 베틀 위에",
     searchPlaceholder: "다카, 파슈미나, 알로 검색",
     cart: "장바구니",
     account: "마이페이지",
@@ -770,6 +790,7 @@ const trace: { t: keyof (typeof T)["en"]; d: keyof (typeof T)["en"] }[] = [
   { t: "tr4t", d: "tr4d" },
 ];
 
+const heroIds = [1, 10, 3];
 const bestIds = [1, 2, 10, 9];
 const newIds = [3, 10, 5, 12];
 
@@ -949,11 +970,6 @@ function Craft() {
   const [subscribed, setSubscribed] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Measured, not hard-coded — see the note in the festive demo: the promo line wraps on
-  // a phone and a fixed offset would leave the hero misaligned.
-  const headRef = useRef<HTMLElement>(null);
-  const [headH, setHeadH] = useState(0);
-
   const [quick, setQuick] = useState<Product | null>(null);
   const [pickedSize, setPickedSize] = useState<Size | null>(null);
   const [pickedColour, setPickedColour] = useState<string | null>(null);
@@ -964,16 +980,6 @@ function Craft() {
     const timer = window.setTimeout(() => setSlide((s) => (s + 1) % banners.length), SLIDE_MS);
     return () => window.clearTimeout(timer);
   }, [slide]);
-
-  useEffect(() => {
-    const el = headRef.current;
-    if (!el) return;
-    const measure = () => setHeadH(el.getBoundingClientRect().height);
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -1067,7 +1073,7 @@ function Craft() {
     setSubscribed(true);
   }
 
-  const banner = banners[slide];
+  const heroProduct = byId.get(heroIds[slide % heroIds.length])!;
   const colourName = (c: Colour) => (lang === "ko" ? c.ko : c.name);
 
   const sectionHead = (title: string, subtitle: string, onView?: () => void) => (
@@ -1088,244 +1094,250 @@ function Craft() {
     <div className="taa">
       <style>{`
         .taa {
-          font-family: "Noto Sans KR", ui-sans-serif, system-ui, sans-serif;
+          font-family: "Schibsted Grotesk", "Noto Sans KR", ui-sans-serif, system-ui, sans-serif;
           -webkit-font-smoothing: antialiased;
           min-height: 100vh;
           background: #f7f5f0;
           color: #1f1e1b;
-          font-weight: 300;
           padding-bottom: 4rem;
         }
         @media (min-width: 768px) { .taa { padding-bottom: 0; } }
+        .taa h1, .taa h2 { font-weight: 500; letter-spacing: -0.035em; }
+        .taa em { font-style: normal; color: #a9705a; }
         .taa-tab { font-variant-numeric: tabular-nums; }
-        .taa-wrap { max-width: 78rem; margin: 0 auto; padding-left: 1.25rem; padding-right: 1.25rem; }
-        @media (min-width: 768px) { .taa-wrap { padding-left: 2.5rem; padding-right: 2.5rem; } }
+        .taa-wrap { max-width: 80rem; margin: 0 auto; padding-left: 1.5rem; padding-right: 1.5rem; }
+        @media (min-width: 768px) { .taa-wrap { padding-left: 3rem; padding-right: 3rem; } }
         .taa-scroll { overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
         .taa-scroll::-webkit-scrollbar { display: none; }
-        .taa-caps { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; }
+        .taa-caps { font-size: 10.5px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; }
 
-        /* Header ---------------------------------------------------------------- */
-        .taa-promo { background: #1f1e1b; color: #ddd8ce; text-align: center; font-size: 10.5px; letter-spacing: 0.06em; padding: 0.55rem 1rem; }
-        .taa-header { position: sticky; top: 0; z-index: 40; transition: background-color .45s, color .45s, box-shadow .45s; }
-        .taa-header-float { color: #ffffff; }
-        .taa-header-solid { background: rgba(247,245,240,.95); backdrop-filter: blur(8px); color: #1f1e1b; box-shadow: 0 1px 0 rgba(31,30,27,.08); }
-        .taa-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; height: 4.25rem; }
+        /* Header: flat, square, quiet. No pills anywhere on this site. */
+        .taa-promo { background: #1f1e1b; color: #ddd8ce; text-align: center; font-size: 11px; letter-spacing: 0.03em; padding: 0.6rem 1rem; }
+        .taa-header { position: sticky; top: 0; z-index: 40; background: #f7f5f0; color: #1f1e1b; transition: box-shadow .4s; }
+        .taa-header-float { box-shadow: none; }
+        .taa-header-solid { box-shadow: 0 1px 0 rgba(31,30,27,.1); }
+        .taa-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; height: 4.75rem; }
         .taa-brand { display: flex; align-items: center; gap: 0.7rem; flex-shrink: 0; }
-        .taa-brand-name { font-size: 1.05rem; font-weight: 400; letter-spacing: 0.42em; }
-        .taa-search { position: relative; flex: 1; max-width: 20rem; display: none; }
+        .taa-brand-name { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.38em; }
+        .taa-search { position: relative; flex: 1; max-width: 19rem; display: none; }
         @media (min-width: 1024px) { .taa-search { display: block; } }
-        .taa-search-box { width: 100%; border-bottom: 1px solid currentColor; opacity: .6; padding: 0.5rem 0 0.5rem 1.6rem; font-size: 11.5px; }
-        .taa-icons { display: flex; align-items: center; gap: 1.2rem; flex-shrink: 0; }
-        .taa-langs { display: flex; align-items: center; font-size: 10.5px; letter-spacing: 0.1em; }
-        .taa-lang-div { padding: 0 0.4rem; opacity: .4; }
-        .taa-count { position: absolute; top: -6px; right: -9px; min-width: 15px; height: 15px; display: grid; place-items: center; border-radius: 999px; font-size: 9.5px; padding: 0 4px; background: #a9705a; color: #fff; }
-        .taa-nav { border-bottom: 1px solid rgba(31,30,27,.1); }
-        .taa-header-float .taa-nav { border-color: rgba(255,255,255,.22); }
-        .taa-nav-row { display: flex; gap: 2rem; }
-        .taa-nav-item { flex-shrink: 0; padding: 0.8rem 0; font-size: 11.5px; letter-spacing: 0.06em; border-bottom: 1px solid transparent; background: none; transition: opacity .2s, border-color .2s; opacity: .62; }
-        .taa-nav-item[data-on="true"] { opacity: 1; border-bottom-color: currentColor; }
+        .taa-search-box { width: 100%; border-bottom: 1px solid #d8d3c8; padding: 0.55rem 0 0.55rem 1.7rem; font-size: 12px; color: #8b867c; }
+        .taa-icons { display: flex; align-items: center; gap: 1.3rem; flex-shrink: 0; }
+        .taa-langs { display: flex; align-items: center; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; }
+        .taa-lang-div { padding: 0 0.4rem; opacity: .35; }
+        .taa-count { position: absolute; top: -7px; right: -10px; min-width: 16px; height: 16px; display: grid; place-items: center; font-size: 9.5px; font-weight: 700; padding: 0 4px; background: #a9705a; color: #fff; }
+        .taa-nav { border-top: 1px solid #e7e3da; }
+        .taa-nav-row { display: flex; gap: 2.2rem; }
+        .taa-nav-item { flex-shrink: 0; padding: 0.85rem 0; font-size: 12.5px; font-weight: 500; color: #8b867c; background: none; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+        .taa-nav-item:hover { color: #1f1e1b; }
+        .taa-nav-item[data-on="true"] { color: #1f1e1b; border-bottom-color: #1f1e1b; }
 
-        /* Hero -------------------------------------------------------------------- */
-        .taa-hero { position: relative; margin-top: -8.35rem; }
-        .taa-hero-frame { position: relative; width: 100%; aspect-ratio: 4/5; overflow: hidden; background: #e8e4db; }
-        @media (min-width: 640px) { .taa-hero-frame { aspect-ratio: 16/9; } }
-        @media (min-width: 1024px) { .taa-hero-frame { aspect-ratio: 2.2/1; } }
-        .taa-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 1.1s; }
-        .taa-hero-top { position: absolute; left: 0; right: 0; top: 0; height: 240px; background: linear-gradient(to bottom, rgba(20,19,17,.5), rgba(20,19,17,0)); }
-        .taa-hero-bottom { position: absolute; inset: 0; background: linear-gradient(to top, rgba(20,19,17,.6), rgba(20,19,17,.04) 50%, rgba(20,19,17,0)); }
-        .taa-hero-copy { position: absolute; left: 0; right: 0; bottom: 0; color: #fff; padding-bottom: 3rem; }
-        @media (min-width: 768px) { .taa-hero-copy { padding-bottom: 4.5rem; } }
-        .taa-hero-title { margin-top: 0.9rem; font-size: 1.85rem; font-weight: 200; line-height: 1.18; letter-spacing: -0.01em; }
-        @media (min-width: 768px) { .taa-hero-title { font-size: 3.4rem; } }
-        .taa-hero-sub { margin-top: 0.8rem; font-size: 0.85rem; color: rgba(255,255,255,.85); max-width: 32rem; line-height: 1.7; }
-        .taa-hero-copy[data-align="right"] { text-align: left; }
-        @media (min-width: 768px) { .taa-hero-copy[data-align="right"] { text-align: right; } .taa-hero-copy[data-align="right"] .taa-hero-sub { margin-left: auto; } }
-        .taa-hero-cta { margin-top: 1.7rem; display: inline-flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid rgba(255,255,255,.6); color: #fff; padding-bottom: 0.3rem; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; transition: gap .25s; }
-        .taa-hero-cta:hover { gap: 0.9rem; }
-        .taa-hero-dots { position: absolute; bottom: 1.5rem; right: 1.25rem; font-size: 10.5px; color: rgba(255,255,255,.8); letter-spacing: 0.1em; }
-        @media (min-width: 768px) { .taa-hero-dots { right: 2.5rem; } }
+        /* Hero: text column left, image bleeding off the right edge. Asymmetric on
+           purpose — nothing else in the three demos is laid out this way. */
+        .taa-hero { position: relative; overflow: hidden; }
+        .taa-hero-in { display: grid; gap: 2.5rem; align-items: center; padding-top: 3.5rem; padding-bottom: 3.5rem; }
+        @media (min-width: 900px) {
+          .taa-hero-in { grid-template-columns: 1fr 1.15fr; gap: 4rem; padding-top: 5.5rem; padding-bottom: 5.5rem; }
+        }
+        .taa-hero-title { margin-top: 1.3rem; font-size: clamp(2.5rem, 6vw, 4.2rem); line-height: 1.02; }
+        .taa-hero-sub { margin-top: 1.5rem; font-size: 1rem; line-height: 1.85; color: #6b665d; max-width: 40ch; }
+        .taa-hero-btns { margin-top: 2.2rem; display: flex; gap: 1.6rem; align-items: center; flex-wrap: wrap; }
+        .taa-btn-line { display: inline-flex; align-items: center; gap: 0.55rem; border-bottom: 1px solid currentColor; padding-bottom: 0.3rem; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; transition: gap .25s; }
+        .taa-btn-line:hover { gap: 1rem; }
+        .taa-btn-line.muted { color: #8b867c; }
+        .taa-proof { margin-top: 2.4rem; padding-top: 1.4rem; border-top: 1px solid #e2ded4; font-size: 12.5px; color: #8b867c; max-width: 36ch; }
+        .taa-hero-media { position: relative; }
+        .taa-hero-media .frame { position: relative; aspect-ratio: 4/5; background: #eae6dd; overflow: hidden; }
+        @media (min-width: 900px) {
+          .taa-hero-media { margin-right: -3rem; }
+          .taa-hero-media .frame { aspect-ratio: 5/6; }
+        }
+        @media (min-width: 1200px) { .taa-hero-media { margin-right: -6rem; } }
+        .taa-hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity 1.1s; }
+        .taa-hero-float { position: absolute; left: 0; bottom: 1.6rem; background: #f7f5f0; padding: 1.1rem 1.3rem; max-width: 19rem; }
+        @media (min-width: 900px) { .taa-hero-float { left: -2.5rem; } }
+        .taa-hero-float .lbl { font-size: 9.5px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: #a9705a; }
+        .taa-hero-float .nm { margin-top: 0.45rem; font-size: 0.95rem; font-weight: 500; }
+        .taa-hero-float .mk { margin-top: 0.2rem; font-size: 11px; color: #8b867c; }
+        .taa-hero-float button { margin-top: 0.8rem; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; border-bottom: 1px solid #1f1e1b; padding-bottom: 0.2rem; }
 
-        /* Materials ----------------------------------------------------------------- */
-        .taa-mat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin-top: 2rem; background: #e2ded4; border: 1px solid #e2ded4; }
-        @media (min-width: 768px) { .taa-mat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-        @media (min-width: 1024px) { .taa-mat-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
-        .taa-mat { text-align: left; background: #f7f5f0; padding: 1.3rem 1rem 1.5rem; transition: background-color .25s; }
+        /* Materials */
+        .taa-mat-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1px; margin-top: 2.2rem; background: #e2ded4; border: 1px solid #e2ded4; }
+        @media (min-width: 768px) { .taa-mat-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+        @media (min-width: 1100px) { .taa-mat-grid { grid-template-columns: repeat(6, minmax(0,1fr)); } }
+        .taa-mat { text-align: left; background: #f7f5f0; padding: 1.5rem 1.2rem 1.7rem; transition: background-color .25s, color .25s; }
         .taa-mat:hover { background: #fff; }
         .taa-mat[data-on="true"] { background: #1f1e1b; color: #f7f5f0; }
-        .taa-mat-name { font-size: 12.5px; font-weight: 400; letter-spacing: 0.04em; }
-        .taa-mat-note { margin-top: 0.5rem; font-size: 10.5px; line-height: 1.7; opacity: .65; }
+        .taa-mat-name { font-size: 13px; font-weight: 600; letter-spacing: -0.01em; }
+        .taa-mat-note { margin-top: 0.6rem; font-size: 11px; line-height: 1.75; opacity: .62; }
 
-        /* Sections and grid ----------------------------------------------------------- */
-        .taa-section { padding-top: 4.5rem; padding-bottom: 4.5rem; }
-        .taa-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; }
-        .taa-head-title { font-size: 1.35rem; font-weight: 300; letter-spacing: -0.01em; }
-        @media (min-width: 768px) { .taa-head-title { font-size: 1.6rem; } }
-        .taa-head-sub { margin-top: 0.5rem; font-size: 12px; opacity: .6; max-width: 32rem; line-height: 1.7; }
-        .taa-head-link { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; opacity: .65; transition: opacity .2s; }
-        .taa-head-link:hover { opacity: 1; }
-        .taa-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem 1.25rem; margin-top: 2.2rem; }
-        @media (min-width: 768px) { .taa-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3.5rem 2rem; } }
-        @media (min-width: 1280px) { .taa-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        /* Sections */
+        .taa-section { padding-top: 5rem; padding-bottom: 5rem; }
+        .taa-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.2rem; }
+        .taa-head-title { font-size: clamp(1.6rem, 3.4vw, 2.3rem); }
+        .taa-head-sub { margin-top: 0.6rem; font-size: 13.5px; line-height: 1.75; color: #8b867c; max-width: 44ch; }
+        .taa-head-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8b867c; white-space: nowrap; transition: gap .2s, color .2s; }
+        .taa-head-link:hover { gap: 0.9rem; color: #1f1e1b; }
+        .taa-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 3rem 1.4rem; margin-top: 2.6rem; }
+        @media (min-width: 768px) { .taa-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 3.6rem 2.2rem; } }
+        @media (min-width: 1280px) { .taa-grid { grid-template-columns: repeat(4, minmax(0,1fr)); } }
 
-        /* Product card ------------------------------------------------------------------ */
+        /* Product card — square corners, maker credit, no badges */
         .taa-card-img { position: relative; width: 100%; aspect-ratio: 3/4; overflow: hidden; background: #eae6dd; }
         .taa-card-photo { width: 100%; height: 100%; object-fit: cover; transition: transform .9s cubic-bezier(.2,.7,.2,1); }
-        .taa-card:hover .taa-card-photo { transform: scale(1.035); }
-        .taa-tag { position: absolute; top: 0.75rem; left: 0.75rem; font-size: 9px; letter-spacing: 0.2em; padding: 0.25rem 0.5rem; background: #f7f5f0; color: #1f1e1b; }
-        .taa-card-name { margin-top: 0.9rem; font-size: 13px; font-weight: 400; line-height: 1.45; }
-        .taa-card-sub { margin-top: 0.15rem; font-size: 11px; opacity: .5; }
-        .taa-card-maker { margin-top: 0.5rem; font-size: 10.5px; line-height: 1.6; color: #a9705a; }
-        .taa-card-price { margin-top: 0.5rem; font-size: 12.5px; font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: 0.45rem; }
-        .taa-was { font-size: 11px; opacity: .45; text-decoration: line-through; }
+        .taa-card:hover .taa-card-photo { transform: scale(1.04); }
+        .taa-tag { position: absolute; top: 0; left: 0; font-size: 9px; font-weight: 600; letter-spacing: 0.2em; padding: 0.4rem 0.7rem; background: #f7f5f0; color: #1f1e1b; }
+        .taa-card-name { margin-top: 1rem; font-size: 13.5px; font-weight: 500; line-height: 1.4; }
+        .taa-card-sub { margin-top: 0.15rem; font-size: 11px; color: #a09a8f; }
+        .taa-card-maker { margin-top: 0.55rem; font-size: 11px; line-height: 1.6; color: #a9705a; }
+        .taa-card-price { margin-top: 0.5rem; font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: 0.45rem; }
+        .taa-was { font-size: 11px; color: #b0aaa0; text-decoration: line-through; }
 
-        /* Trace ----------------------------------------------------------------------- */
+        /* Traceability */
         .taa-trace { background: #1f1e1b; color: #e8e3d8; }
-        .taa-trace-grid { display: grid; gap: 2rem; margin-top: 2.2rem; }
-        @media (min-width: 768px) { .taa-trace-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2.5rem; } }
-        .taa-trace-n { font-size: 10px; letter-spacing: 0.3em; color: #a9705a; }
-        .taa-trace-t { margin-top: 0.7rem; font-size: 1.1rem; font-weight: 300; }
-        .taa-trace-d { margin-top: 0.5rem; font-size: 11.5px; line-height: 1.85; opacity: .6; }
-        .taa-trace .taa-head-title, .taa-trace .taa-head-sub { color: #e8e3d8; }
+        .taa-trace-grid { display: grid; gap: 2.2rem; margin-top: 2.6rem; }
+        @media (min-width: 768px) { .taa-trace-grid { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 2.6rem; } }
+        .taa-trace-n { font-size: 10.5px; font-weight: 600; letter-spacing: 0.28em; color: #c08a6e; }
+        .taa-trace-t { margin-top: 0.8rem; font-size: 1.25rem; font-weight: 500; letter-spacing: -0.02em; }
+        .taa-trace-d { margin-top: 0.55rem; font-size: 12.5px; line-height: 1.85; color: rgba(232,227,216,.62); }
+        .taa-trace .taa-head-title { color: #e8e3d8; }
+        .taa-trace .taa-head-sub { color: rgba(232,227,216,.6); }
 
-        /* Story ------------------------------------------------------------------------- */
-        .taa-story-grid { display: grid; gap: 2.5rem; align-items: center; }
+        /* Story */
+        .taa-story-grid { display: grid; gap: 2.6rem; align-items: center; }
         @media (min-width: 768px) { .taa-story-grid { grid-template-columns: 1fr 1.05fr; gap: 4.5rem; } }
-        .taa-story-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+        .taa-story-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .taa-story-imgs img { width: 100%; aspect-ratio: 3/4; object-fit: cover; background: #eae6dd; }
-        .taa-story-imgs img:first-child { margin-top: 2.5rem; }
-        .taa-story-title { margin-top: 1.1rem; font-size: 1.6rem; font-weight: 200; line-height: 1.3; }
-        @media (min-width: 768px) { .taa-story-title { font-size: 2.2rem; } }
-        .taa-story-body { margin-top: 1.4rem; font-size: 13px; line-height: 2.05; opacity: .72; }
-        .taa-story-points { margin-top: 2rem; display: grid; gap: 1.1rem; }
-        .taa-point { border-top: 1px solid #e2ded4; padding-top: 0.9rem; }
-        .taa-point-t { font-size: 12.5px; font-weight: 400; }
-        .taa-point-d { margin-top: 0.3rem; font-size: 11.5px; line-height: 1.7; opacity: .6; }
+        .taa-story-imgs img:first-child { margin-top: 2.6rem; }
+        .taa-story-title { margin-top: 1.2rem; font-size: clamp(1.8rem, 3.8vw, 2.6rem); line-height: 1.1; }
+        .taa-story-body { margin-top: 1.4rem; font-size: 14px; line-height: 2.05; color: #6b665d; }
+        .taa-story-points { margin-top: 2.2rem; display: grid; gap: 1.2rem; }
+        .taa-point { border-top: 1px solid #e2ded4; padding-top: 1rem; }
+        .taa-point-t { font-size: 13px; font-weight: 600; }
+        .taa-point-d { margin-top: 0.3rem; font-size: 12px; line-height: 1.75; color: #8b867c; }
 
-        /* Shipping ------------------------------------------------------------------------ */
-        .taa-ship { border-top: 1px solid #e2ded4; border-bottom: 1px solid #e2ded4; background: #f0ede6; }
-        .taa-ship-grid { display: grid; gap: 1.8rem; padding-top: 2.8rem; padding-bottom: 2.8rem; }
-        @media (min-width: 768px) { .taa-ship-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.8rem; } }
+        /* Shipping */
+        .taa-ship { border-top: 1px solid #e2ded4; border-bottom: 1px solid #e2ded4; background: #f1efe8; }
+        .taa-ship-grid { display: grid; gap: 2rem; padding-bottom: 3rem; }
+        @media (min-width: 768px) { .taa-ship-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 3rem; } }
         .taa-ship-item { display: flex; gap: 0.9rem; align-items: flex-start; }
-        .taa-ship-t { font-size: 12.5px; font-weight: 400; }
-        .taa-ship-d { margin-top: 0.3rem; font-size: 11.5px; line-height: 1.75; opacity: .6; }
+        .taa-ship-t { font-size: 13px; font-weight: 600; }
+        .taa-ship-d { margin-top: 0.3rem; font-size: 12px; line-height: 1.8; color: #8b867c; }
 
-        /* Reviews --------------------------------------------------------------------------- */
-        .taa-rev-grid { display: grid; gap: 2rem; margin-top: 2.2rem; }
-        @media (min-width: 768px) { .taa-rev-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem; } }
-        .taa-rev { border-top: 1px solid #e2ded4; padding-top: 1.1rem; }
-        .taa-rev-name { font-size: 12.5px; font-weight: 400; }
-        .taa-rev-meta { margin-top: 0.15rem; font-size: 10.5px; opacity: .5; }
-        .taa-rev-text { margin-top: 0.8rem; font-size: 12.5px; line-height: 2; opacity: .75; }
+        /* Reviews */
+        .taa-rev-grid { display: grid; gap: 2.2rem; margin-top: 2.6rem; }
+        @media (min-width: 768px) { .taa-rev-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 3rem; } }
+        .taa-rev { border-top: 1px solid #1f1e1b; padding-top: 1.2rem; }
+        .taa-rev-name { font-size: 13px; font-weight: 600; }
+        .taa-rev-meta { margin-top: 0.2rem; font-size: 11px; color: #a09a8f; }
+        .taa-rev-text { margin-top: 0.9rem; font-size: 13px; line-height: 2; color: #6b665d; }
 
-        /* Newsletter ------------------------------------------------------------------------- */
+        /* Newsletter */
         .taa-news { background: #e9e5db; }
-        .taa-news-in { padding-top: 3.6rem; padding-bottom: 3.6rem; max-width: 34rem; }
-        .taa-news-form { margin-top: 1.5rem; display: flex; gap: 0.6rem; }
-        .taa-news-input { flex: 1; border: none; border-bottom: 1px solid #b9b2a4; background: transparent; padding: 0.7rem 0.1rem; font-size: 12.5px; }
-        .taa-news-btn { border-bottom: 1px solid #1f1e1b; padding: 0.7rem 0.2rem; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; }
+        .taa-news-in { padding-top: 4rem; padding-bottom: 4rem; max-width: 36rem; }
+        .taa-news-form { margin-top: 1.8rem; display: flex; gap: 0.8rem; }
+        .taa-news-input { flex: 1; border: none; border-bottom: 1px solid #b9b2a4; background: transparent; padding: 0.75rem 0.1rem; font-size: 13.5px; }
+        .taa-news-btn { border-bottom: 1px solid #1f1e1b; padding: 0.75rem 0.2rem; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
 
-        /* Footer ------------------------------------------------------------------------------- */
+        /* Footer */
         .taa-foot { background: #1f1e1b; color: #ddd8ce; }
-        .taa-foot-grid { display: grid; gap: 2.8rem; padding-top: 4rem; padding-bottom: 2.6rem; }
+        .taa-foot-grid { display: grid; gap: 3rem; padding-top: 4.5rem; padding-bottom: 2.8rem; }
         @media (min-width: 768px) { .taa-foot-grid { grid-template-columns: 1fr 1.2fr; gap: 5rem; } }
-        .taa-foot-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem 1.5rem; }
-        .taa-foot-h { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: #a9705a; }
-        .taa-foot-links { margin-top: 0.9rem; display: grid; gap: 0.6rem; }
-        .taa-foot-links span { font-size: 12px; opacity: .72; }
-        .taa-foot-pay { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin-top: 0.9rem; }
-        .taa-pay { font-size: 10.5px; opacity: .6; }
-        .taa-co { border-top: 1px solid rgba(221,216,206,.14); padding-top: 1.7rem; padding-bottom: 3.2rem; display: grid; gap: 0.45rem; }
-        .taa-co-row { font-size: 10.5px; opacity: .55; line-height: 1.75; }
-        .taa-co-row b { font-weight: 400; opacity: .85; }
-        .taa-disclaim { margin-top: 1rem; font-size: 10.5px; line-height: 1.8; opacity: .4; }
-        .taa-social { display: flex; gap: 1.1rem; margin-top: 1.3rem; }
+        .taa-foot-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2.2rem 1.5rem; }
+        .taa-foot-h { font-size: 10px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: #c08a6e; }
+        .taa-foot-links { margin-top: 1rem; display: grid; gap: 0.65rem; }
+        .taa-foot-links span { font-size: 12.5px; color: rgba(221,216,206,.72); }
+        .taa-foot-pay { display: flex; flex-wrap: wrap; gap: 0.45rem 1.1rem; margin-top: 1rem; }
+        .taa-pay { font-size: 11px; color: rgba(221,216,206,.6); }
+        .taa-co { border-top: 1px solid rgba(221,216,206,.14); padding-top: 1.8rem; padding-bottom: 3.4rem; display: grid; gap: 0.5rem; }
+        .taa-co-row { font-size: 10.5px; color: rgba(221,216,206,.55); line-height: 1.75; }
+        .taa-co-row b { font-weight: 600; color: rgba(221,216,206,.85); }
+        .taa-disclaim { margin-top: 1.1rem; font-size: 10.5px; line-height: 1.85; color: rgba(221,216,206,.4); }
+        .taa-social { display: flex; gap: 1.2rem; margin-top: 1.4rem; }
 
-        /* Bottom tab bar ------------------------------------------------------------------------ */
-        .taa-tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; display: grid; grid-template-columns: repeat(5, 1fr); background: #f7f5f0; border-top: 1px solid #e2ded4; }
+        /* Bottom tab bar, phones only */
+        .taa-tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; display: grid; grid-template-columns: repeat(5,1fr); background: rgba(247,245,240,.97); backdrop-filter: blur(10px); border-top: 1px solid #e2ded4; }
         @media (min-width: 768px) { .taa-tabs { display: none; } }
-        .taa-tab-btn { padding: 0.55rem 0 0.65rem; display: grid; justify-items: center; gap: 0.25rem; font-size: 9.5px; opacity: .6; position: relative; }
-        .taa-tab-btn[data-on="true"] { opacity: 1; }
+        .taa-tab-btn { padding: 0.6rem 0 0.7rem; display: grid; justify-items: center; gap: 0.25rem; font-size: 9.5px; font-weight: 500; color: #8b867c; position: relative; }
+        .taa-tab-btn[data-on="true"] { color: #1f1e1b; }
 
-        /* Overlays -------------------------------------------------------------------------------- */
+        /* Overlays */
         .taa-scrim { position: fixed; inset: 0; z-index: 50; background: rgba(31,30,27,.45); }
-        .taa-drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 55; width: 100%; max-width: 26rem; background: #f7f5f0; display: flex; flex-direction: column; }
-        .taa-drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 1.4rem; border-bottom: 1px solid #e2ded4; }
-        .taa-drawer-title { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; }
-        .taa-drawer-body { flex: 1; overflow-y: auto; padding: 1.4rem; }
-        .taa-drawer-foot { border-top: 1px solid #e2ded4; padding: 1.2rem 1.4rem 1.5rem; }
-        .taa-line { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #e7e3da; }
+        .taa-drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 55; width: 100%; max-width: 27rem; background: #f7f5f0; display: flex; flex-direction: column; }
+        .taa-drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 1.4rem 1.6rem; border-bottom: 1px solid #e2ded4; }
+        .taa-drawer-title { font-size: 11px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; }
+        .taa-drawer-body { flex: 1; overflow-y: auto; padding: 1.6rem; }
+        .taa-drawer-foot { border-top: 1px solid #e2ded4; padding: 1.4rem 1.6rem 1.7rem; }
+        .taa-line { display: grid; grid-template-columns: 5rem 1fr; gap: 1.1rem; padding: 1.1rem 0; border-bottom: 1px solid #e7e3da; }
         .taa-line img { width: 100%; aspect-ratio: 3/4; object-fit: cover; background: #eae6dd; }
-        .taa-line-name { font-size: 12.5px; font-weight: 400; line-height: 1.45; }
-        .taa-line-var { margin-top: 0.2rem; font-size: 10.5px; opacity: .55; }
-        .taa-qty { margin-top: 0.6rem; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+        .taa-line-name { font-size: 13px; font-weight: 500; line-height: 1.45; }
+        .taa-line-var { margin-top: 0.2rem; font-size: 11px; color: #a09a8f; }
+        .taa-qty { margin-top: 0.7rem; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
         .taa-qty-box { display: flex; align-items: center; border: 1px solid #ddd8cd; }
-        .taa-qty-btn { padding: 0.3rem 0.5rem; }
-        .taa-qty-n { min-width: 1.8rem; text-align: center; font-size: 12px; font-variant-numeric: tabular-nums; }
-        .taa-sum { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; padding: 0.28rem 0; }
-        .taa-sum-total { font-size: 14px; font-weight: 400; }
-        .taa-btn { width: 100%; background: #1f1e1b; color: #f7f5f0; padding: 1rem; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; transition: background-color .2s; }
+        .taa-qty-btn { padding: 0.35rem 0.55rem; }
+        .taa-qty-n { min-width: 1.8rem; text-align: center; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+        .taa-sum { display: flex; align-items: center; justify-content: space-between; font-size: 13px; padding: 0.3rem 0; color: #6b665d; }
+        .taa-sum-total { font-size: 1.05rem; font-weight: 600; color: #1f1e1b; }
+        .taa-btn { width: 100%; background: #1f1e1b; color: #f7f5f0; padding: 1.05rem; font-size: 11.5px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; transition: background-color .2s; }
         .taa-btn:hover { background: #a9705a; }
-        .taa-btn-ghost { width: 100%; border: 1px solid #ddd8cd; padding: 0.9rem; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 0.6rem; opacity: .75; }
-        .taa-field { display: grid; gap: 0.35rem; margin-top: 1rem; }
-        .taa-field label { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; opacity: .55; }
-        .taa-field input { border: none; border-bottom: 1px solid #ddd8cd; background: transparent; padding: 0.5rem 0.1rem; font-size: 12.5px; }
+        .taa-btn-ghost { width: 100%; border: 1px solid #ddd8cd; padding: 0.95rem; font-size: 11.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 0.6rem; color: #8b867c; }
+        .taa-field { display: grid; gap: 0.35rem; margin-top: 1.1rem; }
+        .taa-field label { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #8b867c; }
+        .taa-field input { border: none; border-bottom: 1px solid #ddd8cd; background: transparent; padding: 0.55rem 0.1rem; font-size: 13px; }
         .taa-two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
-        .taa-pay-list { display: grid; gap: 0.1rem; margin-top: 0.8rem; }
-        .taa-pay-opt { display: flex; align-items: center; gap: 0.7rem; border-bottom: 1px solid #e7e3da; padding: 0.75rem 0.1rem; font-size: 12.5px; }
+        .taa-pay-list { display: grid; gap: 0.1rem; margin-top: 0.9rem; }
+        .taa-pay-opt { display: flex; align-items: center; gap: 0.7rem; border-bottom: 1px solid #e7e3da; padding: 0.8rem 0.1rem; font-size: 13px; }
 
         .taa-modal { position: fixed; inset: 0; z-index: 55; display: grid; place-items: center; padding: 1rem; }
-        .taa-modal-card { width: 100%; max-width: 56rem; max-height: 88vh; overflow-y: auto; background: #f7f5f0; }
+        .taa-modal-card { width: 100%; max-width: 58rem; max-height: 88vh; overflow-y: auto; background: #f7f5f0; }
         .taa-quick { display: grid; }
         @media (min-width: 768px) { .taa-quick { grid-template-columns: 1fr 1fr; } }
         .taa-quick img { width: 100%; aspect-ratio: 3/4; object-fit: cover; background: #eae6dd; }
-        .taa-quick-body { padding: 1.6rem; }
-        @media (min-width: 768px) { .taa-quick-body { padding: 2.6rem; } }
-        .taa-maker-box { margin-top: 1.2rem; border: 1px solid #e2ded4; padding: 0.9rem 1rem; }
-        .taa-sizes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.7rem; }
-        .taa-size { min-width: 3.2rem; border: 1px solid #ddd8cd; padding: 0.55rem 0.7rem; font-size: 11.5px; background: transparent; }
+        .taa-quick-body { padding: 1.8rem; }
+        @media (min-width: 768px) { .taa-quick-body { padding: 2.8rem; } }
+        .taa-maker-box { margin-top: 1.3rem; border-top: 1px solid #1f1e1b; border-bottom: 1px solid #e2ded4; padding: 1rem 0; }
+        .taa-sizes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+        .taa-size { min-width: 3.3rem; border: 1px solid #ddd8cd; padding: 0.6rem 0.75rem; font-size: 12px; font-weight: 500; background: transparent; transition: background-color .2s, color .2s, border-color .2s; }
         .taa-size[data-on="true"] { background: #1f1e1b; color: #f7f5f0; border-color: #1f1e1b; }
         .taa-size[disabled] { opacity: .35; text-decoration: line-through; }
-        .taa-swatches { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.7rem; }
-        .taa-swatch { display: flex; align-items: center; gap: 0.45rem; border: 1px solid #ddd8cd; padding: 0.35rem 0.65rem 0.35rem 0.4rem; font-size: 11.5px; }
+        .taa-swatches { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.75rem; }
+        .taa-swatch { display: flex; align-items: center; gap: 0.45rem; border: 1px solid #ddd8cd; padding: 0.4rem 0.7rem 0.4rem 0.45rem; font-size: 12px; }
         .taa-swatch[data-on="true"] { border-color: #1f1e1b; }
-        .taa-dot { width: 0.85rem; height: 0.85rem; border: 1px solid rgba(31,30,27,.18); }
-        .taa-spec { margin-top: 1.5rem; display: grid; gap: 0.7rem; }
-        .taa-spec-row { display: grid; grid-template-columns: 4.5rem 1fr; gap: 0.7rem; font-size: 11.5px; line-height: 1.75; opacity: .72; border-top: 1px solid #e7e3da; padding-top: 0.7rem; }
+        .taa-dot { width: 0.9rem; height: 0.9rem; border: 1px solid rgba(31,30,27,.18); }
+        .taa-spec { margin-top: 1.6rem; display: grid; gap: 0.7rem; }
+        .taa-spec-row { display: grid; grid-template-columns: 4.5rem 1fr; gap: 0.8rem; font-size: 12px; line-height: 1.8; color: #6b665d; border-top: 1px solid #e7e3da; padding-top: 0.75rem; }
 
-        .taa-table { width: 100%; border-collapse: collapse; margin-top: 1.1rem; font-size: 12px; font-variant-numeric: tabular-nums; }
-        .taa-table th, .taa-table td { border-bottom: 1px solid #e2ded4; padding: 0.6rem 0.4rem; text-align: left; }
-        .taa-table th { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; opacity: .55; }
+        .taa-table { width: 100%; border-collapse: collapse; margin-top: 1.2rem; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+        .taa-table th, .taa-table td { border-bottom: 1px solid #e2ded4; padding: 0.7rem 0.45rem; text-align: left; }
+        .taa-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #8b867c; }
 
-        .taa-toast { position: fixed; left: 50%; bottom: 5rem; transform: translateX(-50%); z-index: 60; background: #1f1e1b; color: #f7f5f0; padding: 0.75rem 1.2rem; font-size: 11.5px; display: flex; align-items: center; gap: 0.5rem; max-width: 90vw; }
-        @media (min-width: 768px) { .taa-toast { bottom: 2rem; } }
+        .taa-toast { position: fixed; left: 50%; bottom: 5.5rem; transform: translateX(-50%); z-index: 60; background: #1f1e1b; color: #f7f5f0; padding: 0.85rem 1.4rem; font-size: 12px; display: flex; align-items: center; gap: 0.5rem; max-width: 90vw; }
+        @media (min-width: 768px) { .taa-toast { bottom: 2.2rem; } }
 
-        .taa-account-rows { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #e2ded4; border-bottom: 1px solid #e2ded4; margin-top: 1.2rem; }
-        .taa-account-cell { padding: 1rem 0.5rem; text-align: center; }
-        .taa-account-n { font-size: 1.15rem; font-weight: 300; }
-        .taa-account-l { margin-top: 0.2rem; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; opacity: .55; }
-        .taa-order { display: grid; grid-template-columns: 3.5rem 1fr; gap: 0.9rem; padding: 0.9rem 0; border-bottom: 1px solid #e7e3da; }
+        .taa-account-rows { display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid #1f1e1b; border-bottom: 1px solid #e2ded4; margin-top: 1.3rem; }
+        .taa-account-cell { padding: 1.1rem 0.5rem; text-align: center; }
+        .taa-account-n { font-size: 1.3rem; font-weight: 500; }
+        .taa-account-l { margin-top: 0.25rem; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #8b867c; }
+        .taa-order { display: grid; grid-template-columns: 4rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #e7e3da; }
         .taa-order img { width: 100%; aspect-ratio: 3/4; object-fit: cover; background: #eae6dd; }
-        .taa-status { display: inline-block; font-size: 10px; letter-spacing: 0.1em; margin-top: 0.4rem; }
-        .taa-menu-row { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 0; border-bottom: 1px solid #e7e3da; font-size: 12.5px; }
+        .taa-status { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; margin-top: 0.45rem; }
+        .taa-menu-row { display: flex; align-items: center; justify-content: space-between; padding: 0.95rem 0; border-bottom: 1px solid #e7e3da; font-size: 13px; }
 
-        @keyframes taa-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-        .taa-rise { animation: taa-rise .9s cubic-bezier(.2,.7,.2,1) both; }
+        @keyframes taa-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+        .taa-rise { animation: taa-rise .95s cubic-bezier(.2,.7,.2,1) both; }
         @keyframes taa-in { from { transform: translateX(100%); } to { transform: none; } }
-        .taa-drawer { animation: taa-in .32s cubic-bezier(.2,.7,.2,1); }
+        .taa-drawer { animation: taa-in .34s cubic-bezier(.2,.7,.2,1); }
         @keyframes taa-pop { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-        .taa-pop { animation: taa-pop .26s cubic-bezier(.2,.7,.2,1); }
+        .taa-pop { animation: taa-pop .28s cubic-bezier(.2,.7,.2,1); }
         @media (prefers-reduced-motion: reduce) {
           .taa-rise, .taa-drawer, .taa-pop { animation: none !important; }
-          .taa-card-photo, .taa-mat { transition: none !important; }
+          .taa-card-photo, .taa-mat, .taa-btn { transition: none !important; }
         }
       `}</style>
 
       <DemoBanner forName={n} />
 
-      <header
-        ref={headRef}
-        className={`taa-header ${scrolled ? "taa-header-solid" : "taa-header-float"}`}
-      >
+      <header className={`taa-header ${scrolled ? "taa-header-solid" : "taa-header-float"}`}>
         <div className="taa-promo">{t.promo}</div>
         <div className="taa-wrap taa-bar">
           <a href="#top" className="taa-brand">
@@ -1393,40 +1405,58 @@ function Craft() {
         </nav>
       </header>
 
-      <section
-        id="top"
-        className="taa-hero"
-        style={headH ? { marginTop: `-${headH}px` } : undefined}
-      >
-        <div className="taa-hero-frame">
-          {banners.map((b, i) => (
-            <img
-              key={b.img}
-              src={`${IMG}/${b.img}.webp`}
-              alt=""
-              loading={i === 0 ? "eager" : "lazy"}
-              className="taa-hero-img"
-              style={{ opacity: i === slide ? 1 : 0 }}
-            />
-          ))}
-          <div className="taa-hero-top" />
-          <div className="taa-hero-bottom" />
-          <div className="taa-hero-copy taa-wrap" data-align={banner.align}>
-            <p className="taa-caps taa-rise" style={{ color: "rgba(255,255,255,.8)" }}>
-              {banner.eyebrow}
+      {/* Hero — text left, image bleeding off the right edge. Asymmetric on purpose:
+          neither of the other two demos is laid out this way. */}
+      <section id="top" className="taa-hero">
+        <div className="taa-wrap taa-hero-in">
+          <div>
+            <p className="taa-caps taa-rise" style={{ color: "#a9705a" }}>
+              {t.heroEyebrow}
             </p>
-            <h1 className="taa-hero-title taa-rise">{banner.title[lang]}</h1>
-            <p className="taa-hero-sub taa-rise">{banner.sub[lang]}</p>
-            <button
-              type="button"
-              onClick={() => pickMaterial(banner.material)}
-              className="taa-hero-cta taa-rise"
-            >
-              {t.heroCta} <ArrowRight className="h-3.5 w-3.5" />
-            </button>
+            <h1 className="taa-hero-title taa-rise" style={{ animationDelay: "90ms" }}>
+              {t.heroT1} <em>{t.heroEm}</em> {t.heroT2}
+            </h1>
+            <p className="taa-hero-sub taa-rise" style={{ animationDelay: "180ms" }}>
+              {t.heroSub}
+            </p>
+            <div className="taa-hero-btns taa-rise" style={{ animationDelay: "260ms" }}>
+              <button type="button" onClick={() => pickMaterial("all")} className="taa-btn-line">
+                {t.heroShop}
+                <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
+              </button>
+              <a href="#story" className="taa-btn-line muted">
+                {t.heroStory}
+              </a>
+            </div>
+            <p className="taa-proof taa-rise" style={{ animationDelay: "340ms" }}>
+              {t.heroProof}
+            </p>
           </div>
-          <div className="taa-hero-dots taa-tab">
-            {String(slide + 1).padStart(2, "0")} — {String(banners.length).padStart(2, "0")}
+
+          <div className="taa-hero-media taa-rise" style={{ animationDelay: "200ms" }}>
+            <div className="frame">
+              {banners.map((b, i) => (
+                <img
+                  key={b.img}
+                  src={`${IMG}/${b.img}.webp`}
+                  alt=""
+                  loading={i === 0 ? "eager" : "lazy"}
+                  style={{
+                    opacity: i === slide ? 1 : 0,
+                    position: i === 0 ? "relative" : "absolute",
+                    inset: i === 0 ? undefined : 0,
+                  }}
+                />
+              ))}
+            </div>
+            <div className="taa-hero-float">
+              <p className="lbl">{t.heroFeatured}</p>
+              <p className="nm">{lead(heroProduct, lang)}</p>
+              <p className="mk">{heroProduct.maker[lang]}</p>
+              <button type="button" onClick={() => openQuick(heroProduct)}>
+                {t.addToCart}
+              </button>
+            </div>
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
+  ArrowRight,
   Check,
   ChevronRight,
   Facebook,
@@ -42,7 +43,7 @@ export const Route = createFileRoute("/demos/nepali-festive")({
         ...base.links,
         {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;600&display=swap",
+          href: "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;1,6..96,500&family=Karla:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap",
         },
         { rel: "preload", as: "image", href: "/demos/nepali-festive/banner-dashain.webp" },
       ],
@@ -88,6 +89,16 @@ type Product = {
 const T: Record<Lang, Record<string, string>> = {
   en: {
     promo: "Ships from Kathmandu to Korea in 5–8 days · Duties included · Free over ₩150,000",
+    heroEyebrow: "Handmade in Nepal",
+    heroT1: "Nepali clothes,",
+    heroEm: "cut by the people",
+    heroT2: "who sell them.",
+    heroSub:
+      "Fourteen tailors in Patan, runs of forty or fewer, and a flight to Seoul. Nothing here is bought wholesale and relabelled.",
+    heroProof: "4.9 from 840+ customers in Korea",
+    heroShop: "Shop everything",
+    heroStory: "Meet the tailors",
+    heroFeatured: "Featured",
     searchPlaceholder: "Search kurtha, saree, daura suruwal…",
     cart: "Cart",
     account: "Account",
@@ -250,6 +261,16 @@ const T: Record<Lang, Record<string, string>> = {
   },
   ko: {
     promo: "카트만두에서 한국까지 5~8일 · 관세 포함 · 15만원 이상 무료배송",
+    heroEyebrow: "네팔에서 손으로 짓습니다",
+    heroT1: "파는 사람이",
+    heroEm: "직접 짓는",
+    heroT2: "네팔 옷.",
+    heroSub:
+      "파탄의 재단사 14명, 40벌 이하의 소량 생산, 그리고 서울행 비행기. 도매로 사와 라벨만 바꾼 제품은 없습니다.",
+    heroProof: "한국 고객 840명 이상, 평점 4.9",
+    heroShop: "전체 상품 보기",
+    heroStory: "재단사 소개",
+    heroFeatured: "추천",
     searchPlaceholder: "쿠르타, 사리, 다우라 수루왈 검색",
     cart: "장바구니",
     account: "마이페이지",
@@ -771,6 +792,7 @@ const glossary: { t: keyof (typeof T)["en"]; d: keyof (typeof T)["en"] }[] = [
   { t: "gloss4t", d: "gloss4d" },
 ];
 
+const heroIds = [1, 7, 3];
 const bestIds = [1, 7, 11, 3];
 const newIds = [9, 6, 2, 12];
 
@@ -974,12 +996,6 @@ function Festive() {
   const [subscribed, setSubscribed] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // The header floats over the hero, so the hero is pulled up behind it by exactly the
-  // header's height. That height is measured rather than hard-coded: the promo line wraps
-  // to two lines at phone widths, and a fixed value would leave a gap or clip the image.
-  const headRef = useRef<HTMLElement>(null);
-  const [headH, setHeadH] = useState(0);
-
   const [quick, setQuick] = useState<Product | null>(null);
   const [pickedSize, setPickedSize] = useState<Size | null>(null);
   const [pickedColour, setPickedColour] = useState<string | null>(null);
@@ -990,16 +1006,6 @@ function Festive() {
     const timer = window.setTimeout(() => setSlide((s) => (s + 1) % banners.length), SLIDE_MS);
     return () => window.clearTimeout(timer);
   }, [slide]);
-
-  useEffect(() => {
-    const el = headRef.current;
-    if (!el) return;
-    const measure = () => setHeadH(el.getBoundingClientRect().height);
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -1093,7 +1099,7 @@ function Festive() {
     setSubscribed(true);
   }
 
-  const banner = banners[slide];
+  const heroProduct = byId.get(heroIds[slide % heroIds.length])!;
   const colourName = (c: Colour) => (lang === "ko" ? c.ko : c.name);
 
   const sectionHead = (title: string, subtitle: string, onView?: () => void) => (
@@ -1114,250 +1120,256 @@ function Festive() {
     <div className="rga">
       <style>{`
         .rga {
-          font-family: "Noto Sans KR", ui-sans-serif, system-ui, sans-serif;
+          font-family: "Karla", "Noto Sans KR", ui-sans-serif, system-ui, sans-serif;
           -webkit-font-smoothing: antialiased;
           min-height: 100vh;
-          background: #fffaf3;
-          color: #2a1a14;
+          background: #fffbf5;
+          color: #241613;
           padding-bottom: 4rem;
         }
         @media (min-width: 768px) { .rga { padding-bottom: 0; } }
         .rga h1, .rga h2, .rga .rga-serif {
-          font-family: "Noto Serif KR", Georgia, serif;
+          font-family: "Bodoni Moda", "Noto Serif KR", Georgia, serif;
           font-weight: 500;
+          letter-spacing: -0.015em;
         }
+        .rga em { font-style: italic; color: #9b1b30; }
         .rga-tab { font-variant-numeric: tabular-nums; }
-        .rga-wrap { max-width: 72rem; margin: 0 auto; padding-left: 1.25rem; padding-right: 1.25rem; }
-        @media (min-width: 768px) { .rga-wrap { padding-left: 1.5rem; padding-right: 1.5rem; } }
+        .rga-wrap { max-width: 72rem; margin: 0 auto; padding-left: 1.5rem; padding-right: 1.5rem; }
+        @media (min-width: 768px) { .rga-wrap { padding-left: 2rem; padding-right: 2rem; } }
         .rga-scroll { overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
         .rga-scroll::-webkit-scrollbar { display: none; }
 
-        /* Header ------------------------------------------------------------ */
-        .rga-promo { background: #5e1020; color: #f0ddb9; text-align: center; font-size: 11px; font-weight: 300; letter-spacing: 0.02em; padding: 0.55rem 1rem; }
-        .rga-header { position: sticky; top: 0; z-index: 40; transition: background-color .45s, color .45s, box-shadow .45s; }
-        .rga-header-float { color: #ffffff; }
-        .rga-header-solid { background: rgba(255,250,243,.96); backdrop-filter: blur(8px); color: #2a1a14; box-shadow: 0 1px 0 rgba(42,26,20,.08); }
-        .rga-bar { display: flex; align-items: center; justify-content: space-between; gap: 0.9rem; height: 4rem; }
-        .rga-brand { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
-        .rga-brand-name { font-family: "Noto Serif KR", Georgia, serif; font-size: 1.15rem; font-weight: 600; letter-spacing: 0.16em; }
-        .rga-search { position: relative; flex: 1; max-width: 22rem; display: none; }
-        @media (min-width: 768px) { .rga-search { display: block; } }
-        .rga-search-box { width: 100%; border-bottom: 1px solid currentColor; opacity: .75; padding: 0.5rem 0 0.5rem 1.6rem; font-size: 12px; font-weight: 300; }
-        .rga-icons { display: flex; align-items: center; gap: 1.1rem; flex-shrink: 0; }
-        .rga-langs { display: flex; align-items: center; font-size: 11px; font-weight: 300; }
-        .rga-lang-div { padding: 0 0.4rem; opacity: .45; }
-        .rga-count { position: absolute; top: -6px; right: -9px; min-width: 16px; height: 16px; display: grid; place-items: center; border-radius: 999px; font-size: 10px; font-weight: 500; padding: 0 4px; background: #8e1b2e; color: #fff; }
-        .rga-nav { border-bottom: 1px solid currentColor; border-color: rgba(42,26,20,.1); }
-        .rga-header-float .rga-nav { border-color: rgba(255,255,255,.25); }
-        .rga-nav-row { display: flex; gap: 1.6rem; }
-        .rga-nav-item { flex-shrink: 0; padding: 0.85rem 0; font-size: 12px; letter-spacing: 0.04em; font-weight: 300; border-bottom: 2px solid transparent; background: none; transition: color .2s, border-color .2s; }
-        .rga-nav-item[data-on="true"] { font-weight: 500; border-bottom-color: currentColor; }
+        /* Header sits on cream, so the hero reads as type on paper, not a photo slab */
+        .rga-promo { background: #5e1020; color: #f0ddb9; text-align: center; font-size: 11.5px; padding: 0.6rem 1rem; }
+        .rga-header { position: sticky; top: 0; z-index: 40; background: #fffbf5; color: #241613; transition: box-shadow .4s; }
+        .rga-header-float { box-shadow: none; }
+        .rga-header-solid { box-shadow: 0 1px 0 rgba(36,22,19,.09), 0 8px 24px -18px rgba(36,22,19,.45); }
+        .rga-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; height: 4.5rem; }
+        .rga-brand { display: flex; align-items: center; gap: 0.65rem; flex-shrink: 0; }
+        .rga-brand-name { font-family: "Bodoni Moda", Georgia, serif; font-size: 1.4rem; font-weight: 600; letter-spacing: 0.1em; }
+        .rga-search { position: relative; flex: 1; max-width: 20rem; display: none; }
+        @media (min-width: 900px) { .rga-search { display: block; } }
+        .rga-search-box { width: 100%; border: 1px solid #ebdfcf; border-radius: 999px; background: #fff; padding: 0.6rem 1rem 0.6rem 2.3rem; font-size: 12.5px; color: #9a8373; }
+        .rga-icons { display: flex; align-items: center; gap: 1.15rem; flex-shrink: 0; }
+        .rga-langs { display: flex; align-items: center; font-size: 11.5px; font-weight: 500; letter-spacing: 0.04em; }
+        .rga-lang-div { padding: 0 0.4rem; opacity: .35; }
+        .rga-count { position: absolute; top: -7px; right: -10px; min-width: 17px; height: 17px; display: grid; place-items: center; border-radius: 999px; font-size: 10px; font-weight: 700; padding: 0 5px; background: #9b1b30; color: #fff; }
+        .rga-nav { border-top: 1px solid #f0e6d8; }
+        .rga-nav-row { display: flex; gap: 2rem; }
+        .rga-nav-item { flex-shrink: 0; padding: 0.9rem 0; font-size: 13px; font-weight: 500; color: #7a6256; background: none; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+        .rga-nav-item:hover { color: #241613; }
+        .rga-nav-item[data-on="true"] { color: #9b1b30; border-bottom-color: #9b1b30; }
 
-        /* Hero -------------------------------------------------------------- */
-        .rga-hero { position: relative; margin-top: -8.4rem; }
-        .rga-hero-frame { position: relative; width: 100%; aspect-ratio: 4/5; overflow: hidden; background: #efe3d2; }
-        @media (min-width: 640px) { .rga-hero-frame { aspect-ratio: 16/9; } }
-        @media (min-width: 1024px) { .rga-hero-frame { aspect-ratio: 21/9; } }
-        .rga-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 1s; }
-        .rga-hero-top { position: absolute; left: 0; right: 0; top: 0; height: 240px; background: linear-gradient(to bottom, rgba(42,10,14,.62), rgba(42,10,14,0)); }
-        .rga-hero-bottom { position: absolute; inset: 0; background: linear-gradient(to top, rgba(42,10,14,.72), rgba(42,10,14,.06) 48%, rgba(42,10,14,0)); }
-        .rga-hero-copy { position: absolute; left: 0; right: 0; bottom: 0; color: #fff; padding-bottom: 3rem; }
-        @media (min-width: 768px) { .rga-hero-copy { padding-bottom: 4rem; } }
-        .rga-eyebrow { font-size: 10px; letter-spacing: 0.35em; font-weight: 300; color: #e9c979; }
-        .rga-hero-title { margin-top: 0.7rem; font-size: 1.9rem; line-height: 1.2; }
-        @media (min-width: 768px) { .rga-hero-title { font-size: 3rem; } }
-        .rga-hero-sub { margin-top: 0.6rem; font-size: 0.85rem; font-weight: 300; color: rgba(255,255,255,.88); max-width: 34rem; }
-        .rga-hero-copy[data-align="right"] { text-align: left; }
-        @media (min-width: 768px) { .rga-hero-copy[data-align="right"] { text-align: right; } .rga-hero-copy[data-align="right"] .rga-hero-sub { margin-left: auto; } }
-        .rga-hero-cta { margin-top: 1.6rem; display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid #e9c979; color: #fff; padding: 0.8rem 1.9rem; font-size: 11px; letter-spacing: 0.12em; transition: background-color .25s, color .25s; }
-        .rga-hero-cta:hover { background: #e9c979; color: #3b0d16; }
-        .rga-hero-dots { position: absolute; bottom: 1.4rem; right: 1.25rem; font-size: 11px; font-weight: 300; color: rgba(255,255,255,.85); }
-        @media (min-width: 768px) { .rga-hero-dots { right: 1.5rem; } }
+        /* Hero: centred editorial type, then a triptych of images */
+        .rga-hero { background: #fffbf5; padding-top: 3.5rem; }
+        @media (min-width: 768px) { .rga-hero { padding-top: 5rem; } }
+        .rga-hero-in { text-align: center; max-width: 46rem; margin: 0 auto; }
+        .rga-eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: #9b1b30; }
+        .rga-hero-title { margin-top: 1.1rem; font-size: clamp(2.5rem, 6.6vw, 4.5rem); line-height: 1.03; }
+        .rga-hero-sub { margin: 1.4rem auto 0; font-size: 1.02rem; line-height: 1.8; color: #6b5245; max-width: 32rem; }
+        .rga-hero-btns { margin-top: 2.1rem; display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; }
+        .rga-pill { display: inline-flex; align-items: center; gap: 0.5rem; border-radius: 999px; padding: 0.95rem 1.9rem; font-size: 13.5px; font-weight: 700; transition: transform .22s, background-color .22s, border-color .22s; }
+        .rga-pill-solid { background: #9b1b30; color: #fff; }
+        .rga-pill-solid:hover { background: #7f1527; transform: translateY(-2px); }
+        .rga-pill-ghost { border: 1px solid #ddcab2; color: #241613; }
+        .rga-pill-ghost:hover { border-color: #241613; transform: translateY(-2px); }
+        .rga-proof { margin-top: 2rem; display: inline-flex; align-items: center; gap: 0.6rem; font-size: 13px; color: #7a6256; }
+        .rga-trip { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 3rem; }
+        @media (min-width: 768px) { .rga-trip { grid-template-columns: 1fr 1.25fr 1fr; gap: 1.35rem; align-items: center; } }
+        .rga-trip figure { position: relative; margin: 0; border-radius: 1.6rem; overflow: hidden; background: #f3e9db; box-shadow: 0 30px 60px -42px rgba(36,22,19,.65); }
+        .rga-trip figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .rga-trip .t-side { aspect-ratio: 4/5; }
+        .rga-trip .t-mid { aspect-ratio: 4/5; }
+        @media (min-width: 768px) { .rga-trip .t-side { aspect-ratio: 3/4; } .rga-trip .t-mid { aspect-ratio: 5/6; } }
+        .rga-float { position: absolute; left: 0.9rem; right: 0.9rem; bottom: 0.9rem; display: flex; align-items: flex-end; justify-content: space-between; gap: 0.8rem; background: rgba(255,251,245,.95); backdrop-filter: blur(8px); border-radius: 1rem; padding: 0.9rem 1rem; box-shadow: 0 14px 30px -18px rgba(36,22,19,.55); }
+        .rga-float .lbl { font-size: 9.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #9b1b30; }
+        .rga-float .nm { font-family: "Bodoni Moda", Georgia, serif; font-size: 1rem; font-weight: 600; margin-top: 0.2rem; }
+        .rga-float .pr { font-size: 12.5px; font-weight: 600; color: #6b5245; }
+        .rga-float button { flex-shrink: 0; border-radius: 999px; background: #241613; color: #fff; font-size: 12px; font-weight: 700; padding: 0.6rem 1.1rem; transition: background-color .2s; }
+        .rga-float button:hover { background: #9b1b30; }
 
-        /* Occasion rail ------------------------------------------------------ */
-        .rga-occ { background: #fff; border-bottom: 1px solid #efe3d2; }
-        .rga-occ-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; margin-top: 1.6rem; }
-        @media (min-width: 768px) { .rga-occ-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; } }
-        .rga-occ-card { text-align: left; border: 1px solid #ecdfcc; background: #fffaf3; padding: 1rem 1rem 1.1rem; transition: border-color .2s, background-color .2s, transform .2s; }
-        .rga-occ-card:hover { border-color: #8e1b2e; transform: translateY(-2px); }
-        .rga-occ-card[data-on="true"] { border-color: #8e1b2e; background: #fff2e8; }
-        .rga-occ-name { font-family: "Noto Serif KR", Georgia, serif; font-size: 0.95rem; font-weight: 600; color: #8e1b2e; }
-        .rga-occ-note { margin-top: 0.35rem; font-size: 11px; font-weight: 300; line-height: 1.6; color: #7a6256; }
+        /* Occasions: one quiet strip, not the spine of the shop */
+        .rga-occ { background: #fff6ec; border-top: 1px solid #f0e6d8; border-bottom: 1px solid #f0e6d8; }
+        .rga-occ-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 0.8rem; margin-top: 1.8rem; }
+        @media (min-width: 768px) { .rga-occ-grid { grid-template-columns: repeat(5, minmax(0,1fr)); gap: 1rem; } }
+        .rga-occ-card { text-align: left; border: 1px solid #ecdfcc; border-radius: 1.1rem; background: #fffbf5; padding: 1.15rem 1.15rem 1.3rem; transition: border-color .2s, transform .2s, box-shadow .2s; }
+        .rga-occ-card:hover { border-color: #9b1b30; transform: translateY(-3px); box-shadow: 0 18px 36px -28px rgba(36,22,19,.6); }
+        .rga-occ-card[data-on="true"] { border-color: #9b1b30; background: #fff; box-shadow: 0 18px 36px -28px rgba(155,27,48,.55); }
+        .rga-occ-name { font-family: "Bodoni Moda", Georgia, serif; font-size: 1.05rem; font-weight: 600; color: #9b1b30; }
+        .rga-occ-note { margin-top: 0.4rem; font-size: 12px; line-height: 1.65; color: #7a6256; }
 
-        /* Section heads and grid --------------------------------------------- */
-        .rga-section { padding-top: 3.4rem; padding-bottom: 3.4rem; }
-        .rga-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; }
-        .rga-head-title { font-size: 1.25rem; letter-spacing: -0.01em; }
-        .rga-head-sub { margin-top: 0.35rem; font-size: 12px; font-weight: 300; color: #7a6256; }
-        .rga-head-link { display: inline-flex; align-items: center; gap: 0.15rem; font-size: 11px; font-weight: 300; color: #7a6256; }
-        .rga-head-link:hover { color: #8e1b2e; }
-        .rga-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.4rem 1.1rem; margin-top: 1.8rem; }
-        @media (min-width: 768px) { .rga-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2.8rem 1.4rem; } }
+        /* Sections */
+        .rga-section { padding-top: 4.5rem; padding-bottom: 4.5rem; }
+        .rga-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.2rem; }
+        .rga-head-title { font-size: clamp(1.7rem, 3.4vw, 2.4rem); }
+        .rga-head-sub { margin-top: 0.6rem; font-size: 14px; line-height: 1.7; color: #7a6256; max-width: 42ch; }
+        .rga-head-link { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 13px; font-weight: 700; color: #9b1b30; white-space: nowrap; transition: gap .2s; }
+        .rga-head-link:hover { gap: 0.6rem; }
+        .rga-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 2.6rem 1.3rem; margin-top: 2.4rem; }
+        @media (min-width: 768px) { .rga-grid { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 3rem 1.7rem; } }
 
-        /* Product card -------------------------------------------------------- */
-        .rga-card-img { position: relative; width: 100%; aspect-ratio: 3/4; overflow: hidden; background: #f3e9db; }
-        .rga-card-photo { width: 100%; height: 100%; object-fit: cover; transition: transform .7s cubic-bezier(.2,.7,.2,1); }
-        .rga-card:hover .rga-card-photo { transform: scale(1.04); }
-        .rga-tag { position: absolute; top: 0.6rem; left: 0.6rem; font-size: 9px; letter-spacing: 0.16em; padding: 0.22rem 0.5rem; }
-        .rga-tag-new { background: #2a1a14; color: #fff; }
-        .rga-tag-best { background: #c8a94b; color: #3b2a10; }
-        .rga-card-nep { margin-top: 0.7rem; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #b08a52; }
-        .rga-card-name { margin-top: 0.3rem; font-size: 13px; font-weight: 500; line-height: 1.45; }
-        .rga-card-sub { margin-top: 0.1rem; font-size: 11px; font-weight: 300; color: #9a8373; }
-        .rga-card-price { margin-top: 0.4rem; font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: 0.4rem; }
-        .rga-was { font-size: 11px; font-weight: 300; color: #b3a394; text-decoration: line-through; }
-        .rga-card-rate { margin-top: 0.3rem; display: flex; align-items: center; gap: 0.3rem; font-size: 10.5px; font-weight: 300; color: #9a8373; }
-        .rga-card-cta { display: block; margin-top: 0.6rem; font-size: 11px; letter-spacing: 0.08em; color: #8e1b2e; opacity: 0; transition: opacity .25s; }
-        .rga-card:hover .rga-card-cta { opacity: 1; }
+        /* Product card */
+        .rga-card-img { position: relative; width: 100%; aspect-ratio: 3/4; overflow: hidden; border-radius: 1.3rem; background: #f3e9db; }
+        .rga-card-photo { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+        .rga-card:hover .rga-card-photo { transform: scale(1.05); }
+        .rga-tag { position: absolute; top: 0.8rem; left: 0.8rem; font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em; padding: 0.3rem 0.65rem; border-radius: 999px; }
+        .rga-tag-new { background: #241613; color: #fff; }
+        .rga-tag-best { background: #be9a4e; color: #2b1c05; }
+        .rga-card-nep { margin-top: 0.9rem; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #be9a4e; }
+        .rga-card-name { margin-top: 0.3rem; font-family: "Bodoni Moda", Georgia, serif; font-size: 1.02rem; font-weight: 600; line-height: 1.3; }
+        .rga-card-sub { margin-top: 0.15rem; font-size: 11.5px; color: #9a8373; }
+        .rga-card-price { margin-top: 0.5rem; font-size: 13.5px; font-weight: 700; font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: 0.45rem; }
+        .rga-was { font-size: 11.5px; font-weight: 400; color: #b3a394; text-decoration: line-through; }
+        .rga-card-rate { margin-top: 0.3rem; display: flex; align-items: center; gap: 0.35rem; font-size: 11px; color: #9a8373; }
+        .rga-card-cta { display: inline-block; margin-top: 0.75rem; border-radius: 999px; border: 1px solid #ddcab2; padding: 0.45rem 1rem; font-size: 11.5px; font-weight: 700; color: #241613; opacity: 0; transform: translateY(4px); transition: opacity .25s, transform .25s, border-color .2s; }
+        .rga-card:hover .rga-card-cta { opacity: 1; transform: none; border-color: #9b1b30; }
 
-        /* Story ---------------------------------------------------------------- */
-        .rga-story { background: #fff2e8; border-top: 1px solid #efe3d2; border-bottom: 1px solid #efe3d2; }
-        .rga-story-grid { display: grid; gap: 2.4rem; padding-top: 4rem; padding-bottom: 4rem; align-items: center; }
-        @media (min-width: 768px) { .rga-story-grid { grid-template-columns: 1fr 1fr; gap: 4rem; } }
-        .rga-story-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-        .rga-story-imgs img { width: 100%; aspect-ratio: 3/4; object-fit: cover; }
-        .rga-story-imgs img:last-child { margin-top: 2.4rem; }
-        .rga-story-title { margin-top: 1rem; font-size: 1.6rem; line-height: 1.35; }
-        @media (min-width: 768px) { .rga-story-title { font-size: 2rem; } }
-        .rga-story-body { margin-top: 1.2rem; font-size: 13px; font-weight: 300; line-height: 1.95; color: #6b5245; }
-        .rga-story-points { margin-top: 1.8rem; border-top: 1px solid #e4d3bd; padding-top: 1.5rem; display: grid; gap: 1rem; }
-        .rga-point-t { font-size: 13px; font-weight: 500; }
-        .rga-point-d { margin-top: 0.2rem; font-size: 11.5px; font-weight: 300; line-height: 1.65; color: #8a7263; }
+        /* Story */
+        .rga-story { background: #fff6ec; border-top: 1px solid #f0e6d8; border-bottom: 1px solid #f0e6d8; }
+        .rga-story-grid { display: grid; gap: 2.6rem; padding-top: 5rem; padding-bottom: 5rem; align-items: center; }
+        @media (min-width: 768px) { .rga-story-grid { grid-template-columns: 1fr 1fr; gap: 4.5rem; } }
+        .rga-story-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .rga-story-imgs img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 1.3rem; box-shadow: 0 30px 60px -45px rgba(36,22,19,.7); }
+        .rga-story-imgs img:last-child { margin-top: 2.6rem; }
+        .rga-story-title { margin-top: 1.1rem; font-size: clamp(1.9rem, 4vw, 2.7rem); line-height: 1.15; }
+        .rga-story-body { margin-top: 1.3rem; font-size: 14.5px; line-height: 1.95; color: #6b5245; }
+        .rga-story-points { margin-top: 2rem; display: grid; gap: 1.2rem; }
+        .rga-point-t { font-size: 14px; font-weight: 700; }
+        .rga-point-d { margin-top: 0.25rem; font-size: 12.5px; line-height: 1.7; color: #8a7263; }
 
-        /* Glossary -------------------------------------------------------------- */
-        .rga-gloss-grid { display: grid; gap: 1.1rem; margin-top: 1.8rem; }
-        @media (min-width: 768px) { .rga-gloss-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; } }
-        .rga-gloss-card { border: 1px solid #ecdfcc; background: #fff; padding: 1.4rem; }
-        .rga-gloss-t { font-family: "Noto Serif KR", Georgia, serif; font-size: 1rem; font-weight: 600; color: #8e1b2e; }
-        .rga-gloss-d { margin-top: 0.55rem; font-size: 12.5px; font-weight: 300; line-height: 1.85; color: #6b5245; }
+        /* Glossary */
+        .rga-gloss-grid { display: grid; gap: 1.2rem; margin-top: 2.4rem; }
+        @media (min-width: 768px) { .rga-gloss-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.5rem; } }
+        .rga-gloss-card { border: 1px solid #ecdfcc; border-radius: 1.3rem; background: #fff; padding: 1.6rem; }
+        .rga-gloss-t { font-family: "Bodoni Moda", Georgia, serif; font-size: 1.2rem; font-weight: 600; color: #9b1b30; }
+        .rga-gloss-d { margin-top: 0.6rem; font-size: 13.5px; line-height: 1.85; color: #6b5245; }
 
-        /* Shipping band ---------------------------------------------------------- */
+        /* Shipping */
         .rga-ship { background: #5e1020; color: #f6e8cf; }
-        .rga-ship-grid { display: grid; gap: 1.6rem; padding-top: 2.6rem; padding-bottom: 2.6rem; }
-        @media (min-width: 768px) { .rga-ship-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.4rem; } }
-        .rga-ship-item { display: flex; gap: 0.8rem; align-items: flex-start; }
-        .rga-ship-t { font-size: 13px; font-weight: 500; }
-        .rga-ship-d { margin-top: 0.25rem; font-size: 11.5px; font-weight: 300; line-height: 1.7; color: rgba(246,232,207,.75); }
+        .rga-ship-grid { display: grid; gap: 1.8rem; padding-bottom: 3rem; }
+        @media (min-width: 768px) { .rga-ship-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 2.6rem; } }
+        .rga-ship-item { display: flex; gap: 0.9rem; align-items: flex-start; }
+        .rga-ship-t { font-size: 14px; font-weight: 700; }
+        .rga-ship-d { margin-top: 0.3rem; font-size: 12.5px; line-height: 1.75; color: rgba(246,232,207,.75); }
 
-        /* Reviews ----------------------------------------------------------------- */
-        .rga-rev-grid { display: grid; gap: 1.1rem; margin-top: 1.8rem; }
-        @media (min-width: 768px) { .rga-rev-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; } }
-        .rga-rev { border: 1px solid #ecdfcc; background: #fff; padding: 1.3rem; }
-        .rga-rev-top { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
-        .rga-rev-name { font-size: 12.5px; font-weight: 500; }
-        .rga-rev-meta { font-size: 10.5px; font-weight: 300; color: #9a8373; margin-top: 0.15rem; }
-        .rga-rev-text { margin-top: 0.75rem; font-size: 12.5px; font-weight: 300; line-height: 1.85; color: #6b5245; }
+        /* Reviews */
+        .rga-rev-grid { display: grid; gap: 1.2rem; margin-top: 2.4rem; }
+        @media (min-width: 768px) { .rga-rev-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.5rem; } }
+        .rga-rev { border: 1px solid #ecdfcc; border-radius: 1.3rem; background: #fff; padding: 1.6rem; }
+        .rga-rev-top { display: flex; align-items: center; justify-content: space-between; gap: 0.7rem; }
+        .rga-rev-name { font-size: 13.5px; font-weight: 700; }
+        .rga-rev-meta { font-size: 11.5px; color: #9a8373; margin-top: 0.15rem; }
+        .rga-rev-text { margin-top: 0.85rem; font-size: 13.5px; line-height: 1.85; color: #6b5245; }
 
-        /* Newsletter --------------------------------------------------------------- */
-        .rga-news { background: #fff2e8; border-top: 1px solid #efe3d2; }
-        .rga-news-in { padding-top: 3.2rem; padding-bottom: 3.2rem; text-align: center; }
-        .rga-news-form { margin: 1.6rem auto 0; display: flex; gap: 0.5rem; max-width: 26rem; }
-        .rga-news-input { flex: 1; border: 1px solid #dcc7ae; background: #fff; padding: 0.75rem 0.9rem; font-size: 12px; font-weight: 300; }
-        .rga-news-btn { background: #8e1b2e; color: #fff; padding: 0.75rem 1.5rem; font-size: 11px; letter-spacing: 0.1em; }
+        /* Newsletter */
+        .rga-news { background: #fff6ec; border-top: 1px solid #f0e6d8; }
+        .rga-news-in { padding-top: 4rem; padding-bottom: 4rem; text-align: center; }
+        .rga-news-form { margin: 1.8rem auto 0; display: flex; gap: 0.6rem; max-width: 27rem; }
+        .rga-news-input { flex: 1; border: 1px solid #ddcab2; border-radius: 999px; background: #fff; padding: 0.9rem 1.2rem; font-size: 13.5px; }
+        .rga-news-btn { border-radius: 999px; background: #9b1b30; color: #fff; padding: 0.9rem 1.7rem; font-size: 13px; font-weight: 700; transition: background-color .2s, transform .2s; }
+        .rga-news-btn:hover { background: #7f1527; transform: translateY(-2px); }
 
-        /* Footer -------------------------------------------------------------------- */
-        .rga-foot { background: #2a1a14; color: #e5d8c9; }
-        .rga-foot-grid { display: grid; gap: 2.6rem; padding-top: 3.4rem; padding-bottom: 2.4rem; }
+        /* Footer */
+        .rga-foot { background: #241613; color: #e5d8c9; }
+        .rga-foot-grid { display: grid; gap: 2.8rem; padding-top: 4rem; padding-bottom: 2.6rem; }
         @media (min-width: 768px) { .rga-foot-grid { grid-template-columns: 1.1fr 1fr; gap: 4.5rem; } }
-        .rga-foot-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem 1.5rem; }
-        .rga-foot-h { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #c8a94b; }
-        .rga-foot-links { margin-top: 0.8rem; display: grid; gap: 0.55rem; }
-        .rga-foot-links span { font-size: 12px; font-weight: 300; color: rgba(229,216,201,.8); }
-        .rga-foot-pay { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; margin-top: 0.9rem; }
-        .rga-pay { border: 1px solid rgba(229,216,201,.3); padding: 0.3rem 0.6rem; font-size: 10px; font-weight: 300; }
-        .rga-co { border-top: 1px solid rgba(229,216,201,.15); padding-top: 1.6rem; padding-bottom: 3rem; display: grid; gap: 0.45rem; }
-        .rga-co-row { font-size: 10.5px; font-weight: 300; color: rgba(229,216,201,.62); line-height: 1.7; }
-        .rga-co-row b { font-weight: 400; color: rgba(229,216,201,.85); }
-        .rga-disclaim { margin-top: 0.9rem; font-size: 10.5px; font-weight: 300; line-height: 1.75; color: rgba(229,216,201,.45); }
-        .rga-social { display: flex; gap: 1rem; margin-top: 1.1rem; }
+        .rga-foot-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem 1.5rem; }
+        .rga-foot-h { font-size: 10.5px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #be9a4e; }
+        .rga-foot-links { margin-top: 0.9rem; display: grid; gap: 0.6rem; }
+        .rga-foot-links span { font-size: 13px; color: rgba(229,216,201,.78); }
+        .rga-foot-pay { display: flex; flex-wrap: wrap; gap: 0.45rem 0.6rem; margin-top: 0.95rem; }
+        .rga-pay { border: 1px solid rgba(229,216,201,.28); border-radius: 999px; padding: 0.3rem 0.75rem; font-size: 10.5px; }
+        .rga-co { border-top: 1px solid rgba(229,216,201,.15); padding-top: 1.8rem; padding-bottom: 3.2rem; display: grid; gap: 0.5rem; }
+        .rga-co-row { font-size: 11px; color: rgba(229,216,201,.6); line-height: 1.7; }
+        .rga-co-row b { font-weight: 600; color: rgba(229,216,201,.85); }
+        .rga-disclaim { margin-top: 1rem; font-size: 11px; line-height: 1.8; color: rgba(229,216,201,.45); }
+        .rga-social { display: flex; gap: 1.1rem; margin-top: 1.2rem; }
 
-        /* Bottom tab bar (the app-style nav; hidden on wide screens) ------------------ */
-        .rga-tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; display: grid; grid-template-columns: repeat(5, 1fr); background: #fffaf3; border-top: 1px solid #ecdfcc; }
+        /* App-style bottom bar, phones only */
+        .rga-tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; display: grid; grid-template-columns: repeat(5,1fr); background: rgba(255,251,245,.97); backdrop-filter: blur(10px); border-top: 1px solid #ecdfcc; }
         @media (min-width: 768px) { .rga-tabs { display: none; } }
-        .rga-tab-btn { padding: 0.5rem 0 0.6rem; display: grid; justify-items: center; gap: 0.2rem; font-size: 9.5px; font-weight: 300; color: #8a7263; position: relative; }
-        .rga-tab-btn[data-on="true"] { color: #8e1b2e; }
+        .rga-tab-btn { padding: 0.6rem 0 0.7rem; display: grid; justify-items: center; gap: 0.22rem; font-size: 10px; font-weight: 500; color: #8a7263; position: relative; }
+        .rga-tab-btn[data-on="true"] { color: #9b1b30; }
 
-        /* Overlays --------------------------------------------------------------------- */
-        .rga-scrim { position: fixed; inset: 0; z-index: 50; background: rgba(42,26,20,.5); }
-        .rga-drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 55; width: 100%; max-width: 26rem; background: #fffaf3; display: flex; flex-direction: column; }
-        .rga-drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.25rem; border-bottom: 1px solid #ecdfcc; }
-        .rga-drawer-title { font-family: "Noto Serif KR", Georgia, serif; font-size: 1rem; font-weight: 600; }
-        .rga-drawer-body { flex: 1; overflow-y: auto; padding: 1.25rem; }
-        .rga-drawer-foot { border-top: 1px solid #ecdfcc; padding: 1.1rem 1.25rem 1.4rem; background: #fff; }
-        .rga-line { display: grid; grid-template-columns: 4.5rem 1fr; gap: 0.9rem; padding: 0.9rem 0; border-bottom: 1px solid #f0e5d6; }
-        .rga-line img { width: 100%; aspect-ratio: 3/4; object-fit: cover; background: #f3e9db; }
-        .rga-line-name { font-size: 12.5px; font-weight: 500; line-height: 1.4; }
-        .rga-line-var { margin-top: 0.2rem; font-size: 11px; font-weight: 300; color: #9a8373; }
-        .rga-qty { margin-top: 0.5rem; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
-        .rga-qty-box { display: flex; align-items: center; border: 1px solid #e0cfb8; }
-        .rga-qty-btn { padding: 0.3rem 0.5rem; }
-        .rga-qty-n { min-width: 1.8rem; text-align: center; font-size: 12px; font-variant-numeric: tabular-nums; }
-        .rga-sum { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; font-weight: 300; padding: 0.25rem 0; }
-        .rga-sum-total { font-size: 15px; font-weight: 600; font-family: "Noto Serif KR", Georgia, serif; }
-        .rga-btn { width: 100%; background: #8e1b2e; color: #fff; padding: 0.95rem; font-size: 12px; letter-spacing: 0.1em; transition: background-color .2s; }
-        .rga-btn:hover { background: #761726; }
-        .rga-btn-ghost { width: 100%; border: 1px solid #d9c6ad; color: #6b5245; padding: 0.85rem; font-size: 12px; letter-spacing: 0.08em; margin-top: 0.6rem; }
-        .rga-field { display: grid; gap: 0.3rem; margin-top: 0.9rem; }
-        .rga-field label { font-size: 10.5px; letter-spacing: 0.08em; color: #8a7263; text-transform: uppercase; }
-        .rga-field input { border: 1px solid #e0cfb8; background: #fff; padding: 0.65rem 0.75rem; font-size: 12.5px; }
-        .rga-two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-        .rga-pay-list { display: grid; gap: 0.5rem; margin-top: 0.7rem; }
-        .rga-pay-opt { display: flex; align-items: center; gap: 0.6rem; border: 1px solid #e0cfb8; background: #fff; padding: 0.7rem 0.8rem; font-size: 12.5px; font-weight: 300; }
+        /* Overlays */
+        .rga-scrim { position: fixed; inset: 0; z-index: 50; background: rgba(36,22,19,.5); backdrop-filter: blur(2px); }
+        .rga-drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 55; width: 100%; max-width: 27rem; background: #fffbf5; display: flex; flex-direction: column; }
+        .rga-drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 1.3rem 1.5rem; border-bottom: 1px solid #ecdfcc; }
+        .rga-drawer-title { font-family: "Bodoni Moda", Georgia, serif; font-size: 1.2rem; font-weight: 600; }
+        .rga-drawer-body { flex: 1; overflow-y: auto; padding: 1.5rem; }
+        .rga-drawer-foot { border-top: 1px solid #ecdfcc; padding: 1.3rem 1.5rem 1.6rem; background: #fff; }
+        .rga-line { display: grid; grid-template-columns: 5rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #f0e5d6; }
+        .rga-line img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 0.8rem; background: #f3e9db; }
+        .rga-line-name { font-size: 13.5px; font-weight: 700; line-height: 1.4; }
+        .rga-line-var { margin-top: 0.2rem; font-size: 11.5px; color: #9a8373; }
+        .rga-qty { margin-top: 0.6rem; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+        .rga-qty-box { display: flex; align-items: center; border: 1px solid #e0cfb8; border-radius: 999px; }
+        .rga-qty-btn { padding: 0.35rem 0.6rem; }
+        .rga-qty-n { min-width: 1.8rem; text-align: center; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+        .rga-sum { display: flex; align-items: center; justify-content: space-between; font-size: 13.5px; padding: 0.3rem 0; color: #6b5245; }
+        .rga-sum-total { font-size: 1.15rem; font-weight: 600; color: #241613; font-family: "Bodoni Moda", Georgia, serif; }
+        .rga-btn { width: 100%; border-radius: 999px; background: #9b1b30; color: #fff; padding: 1rem; font-size: 13.5px; font-weight: 700; transition: background-color .2s, transform .2s; }
+        .rga-btn:hover { background: #7f1527; transform: translateY(-2px); }
+        .rga-btn-ghost { width: 100%; border-radius: 999px; border: 1px solid #ddcab2; color: #6b5245; padding: 0.9rem; font-size: 13px; font-weight: 700; margin-top: 0.6rem; }
+        .rga-field { display: grid; gap: 0.35rem; margin-top: 1rem; }
+        .rga-field label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #8a7263; text-transform: uppercase; }
+        .rga-field input { border: 1px solid #e0cfb8; border-radius: 0.8rem; background: #fff; padding: 0.75rem 0.9rem; font-size: 13.5px; }
+        .rga-two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+        .rga-pay-list { display: grid; gap: 0.55rem; margin-top: 0.8rem; }
+        .rga-pay-opt { display: flex; align-items: center; gap: 0.7rem; border: 1px solid #e0cfb8; border-radius: 0.9rem; background: #fff; padding: 0.8rem 0.95rem; font-size: 13.5px; }
 
         .rga-modal { position: fixed; inset: 0; z-index: 55; display: grid; place-items: center; padding: 1rem; }
-        .rga-modal-card { width: 100%; max-width: 54rem; max-height: 88vh; overflow-y: auto; background: #fffaf3; }
+        .rga-modal-card { width: 100%; max-width: 56rem; max-height: 88vh; overflow-y: auto; background: #fffbf5; border-radius: 1.6rem; }
         .rga-quick { display: grid; }
         @media (min-width: 768px) { .rga-quick { grid-template-columns: 1fr 1fr; } }
         .rga-quick img { width: 100%; aspect-ratio: 3/4; object-fit: cover; background: #f3e9db; }
-        .rga-quick-body { padding: 1.5rem; }
-        @media (min-width: 768px) { .rga-quick-body { padding: 2.2rem; } }
-        .rga-sizes { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.6rem; }
-        .rga-size { min-width: 3rem; border: 1px solid #ddcab2; padding: 0.55rem 0.7rem; font-size: 12px; background: #fff; }
-        .rga-size[data-on="true"] { background: #2a1a14; color: #fff; border-color: #2a1a14; }
+        .rga-quick-body { padding: 1.7rem; }
+        @media (min-width: 768px) { .rga-quick-body { padding: 2.4rem; } }
+        .rga-sizes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.7rem; }
+        .rga-size { min-width: 3.2rem; border: 1px solid #ddcab2; border-radius: 999px; padding: 0.6rem 0.85rem; font-size: 12.5px; font-weight: 500; background: #fff; transition: background-color .2s, border-color .2s, color .2s; }
+        .rga-size[data-on="true"] { background: #241613; color: #fff; border-color: #241613; }
         .rga-size[disabled] { color: #c5b7a7; text-decoration: line-through; background: #f6efe5; }
-        .rga-swatches { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
-        .rga-swatch { display: flex; align-items: center; gap: 0.4rem; border: 1px solid #ddcab2; padding: 0.35rem 0.6rem 0.35rem 0.4rem; font-size: 11.5px; font-weight: 300; background: #fff; }
-        .rga-swatch[data-on="true"] { border-color: #2a1a14; }
-        .rga-dot { width: 0.85rem; height: 0.85rem; border-radius: 999px; border: 1px solid rgba(42,26,20,.2); }
-        .rga-spec { margin-top: 1.4rem; border-top: 1px solid #ecdfcc; padding-top: 1rem; display: grid; gap: 0.6rem; }
-        .rga-spec-row { display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.6rem; font-size: 11.5px; font-weight: 300; line-height: 1.7; color: #6b5245; }
-        .rga-spec-row b { font-weight: 500; color: #8a7263; }
+        .rga-swatches { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.7rem; }
+        .rga-swatch { display: flex; align-items: center; gap: 0.45rem; border: 1px solid #ddcab2; border-radius: 999px; padding: 0.4rem 0.8rem 0.4rem 0.45rem; font-size: 12px; background: #fff; }
+        .rga-swatch[data-on="true"] { border-color: #241613; }
+        .rga-dot { width: 0.95rem; height: 0.95rem; border-radius: 999px; border: 1px solid rgba(36,22,19,.2); }
+        .rga-spec { margin-top: 1.5rem; border-top: 1px solid #ecdfcc; padding-top: 1.1rem; display: grid; gap: 0.65rem; }
+        .rga-spec-row { display: grid; grid-template-columns: 6rem 1fr; gap: 0.7rem; font-size: 12.5px; line-height: 1.7; color: #6b5245; }
+        .rga-spec-row b { font-weight: 700; color: #8a7263; }
 
-        .rga-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 12px; font-variant-numeric: tabular-nums; }
-        .rga-table th, .rga-table td { border-bottom: 1px solid #ecdfcc; padding: 0.6rem 0.4rem; text-align: left; font-weight: 300; }
-        .rga-table th { font-weight: 500; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: #8a7263; }
+        .rga-table { width: 100%; border-collapse: collapse; margin-top: 1.1rem; font-size: 13px; font-variant-numeric: tabular-nums; }
+        .rga-table th, .rga-table td { border-bottom: 1px solid #ecdfcc; padding: 0.7rem 0.45rem; text-align: left; }
+        .rga-table th { font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8a7263; }
 
-        .rga-toast { position: fixed; left: 50%; bottom: 5rem; transform: translateX(-50%); z-index: 60; background: #2a1a14; color: #fff; padding: 0.7rem 1.1rem; font-size: 12px; display: flex; align-items: center; gap: 0.5rem; max-width: 90vw; }
-        @media (min-width: 768px) { .rga-toast { bottom: 2rem; } }
+        .rga-toast { position: fixed; left: 50%; bottom: 5.5rem; transform: translateX(-50%); z-index: 60; background: #241613; color: #fff; border-radius: 999px; padding: 0.8rem 1.3rem; font-size: 12.5px; display: flex; align-items: center; gap: 0.5rem; max-width: 90vw; box-shadow: 0 18px 40px -22px rgba(0,0,0,.9); }
+        @media (min-width: 768px) { .rga-toast { bottom: 2.2rem; } }
 
-        .rga-account-rows { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid #ecdfcc; background: #fff; margin-top: 1rem; }
-        .rga-account-cell { padding: 0.9rem 0.5rem; text-align: center; border-right: 1px solid #ecdfcc; }
+        .rga-account-rows { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid #ecdfcc; border-radius: 1.1rem; background: #fff; margin-top: 1.1rem; overflow: hidden; }
+        .rga-account-cell { padding: 1rem 0.5rem; text-align: center; border-right: 1px solid #ecdfcc; }
         .rga-account-cell:last-child { border-right: none; }
-        .rga-account-n { font-family: "Noto Serif KR", Georgia, serif; font-size: 1.1rem; font-weight: 600; }
-        .rga-account-l { margin-top: 0.15rem; font-size: 10.5px; font-weight: 300; color: #8a7263; }
-        .rga-order { display: grid; grid-template-columns: 3.5rem 1fr; gap: 0.8rem; padding: 0.85rem 0; border-bottom: 1px solid #f0e5d6; }
-        .rga-order img { width: 100%; aspect-ratio: 3/4; object-fit: cover; background: #f3e9db; }
-        .rga-status { display: inline-block; font-size: 10px; padding: 0.15rem 0.45rem; border: 1px solid currentColor; }
-        .rga-menu-row { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 0; border-bottom: 1px solid #f0e5d6; font-size: 12.5px; font-weight: 300; }
+        .rga-account-n { font-family: "Bodoni Moda", Georgia, serif; font-size: 1.3rem; font-weight: 600; }
+        .rga-account-l { margin-top: 0.15rem; font-size: 11px; color: #8a7263; }
+        .rga-order { display: grid; grid-template-columns: 4rem 1fr; gap: 0.9rem; padding: 0.95rem 0; border-bottom: 1px solid #f0e5d6; }
+        .rga-order img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 0.7rem; background: #f3e9db; }
+        .rga-status { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; border: 1px solid currentColor; }
+        .rga-menu-row { display: flex; align-items: center; justify-content: space-between; padding: 0.95rem 0; border-bottom: 1px solid #f0e5d6; font-size: 13.5px; }
 
-        @keyframes rga-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-        .rga-rise { animation: rga-rise .8s cubic-bezier(.2,.7,.2,1) both; }
+        @keyframes rga-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+        .rga-rise { animation: rga-rise .85s cubic-bezier(.2,.7,.2,1) both; }
         @keyframes rga-in { from { transform: translateX(100%); } to { transform: none; } }
-        .rga-drawer { animation: rga-in .32s cubic-bezier(.2,.7,.2,1); }
+        .rga-drawer { animation: rga-in .34s cubic-bezier(.2,.7,.2,1); }
         @keyframes rga-pop { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-        .rga-pop { animation: rga-pop .26s cubic-bezier(.2,.7,.2,1); }
+        .rga-pop { animation: rga-pop .28s cubic-bezier(.2,.7,.2,1); }
         @media (prefers-reduced-motion: reduce) {
           .rga-rise, .rga-drawer, .rga-pop { animation: none !important; }
-          .rga-card-photo, .rga-occ-card { transition: none !important; }
+          .rga-card-photo, .rga-occ-card, .rga-pill, .rga-btn { transition: none !important; }
         }
       `}</style>
 
       <DemoBanner forName={n} />
 
-      <header
-        ref={headRef}
-        className={`rga-header ${scrolled ? "rga-header-solid" : "rga-header-float"}`}
-      >
+      <header className={`rga-header ${scrolled ? "rga-header-solid" : "rga-header-float"}`}>
         <div className="rga-promo">{t.promo}</div>
         <div className="rga-wrap rga-bar">
           <a href="#top" className="rga-brand">
@@ -1425,39 +1437,61 @@ function Festive() {
         </nav>
       </header>
 
-      {/* Hero — runs to the very top, behind the floating header */}
-      <section
-        id="top"
-        className="rga-hero"
-        style={headH ? { marginTop: `-${headH}px` } : undefined}
-      >
-        <div className="rga-hero-frame">
-          {banners.map((b, i) => (
-            <img
-              key={b.img}
-              src={`${IMG}/${b.img}.webp`}
-              alt=""
-              loading={i === 0 ? "eager" : "lazy"}
-              className="rga-hero-img"
-              style={{ opacity: i === slide ? 1 : 0 }}
-            />
-          ))}
-          <div className="rga-hero-top" />
-          <div className="rga-hero-bottom" />
-          <div className="rga-hero-copy rga-wrap" data-align={banner.align}>
-            <p className="rga-eyebrow rga-rise">{banner.eyebrow}</p>
-            <h1 className="rga-hero-title rga-rise">{banner.title[lang]}</h1>
-            <p className="rga-hero-sub rga-rise">{banner.sub[lang]}</p>
-            <button
-              type="button"
-              onClick={() => pickOccasion(banner.occasion)}
-              className="rga-hero-cta rga-rise"
-            >
-              {banner.cta[lang]}
-            </button>
+      {/* Hero — centred type on cream, then a triptych. Deliberately not the split
+          hero-with-floating-card that /demos/shop uses. */}
+      <section id="top" className="rga-hero">
+        <div className="rga-wrap">
+          <div className="rga-hero-in">
+            <p className="rga-eyebrow rga-rise">{t.heroEyebrow}</p>
+            <h1 className="rga-hero-title rga-rise" style={{ animationDelay: "90ms" }}>
+              {t.heroT1} <em>{t.heroEm}</em> {t.heroT2}
+            </h1>
+            <p className="rga-hero-sub rga-rise" style={{ animationDelay: "180ms" }}>
+              {t.heroSub}
+            </p>
+            <div className="rga-hero-btns rga-rise" style={{ animationDelay: "260ms" }}>
+              <button
+                type="button"
+                onClick={() => pickCategory("All")}
+                className="rga-pill rga-pill-solid"
+              >
+                {t.heroShop}
+                <ArrowRight className="h-4 w-4" strokeWidth={2} />
+              </button>
+              <a href="#story" className="rga-pill rga-pill-ghost">
+                {t.heroStory}
+              </a>
+            </div>
+            <p className="rga-proof rga-rise" style={{ animationDelay: "340ms" }}>
+              <Stars n={5} gold />
+              {t.heroProof}
+            </p>
           </div>
-          <div className="rga-hero-dots rga-tab">
-            {String(slide + 1).padStart(2, "0")} / {String(banners.length).padStart(2, "0")}
+
+          <div className="rga-trip rga-rise" style={{ animationDelay: "420ms" }}>
+            <figure className="t-side">
+              <img src={`${IMG}/${banners[slide].img}.webp`} alt="" loading="eager" />
+            </figure>
+            <figure className="t-mid">
+              <img src={`${IMG}/${heroProduct.img}.webp`} alt={lead(heroProduct, lang)} />
+              <div className="rga-float">
+                <div style={{ minWidth: 0 }}>
+                  <p className="lbl">{t.heroFeatured}</p>
+                  <p className="nm">{lead(heroProduct, lang)}</p>
+                  <p className="pr rga-tab">{won(heroProduct.price)}</p>
+                </div>
+                <button type="button" onClick={() => openQuick(heroProduct)}>
+                  {t.addToCart}
+                </button>
+              </div>
+            </figure>
+            <figure className="t-side">
+              <img
+                src={`${IMG}/${banners[(slide + 1) % banners.length].img}.webp`}
+                alt=""
+                loading="lazy"
+              />
+            </figure>
           </div>
         </div>
       </section>

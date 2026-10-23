@@ -148,6 +148,16 @@ const demos = [
     name: "Clothing store",
     img: "/demos/previews/clothing.webp",
   },
+  {
+    to: "/demos/nepali-festive" as const,
+    name: "Nepali festive wear",
+    img: "/demos/previews/nepali-festive.webp",
+  },
+  {
+    to: "/demos/nepali-craft" as const,
+    name: "Handwoven Nepal",
+    img: "/demos/previews/nepali-craft.webp",
+  },
 ];
 
 // Shared class strings so light (clean) and dark (data) themes stay in sync.

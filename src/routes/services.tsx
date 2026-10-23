@@ -134,6 +134,22 @@ const demos = [
     preview: "/demos/previews/clothing.webp",
     url: "saphinpraja.com.np/demos/clothing",
   },
+  {
+    to: "/demos/nepali-festive" as const,
+    kind: "Festive wear store",
+    name: "RANGA",
+    desc: "Nepali festive clothing sold into Korea: shop by festival, a glossary of the garments, English/Korean toggle, and KakaoPay / Naver Pay / Toss checkout.",
+    preview: "/demos/previews/nepali-festive.webp",
+    url: "saphinpraja.com.np/demos/nepali-festive",
+  },
+  {
+    to: "/demos/nepali-craft" as const,
+    kind: "Craft textile store",
+    name: "TAANA",
+    desc: "Handwoven Nepali cloth cut as modern pieces: filter by material, every garment names its weaver, and full traceability from fibre to door.",
+    preview: "/demos/previews/nepali-craft.webp",
+    url: "saphinpraja.com.np/demos/nepali-craft",
+  },
 ];
 
 const steps = [
